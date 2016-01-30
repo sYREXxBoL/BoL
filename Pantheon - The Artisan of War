@@ -1,6 +1,6 @@
 
 
-version = "1.00"
+version = "1.02"
 
 
 --[[
@@ -171,15 +171,17 @@ end
 		if ts.target and ValidTarget(ts.target) then
 
 			if GetDistance(ts.target) <= 600 then
-					CastSpell(_Q, ts.target)
+				CastSpell(_Q, ts.target)
 			end
 
 			if GetDistance(ts.target) <= 600 then
-					CastSpell(_W, ts.target)
+				CastSpell(_W, ts.target)
 			end
 
 			if GetDistance(ts.target) <= 600 then
+				if HaveBuffs(ts.target, 5) then
 					CastSpell(_E, ts.target)
+				end
 			end
 		end
 	end
@@ -305,3 +307,11 @@ end
 	end
 
 	
+	function HaveBuffs(unit, buffs)
+        for i = 1, unit.buffCount, 1 do      
+            local buff = unit:getBuff(i) 
+            if buff.valid and buff.type == buffs then
+                return true            
+            end                    
+        end
+	end
