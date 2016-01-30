@@ -1,4 +1,5 @@
 
+
 version = "1.00"
 
 
@@ -75,6 +76,11 @@ end
 			PanthMenu.drawing:addParam("rDraw", "Draw (R) Range on the Minimap", SCRIPT_PARAM_ONOFF, true)
 
 
+		PanthMenu:addSubMenu("Info - Ultimate Alert", "ultAlert")
+			PanthMenu.ultAlert:addParam("drawulttext", "Enable Ultimate Alert", SCRIPT_PARAM_ONOFF, true)
+			PanthMenu.ultAlert:addParam("alertInfo", "It will print a text in the middle of the screen if an Enemy is Killable", SCRIPT_PARAM_INFO, "")
+
+
 		PanthMenu:addParam("panthVer", "Version: ", SCRIPT_PARAM_INFO, version)		
 	end
 
@@ -99,6 +105,10 @@ end
 				if (PanthMenu.drawing.rDraw) and rReady then
 					DrawCircleMinimapR(myHero.x, myHero.y, myHero.z)
 				end        
+
+				if (PanthMenu.ultAlert.drawulttext) and rReady then
+					ultAlert()
+				end
 			end
 		end
 	end
@@ -145,6 +155,11 @@ end
 			HerassAutoQ()
 		end
 
+
+		if PanthMenu.ultAlert.drawulttext then
+			ultAlert()
+		end
+
         if PanthMenu.ks.killSteal then
             KillSteal()
         end
@@ -154,6 +169,7 @@ end
 	function Combo()
 
 		if ts.target and ValidTarget(ts.target) then
+
 			if GetDistance(ts.target) <= 600 then
 					CastSpell(_Q, ts.target)
 			end
@@ -221,7 +237,7 @@ end
                 	CastSpell(_W, enemy)
                 	CastSpell(_E, enemy)
                 	CastSpell(_Q, enemy)
-                end	                 
+                end       
             end
         end
     end
@@ -270,3 +286,22 @@ end
 	    	end
 	    DrawLines2(points, width or 1, color or 4294967295)
 	end
+
+
+	function ultAlert()
+
+		for each, enemy in ipairs(GetEnemyHeroes()) do
+
+	        if enemy and ValidTarget(enemy) then
+
+				if enemy.visible and enemy ~= nil and not enemy.dead then
+
+					if enemy.health < getDmg("R",enemy,myHero) + getDmg("Q",enemy,myHero) + getDmg("W",enemy,myHero) + getDmg("E",enemy,myHero) then
+						DrawText("Drop the Man out of "..enemy.charName, 24, 300, 400, 0xFFFF0000)						
+					end
+				end
+			end
+		end
+	end
+
+	
