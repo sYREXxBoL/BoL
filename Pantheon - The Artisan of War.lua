@@ -31,6 +31,8 @@ end
 
 		Menu()
 		Hello()
+
+		if myHero:GetSpellData(SUMMONER_1).name:find("summonerdot") then Ignite = SUMMONER_1 elseif myHero:GetSpellData(SUMMONER_2).name:find("summonerdot") then Ignite = SUMMONER_2 end
  		
 	end
 
@@ -64,7 +66,7 @@ end
 			
 		PanthMenu:addSubMenu("KillSteal Settings", "ks")
 			PanthMenu.ks:addParam("killSteal", "Use Smart Kill Steal", SCRIPT_PARAM_ONOFF, true)
-			--PanthMenu.ks:addParam("autoIgnite", "Auto Ignite", SCRIPT_PARAM_ONOFF, true)
+			PanthMenu.ks:addParam("autoIgnite", "Auto Ignite", SCRIPT_PARAM_ONOFF, true)
 				
 
 		PanthMenu:addSubMenu("Draw Settings", "drawing")	
@@ -163,6 +165,10 @@ end
         if PanthMenu.ks.killSteal then
             KillSteal()
         end
+
+        if PanthMenu.ks.autoIgnite then
+            autoIgnite()
+        end
 	end
 
 
@@ -217,6 +223,7 @@ end
 		--soon
 	end
 
+
 	function KillSteal()
 
 		for each, enemy in ipairs(GetEnemyHeroes()) do
@@ -243,7 +250,6 @@ end
             end
         end
     end
-
 
 
     function DrawCircle3DQ(x, y, z, radius, width, color, quality)
@@ -314,4 +320,20 @@ end
                 return true            
             end                    
         end
+	end
+
+
+	function autoIgnite()
+
+		if not Ignite then return end
+
+		for each, enemy in ipairs(GetEnemyHeroes()) do
+
+		       if enemy and ValidTarget(enemy) then
+
+				if enemy.health <= 50 + (20 * myHero.level) and PanthMenu.ks.autoIgnite and myHero:CanUseSpell(Ignite) == READY then
+						CastSpell(Ignite, enemy)
+				end
+			end
+		end
 	end
