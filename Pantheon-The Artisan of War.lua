@@ -1,6 +1,6 @@
 
 
-version = "1.03"
+version = "1.04"
 
 
 --[[
@@ -52,16 +52,23 @@ end
 			--PanthMenu.harass:addParam("aQT", "Don't Auto-Q if in enemy Turret Range", SCRIPT_PARAM_ONOFF, true)
 			
 		
-		PanthMenu:addSubMenu("Farm Settings", "farming")
+		PanthMenu:addSubMenu("Last Hit Settings", "farming")
 			PanthMenu.farming:addParam("farmKey", "Farming Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("X"))
 			PanthMenu.farming:addParam("qFarm", "Last Hit with (Q)", SCRIPT_PARAM_ONOFF, true)
 
+
+		PanthMenu:addSubMenu("Lane Clear Settings", "lane")
+			PanthMenu.lane:addParam("laneKey", "Jungle Clear Key (V)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
+			PanthMenu.lane:addParam("laneQ", "Use (Q)", SCRIPT_PARAM_ONOFF, true)
+			PanthMenu.lane:addParam("laneW", "Use (W)", SCRIPT_PARAM_ONOFF, true)
+			PanthMenu.lane:addParam("laneE", "USe (E)", SCRIPT_PARAM_ONOFF, true)
+
 			
-		--PanthMenu:addSubMenu("Jungle Clear Settings", "jungle")
-			--PanthMenu.jungle:addParam("jungleKey", "Jungle Clear Key (V)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
-			--PanthMenu.jungle:addParam("jungleQ", "Use (Q)", SCRIPT_PARAM_ONOFF, true)
-			--PanthMenu.jungle:addParam("jungleW", "Use (W)", SCRIPT_PARAM_ONOFF, true)
-			--PanthMenu.jungle:addParam("jungleE", "USe (E)", SCRIPT_PARAM_ONOFF, true)
+		PanthMenu:addSubMenu("Jungle Clear Settings", "jungle")
+			PanthMenu.jungle:addParam("jungleKey", "Jungle Clear Key (V)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
+			PanthMenu.jungle:addParam("jungleQ", "Use (Q)", SCRIPT_PARAM_ONOFF, true)
+			PanthMenu.jungle:addParam("jungleW", "Use (W)", SCRIPT_PARAM_ONOFF, true)
+			PanthMenu.jungle:addParam("jungleE", "USe (E)", SCRIPT_PARAM_ONOFF, true)
 			
 			
 		PanthMenu:addSubMenu("KillSteal Settings", "ks")
@@ -88,6 +95,7 @@ end
 
 
 	function OnDraw()
+		
 		if not myHero.dead then
 
 			if not PanthMenu.drawing.mDraw then
@@ -121,7 +129,8 @@ end
 		ComboKey		= PanthMenu.combo.comboKey
 		HarassKey		= PanthMenu.harass.harassKey
 		FarmKey			= PanthMenu.farming.farmKey
-		--JungleClearKey	= PanthMenu.jungle.jungleKey
+		LaneClearKey	= PanthMenu.lane.laneKey
+		JungleClearKey	= PanthMenu.jungle.jungleKey
 
 		ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 900, DAMAGE_PHYSICAL)
 		target = ts.target
@@ -147,6 +156,10 @@ end
 
 		if FarmKey then
 			Farm()
+		end
+
+		if LaneClearKey then
+			LaneClear()
 		end
 
 		if JungleClearKey then
@@ -219,8 +232,50 @@ end
     end
 
 
+    function LaneClear()
+
+    	enemyMinions:update()
+
+        for each, minions in ipairs(enemyMinions.objects) do
+
+            if minions and ValidTarget(minions) then
+
+				if GetDistance(minions) <= 600 and PanthMenu.lane.laneQ then
+					CastSpell(_Q, minions)
+				end
+
+				if GetDistance(minions) <= 600 and PanthMenu.lane.laneW then
+					CastSpell(_W, minions)
+				end
+
+				if GetDistance(minions) <= 600 and GetMinionsaroundMinion(600, enemyMinions) >= 3 and PanthMenu.lane.laneE then
+					CastSpell(_E, minions)	
+				end
+			end
+		end
+    end
+
+
 	function JungleClear()
-		--soon
+
+		jungleMinions:update()
+
+        for _,jm in pairs(jungleMinions.objects) do
+            if jm and ValidTarget(jm) then
+
+				if GetDistance(jm) <= 600 and PanthMenu.jungle.jungleQ then
+					CastSpell(_Q, jm)
+				end
+
+				if GetDistance(jm) <= 600 and PanthMenu.jungle.jungleW then
+					CastSpell(_W, jm)
+				end
+
+				if GetDistance(jm) <= 600 and PanthMenu.jungle.jungleE then
+					CastSpell(_E, jm)	
+				end
+			end
+		end
 	end
 
 
@@ -336,4 +391,13 @@ end
 				end
 			end
 		end
+	end
+
+
+	function GetMinionsaroundMinion(range, minions)
+		local n = 0
+		for _,v in pairs(minions.objects) do
+			if GetDistance(v) <= range then n = n+1 end
+		end
+		return n
 	end
