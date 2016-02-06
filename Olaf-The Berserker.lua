@@ -1,4 +1,4 @@
-version = "1.03"
+version = "1.04"
 
 
 --[[
@@ -51,12 +51,14 @@ end
 			--OlafMenu.harass:addParam("harassKey", "Harass key (C)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("C"))
 			OlafMenu.harass:addParam("autoQ", "Auto-Q when Target in Range", SCRIPT_PARAM_ONKEYTOGGLE, false, GetKey('Z'))
 			OlafMenu.harass:addParam("autoE", "Auto-E when Target in Range", SCRIPT_PARAM_ONKEYTOGGLE, false, GetKey('Z'))
-			
+			OlafMenu.harass:addParam("harassMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
+		
 		
 		OlafMenu:addSubMenu("Last Hit Settings", "farming")
 			OlafMenu.farming:addParam("farmKey", "Farming Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("X"))
 			OlafMenu.farming:addParam("qFarm", "Last Hit with (Q)", SCRIPT_PARAM_ONOFF, true)
 			OlafMenu.farming:addParam("eFarm", "Last Hit with (E)", SCRIPT_PARAM_ONOFF, true)
+			OlafMenu.farming:addParam("FarmMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
 
 
 		OlafMenu:addSubMenu("Lane Clear Settings", "lane")
@@ -71,7 +73,10 @@ end
 			OlafMenu.jungle:addParam("jungleQ", "Use (Q)", SCRIPT_PARAM_ONOFF, true)
 			OlafMenu.jungle:addParam("jungleW", "Use (W)", SCRIPT_PARAM_ONOFF, true)
 			OlafMenu.jungle:addParam("jungleE", "USe (E)", SCRIPT_PARAM_ONOFF, true)
-			
+		
+		OlafMenu:addSubMenu("Flee Settings", "flee")
+			OlafMenu.flee:addParam("fleeKey", "Flee Key (G)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("G"))
+			OlafMenu.flee:addParam("fleeq", "Throw Q on Enemy", SCRIPT_PARAM_ONOFF, true)
 			
 		OlafMenu:addSubMenu("KillSteal Settings", "ks")
 			OlafMenu.ks:addParam("killSteal", "Use Smart Kill Steal", SCRIPT_PARAM_ONOFF, true)
@@ -114,6 +119,7 @@ end
 		FarmKey			= OlafMenu.farming.farmKey
 		LaneClearKey	= OlafMenu.lane.laneKey
 		JungleClearKey	= OlafMenu.jungle.jungleKey
+		FleeKey			= OlafMenu.flee.fleeKey
 
 		ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 900, DAMAGE_PHYSICAL)
 		target = ts.target
@@ -128,7 +134,16 @@ end
         eReady = myHero:CanUseSpell(_E) == READY
         rReady = myHero:CanUseSpell(_R) == READY
 
+        SpellQ = {name = "Spear Shot",			range =  600, ready = false, dmg = 0, manaUsage = 0				   }
+		SpellW = {name = "Aegis of Zeonia",		range =  600, ready = false, dmg = 0, manaUsage = 0				   }
+		SpellE = {name = "Heartseeker Strike",	range =  700, ready = false, dmg = 0, manaUsage = 0				   }
+		SpellR = {name = "Grand Skyfall",		range = 5500, ready = false, dmg = 0, manaUsage = 0				   }
 
+
+        SpellQ.manaUsage = myHero:GetSpellData(_Q).mana
+		SpellW.manaUsage = myHero:GetSpellData(_W).mana
+		SpellE.manaUsage = myHero:GetSpellData(_E).mana
+		SpellR.manaUsage = myHero:GetSpellData(_R).mana
 
 
 
@@ -150,6 +165,10 @@ end
 
 		if JungleClearKey then
 			JungleClear()
+		end
+
+		if FleeKey then
+			Flee()
 		end
 
 		if OlafMenu.harass.autoQ then
@@ -215,8 +234,11 @@ end
 
             if enemy and ValidTarget(enemy) then
 
-				if ts.target and ValidTarget(ts.target) then
-					CastQ(ts.target)					
+            	if not isLow('Mana', myHero, OlafMenu.harass.harassMana) then
+
+					if ts.target and ValidTarget(ts.target) then
+						CastQ(ts.target)					
+					end
 				end
 			end
 		end
@@ -233,6 +255,7 @@ end
 
 					if GetDistance(ts.target) <= 325  then
 						CastSpell(_E, ts.target)
+					
 					end
 				end
 			end
@@ -247,7 +270,7 @@ end
 
             if minions and ValidTarget(minions) then
 
-            	if minions.health <= getDmg("Q",minions,myHero) and OlafMenu.farming.qFarm and GetDistance(minions) >= 125 then
+            	if minions.health <= getDmg("Q",minions,myHero) and OlafMenu.farming.qFarm and GetDistance(minions) >= 125 and not isLow('Mana', myHero, OlafMenu.farming.FarmMana) then
               		CastQ(minions)
 
           		elseif minions.health <= getDmg("E",minions,myHero) and OlafMenu.farming.eFarm and GetDistance(minions) >= 325 then
@@ -303,6 +326,20 @@ end
 			end
 		end
 	end
+
+
+	function Flee()
+		
+		local rastoyanie = math.sqrt((mousePos.x-myHero.x)*(mousePos.x-myHero.x) + (mousePos.z-myHero.z)*(mousePos.z-myHero.z))
+  		myHero:MoveTo(mousePos.x,mousePos.z)
+
+  		if ts.target and ValidTarget(ts.target) then
+
+			if FleeKey and GetDistance(ts.target) <= 600 then
+				CastQ(ts.target)
+			end
+		end
+  	end
 
 
 	function KillSteal()
@@ -420,4 +457,21 @@ end
 				end
 			end
 		return n
+	end
+
+
+	function isLow(what, unit, slider)
+		if what == 'Mana' then
+			if unit.mana < (unit.maxMana * (slider / 100)) then
+				return true
+			else
+				return false
+			end
+		elseif what == 'HP' then
+			if unit.health < (unit.maxHealth * (slider / 100)) then
+				return true
+			else
+				return false
+			end
+		end
 	end
