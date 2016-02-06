@@ -1,4 +1,4 @@
-version = "1.02"
+version = "1.03"
 
 
 --[[
@@ -311,11 +311,11 @@ end
 
             if enemy and ValidTarget(enemy) then
 
-                if enemy.health <= getDmg("Q",enemy,myHero) then
+                if GetDistance(enemy) <= 1000 and enemy.health <= getDmg("Q",enemy,myHero) then
    					CastQ(ts.target)
                 elseif GetDistance(enemy) <= 325 and enemy.health <= getDmg("E",enemy,myHero) then
                     CastSpell(_E, enemy)
-                elseif enemy.health <= getDmg("Q",enemy,myHero) + getDmg("E",enemy,myHero) then
+                elseif GetDistance(enemy) <= 325 and enemy.health <= getDmg("Q",enemy,myHero) + getDmg("E",enemy,myHero) then
                 	CastQ(ts.target)
                 	CastSpell(_E, enemy)
                 end       
