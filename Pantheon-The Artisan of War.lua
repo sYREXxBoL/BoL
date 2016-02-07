@@ -1,6 +1,4 @@
-
-
-version = "1.04"
+version = "1.05"
 
 
 --[[
@@ -13,7 +11,6 @@ version = "1.04"
                                                                                                                                                      
                                                                                                                                                      
 --]]                                                                                                                                                  
-
 
 if myHero.charName ~= "Pantheon" then
 	return 
@@ -50,11 +47,13 @@ end
 			--PanthMenu.harass:addParam("harassKey", "Harass key (C)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("C"))
 			PanthMenu.harass:addParam("autoQ", "Auto-Q when Target in Range", SCRIPT_PARAM_ONKEYTOGGLE, false, GetKey('Z'))
 			--PanthMenu.harass:addParam("aQT", "Don't Auto-Q if in enemy Turret Range", SCRIPT_PARAM_ONOFF, true)
+			PanthMenu.harass:addParam("harassMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
 			
 		
 		PanthMenu:addSubMenu("Last Hit Settings", "farming")
 			PanthMenu.farming:addParam("farmKey", "Farming Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("X"))
 			PanthMenu.farming:addParam("qFarm", "Last Hit with (Q)", SCRIPT_PARAM_ONOFF, true)
+			PanthMenu.farming:addParam("farmMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
 
 
 		PanthMenu:addSubMenu("Lane Clear Settings", "lane")
@@ -62,6 +61,7 @@ end
 			PanthMenu.lane:addParam("laneQ", "Use (Q)", SCRIPT_PARAM_ONOFF, true)
 			PanthMenu.lane:addParam("laneW", "Use (W)", SCRIPT_PARAM_ONOFF, true)
 			PanthMenu.lane:addParam("laneE", "USe (E)", SCRIPT_PARAM_ONOFF, true)
+			PanthMenu.lane:addParam("laneMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
 
 			
 		PanthMenu:addSubMenu("Jungle Clear Settings", "jungle")
@@ -69,6 +69,7 @@ end
 			PanthMenu.jungle:addParam("jungleQ", "Use (Q)", SCRIPT_PARAM_ONOFF, true)
 			PanthMenu.jungle:addParam("jungleW", "Use (W)", SCRIPT_PARAM_ONOFF, true)
 			PanthMenu.jungle:addParam("jungleE", "USe (E)", SCRIPT_PARAM_ONOFF, true)
+			PanthMenu.jungle:addParam("jungleMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
 			
 			
 		PanthMenu:addSubMenu("KillSteal Settings", "ks")
@@ -144,6 +145,18 @@ end
         wReady = myHero:CanUseSpell(_W) == READY
         eReady = myHero:CanUseSpell(_E) == READY
         rReady = myHero:CanUseSpell(_R) == READY
+
+
+        SpellQ = {name = "Spear Shot",			range =  1000	, ready = false, dmg = 0, manaUsage = 0				   }
+		SpellW = {name = "Aegis of Zeonia",		range =  125	, ready = false, dmg = 0, manaUsage = 0				   }
+		SpellE = {name = "Heartseeker Strike",	range =  325	, ready = false, dmg = 0, manaUsage = 0				   }
+		SpellR = {name = "Grand Skyfall",		range = 	0	, ready = false, dmg = 0, manaUsage = 0				   }
+
+
+		SpellQ.manaUsage = myHero:GetSpellData(_Q).mana
+		SpellW.manaUsage = myHero:GetSpellData(_W).mana
+		SpellE.manaUsage = myHero:GetSpellData(_E).mana
+		SpellR.manaUsage = myHero:GetSpellData(_R).mana
        
 
 		if ComboKey then
@@ -209,8 +222,12 @@ end
     function HerassAutoQ()
 
     	if ts.target and ValidTarget(ts.target) then
+
 			if GetDistance(ts.target) <= 600 then
-				CastSpell(_Q, ts.target)
+
+				if not isLow('Mana', myHero, PanthMenu.harass.harassMana) then
+					CastSpell(_Q, ts.target)
+				end
 			end
 		end
     end
@@ -224,9 +241,12 @@ end
 
             if minions and ValidTarget(minions) then
 
-            	if GetDistance(minions) > 150 and minions.health <= getDmg("Q",minions,myHero) and PanthMenu.farming.qFarm then
-              		CastSpell(_Q, minions)
-          		end
+            	if not isLow('Mana', myHero, PanthMenu.harass.harassMana) then
+
+	            	if GetDistance(minions) > 150 and minions.health <= getDmg("Q",minions,myHero) and PanthMenu.farming.qFarm and not isLow('Mana', myHero, PanthMenu.farm.farmMana) then
+	              		CastSpell(_Q, minions)
+	          		end
+	          	end
             end
         end
     end
@@ -240,16 +260,19 @@ end
 
             if minions and ValidTarget(minions) then
 
-				if GetDistance(minions) <= 600 and PanthMenu.lane.laneQ then
-					CastSpell(_Q, minions)
-				end
+            	if not isLow('Mana', myHero, PanthMenu.harass.harassMana) then
 
-				if GetDistance(minions) <= 600 and PanthMenu.lane.laneW then
-					CastSpell(_W, minions)
-				end
+					if GetDistance(minions) <= 600 and PanthMenu.lane.laneQ and not isLow('Mana', myHero, PanthMenu.lane.laneMana) then
+						CastSpell(_Q, minions)
+					end
 
-				if GetDistance(minions) <= 600 and GetMinionsaroundMinion(600, enemyMinions) >= 3 and PanthMenu.lane.laneE then
-					CastSpell(_E, minions)	
+					if GetDistance(minions) <= 600 and PanthMenu.lane.laneW and not isLow('Mana', myHero, PanthMenu.lane.laneMana) then
+						CastSpell(_W, minions)
+					end
+
+					if GetDistance(minions) <= 600 and GetMinionsaroundMinion(600, enemyMinions) >= 3 and PanthMenu.lane.laneE and not isLow('Mana', myHero, PanthMenu.lane.laneMana) then
+						CastSpell(_E, minions)	
+					end
 				end
 			end
 		end
@@ -261,18 +284,22 @@ end
 		jungleMinions:update()
 
         for _,jm in pairs(jungleMinions.objects) do
+
             if jm and ValidTarget(jm) then
 
-				if GetDistance(jm) <= 600 and PanthMenu.jungle.jungleQ then
-					CastSpell(_Q, jm)
-				end
+            	if not isLow('Mana', myHero, PanthMenu.harass.harassMana) then
 
-				if GetDistance(jm) <= 600 and PanthMenu.jungle.jungleW then
-					CastSpell(_W, jm)
-				end
+					if GetDistance(jm) <= 600 and PanthMenu.jungle.jungleQ and not isLow('Mana', myHero, PanthMenu.jungle.jungleMana) then
+						CastSpell(_Q, jm)
+					end
 
-				if GetDistance(jm) <= 600 and PanthMenu.jungle.jungleE then
-					CastSpell(_E, jm)	
+					if GetDistance(jm) <= 600 and PanthMenu.jungle.jungleW and not isLow('Mana', myHero, PanthMenu.jungle.jungleMana) then
+						CastSpell(_W, jm)
+					end
+
+					if GetDistance(jm) <= 600 and PanthMenu.jungle.jungleE and not isLow('Mana', myHero, PanthMenu.jungle.jungleMana)  then
+						CastSpell(_E, jm)	
+					end
 				end
 			end
 		end
@@ -400,4 +427,21 @@ end
 			if GetDistance(v) <= range then n = n+1 end
 		end
 		return n
+	end
+
+
+	function isLow(what, unit, slider)
+		if what == 'Mana' then
+			if unit.mana < (unit.maxMana * (slider / 100)) then
+				return true
+			else
+				return false
+			end
+		elseif what == 'HP' then
+			if unit.health < (unit.maxHealth * (slider / 100)) then
+				return true
+			else
+				return false
+			end
+		end
 	end
