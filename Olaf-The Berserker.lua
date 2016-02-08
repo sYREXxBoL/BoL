@@ -1,4 +1,4 @@
-version = "1.05"
+version = "1.06"
 
 
 --[[
@@ -48,7 +48,6 @@ end
 
 		
 		OlafMenu:addSubMenu("Harass Settings", "harass")
-			--OlafMenu.harass:addParam("harassKey", "Harass key (C)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("C"))
 			OlafMenu.harass:addParam("autoQ", "Auto-Q when Target in Range", SCRIPT_PARAM_ONKEYTOGGLE, false, GetKey('Z'))
 			OlafMenu.harass:addParam("autoE", "Auto-E when Target in Range", SCRIPT_PARAM_ONKEYTOGGLE, false, GetKey('Z'))
 			OlafMenu.harass:addParam("harassMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
@@ -65,7 +64,7 @@ end
 			OlafMenu.lane:addParam("laneKey", "Jungle Clear Key (V)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
 			OlafMenu.lane:addParam("laneQ", "Use (Q)", SCRIPT_PARAM_ONOFF, true)
 			OlafMenu.lane:addParam("laneW", "Use (W)", SCRIPT_PARAM_ONOFF, true)
-			OlafMenu.lane:addParam("laneE", "USe (E)", SCRIPT_PARAM_ONOFF, true)
+			OlafMenu.lane:addParam("laneE", "Use (E) as", SCRIPT_PARAM_LIST, 1, { "Clear", "LastHit" })
 			OlafMenu.lane:addParam("laneMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
 
 			
@@ -73,7 +72,7 @@ end
 			OlafMenu.jungle:addParam("jungleKey", "Jungle Clear Key (V)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
 			OlafMenu.jungle:addParam("jungleQ", "Use (Q)", SCRIPT_PARAM_ONOFF, true)
 			OlafMenu.jungle:addParam("jungleW", "Use (W)", SCRIPT_PARAM_ONOFF, true)
-			OlafMenu.jungle:addParam("jungleE", "USe (E)", SCRIPT_PARAM_ONOFF, true)
+			OlafMenu.jungle:addParam("jungleE", "Use (E) as", SCRIPT_PARAM_LIST, 1, { "Clear", "LastHit" })
 			OlafMenu.jungle:addParam("jungleMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
 		
 		OlafMenu:addSubMenu("Flee Settings", "flee")
@@ -296,9 +295,9 @@ end
             	if minions.health <= getDmg("Q",minions,myHero) and OlafMenu.farming.qFarm and GetDistance(minions) >= 125 and not isLow('Mana', myHero, OlafMenu.farming.FarmMana) then
               		CastQ(minions)
 
-          		elseif minions.health <= getDmg("E",minions,myHero) and OlafMenu.farming.eFarm and GetDistance(minions) >= 325 then
+              	elseif minions.health <= getDmg("E",minions,myHero) and OlafMenu.farming.eFarm and GetDistance(minions) >= 325 and not isLow('Mana', myHero, OlafMenu.farming.FarmMana) then
               		CastSpell(_E, minions)
-          		end
+              	end
             end
         end
     end
@@ -320,7 +319,11 @@ end
 					CastSpell(_W, minions)
 				end
 
-				if GetDistance(minions) <= 325 and OlafMenu.lane.laneE then
+				if GetDistance(minions) <= 325 and OlafMenu.lane.laneE == 1 then
+					CastSpell(_E, minions)	
+				end
+
+				if GetDistance(minions) <= 325 and minions.health <= getDmg("E",minions,myHero) and OlafMenu.lane.laneE == 2 then
 					CastSpell(_E, minions)	
 				end
 			end
@@ -343,7 +346,11 @@ end
 					CastQ(jm)
 				end
 
-				if GetDistance(jm) <= 325 and OlafMenu.jungle.jungleE then
+				if GetDistance(jm) <= 325 and OlafMenu.jungle.jungleE == 1 then
+					CastSpell(_E, jm)	
+				end
+
+				if GetDistance(jm) <= 325 and jm.health <= getDmg("E",jm,myHero) and OlafMenu.jungle.jungleE == 2 then
 					CastSpell(_E, jm)	
 				end
 			end
