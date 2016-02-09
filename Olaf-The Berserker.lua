@@ -78,6 +78,7 @@ end
 		OlafMenu:addSubMenu("Flee Settings", "flee")
 			OlafMenu.flee:addParam("fleeKey", "Flee Key (G)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("G"))
 			OlafMenu.flee:addParam("fleeq", "Throw Q on Enemy", SCRIPT_PARAM_ONOFF, true)
+			OlafMenu.flee:addParam("fleerange", "Dangerous Area", SCRIPT_PARAM_SLICE, 600, 0, 1000)
 			
 		OlafMenu:addSubMenu("KillSteal Settings", "ks")
 			OlafMenu.ks:addParam("killSteal", "Use Smart Kill Steal", SCRIPT_PARAM_ONOFF, true)
@@ -178,27 +179,27 @@ end
 
 
 		ItemNames     = {
-		    [3144]        = "BilgewaterCutlass",
-		    [3748]		  =	"TitanicHydra"
-		    [3153]        = "ItemSwordOfFeastAndFamine",
-		  	[3405]        = "TrinketSweeperLvl1",
-		  	[3166]        = "TrinketTotemLvl1",
-		  	[3361]        = "TrinketTotemLvl3",
-		  	[3362]        = "TrinketTotemLvl4",
-		  	[2003]        = "RegenerationPotion",
-		  	[3146]        = "HextechGunblade",
-		  	[3187]        = "HextechSweeper",
-		  	[3364]        = "TrinketSweeperLvl3",
-		  	[3074]        = "ItemTiamatCleave",
-		  	[3077]        = "ItemTiamatCleave",
-		  	[3340]        = "TrinketTotemLvl1",
-		 	[3090]        = "ZhonyasHourglass",
-		  	[3142]        = "YoumusBlade",
-		  	[3157]        = "ZhonyasHourglass",
-		 	[3350]        = "TrinketTotemLvl2",
-		 	[3140]        = "QuicksilverSash",
-		  	[3139]        = "ItemMercurial",
-		  	}
+		    			[3144]        = "BilgewaterCutlass",
+		    			[3748]		  =	"TitanicHydra",
+		    			[3153]        = "ItemSwordOfFeastAndFamine",
+		  				[3405]        = "TrinketSweeperLvl1",
+		  				[3166]        = "TrinketTotemLvl1",
+		  				[3361]        = "TrinketTotemLvl3",
+		  				[3362]        = "TrinketTotemLvl4",
+		  				[2003]        = "RegenerationPotion",
+		  				[3146]        = "HextechGunblade",
+		  				[3187]        = "HextechSweeper",
+		  				[3364]        = "TrinketSweeperLvl3",
+		  				[3074]        = "ItemTiamatCleave",
+		  				[3077]        = "ItemTiamatCleave",
+		  				[3340]        = "TrinketTotemLvl1",
+		 				[3090]        = "ZhonyasHourglass",
+		  				[3142]        = "YoumusBlade",
+		  				[3157]        = "ZhonyasHourglass",
+		 				[3350]        = "TrinketTotemLvl2",
+		 				[3140]        = "QuicksilverSash",
+		  				[3139]        = "ItemMercurial",
+						}
 
 
         if ComboKey then
@@ -408,7 +409,7 @@ end
 
   		if ts.target and ValidTarget(ts.target) then
 
-			if FleeKey and GetDistance(ts.target) <= 600 then
+			if FleeKey and GetDistance(ts.target) <= (OlafMenu.flee.fleerange) then
 				CastQ(ts.target)
 			end
 		end
