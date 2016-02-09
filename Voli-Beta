@@ -1,0 +1,519 @@
+if myHero.charName ~= "Volibear" then
+	return 
+end
+
+
+	function Hello()
+		PrintChat("<font color=\"#4000ff\">Volibear - The Thunder's Roar</font>")
+	end
+
+
+	function OnLoad()
+
+		Menu()
+		Hello()
+
+		if myHero:GetSpellData(SUMMONER_1).name:find("summonerdot") then Ignite = SUMMONER_1 elseif myHero:GetSpellData(SUMMONER_2).name:find("summonerdot") then Ignite = SUMMONER_2 end
+
+	end
+
+
+	function Menu()
+		
+		VoliMenu = scriptConfig("Voli - The Thunder's Roar", "Voli")
+
+		VoliMenu:addSubMenu("Combo Settings", "combo")
+			VoliMenu.combo:addParam("ComboKey", "Full Combo Key (SBTW)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte (" "))
+
+		VoliMenu:addSubMenu("Harass Settings", "harass")
+			VoliMenu.harass:addParam("autoW", "Auto-W when Target in Range", SCRIPT_PARAM_ONKEYTOGGLE, false, GetKey('Z'))
+			VoliMenu.harass:addParam("autoE", "Auto-E when Target in Range", SCRIPT_PARAM_ONKEYTOGGLE, false, GetKey('Z'))
+			VoliMenu.harass:addParam("HarassMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
+		
+		
+		VoliMenu:addSubMenu("Last Hit Settings", "lasthit")
+			VoliMenu.lasthit:addParam("LastHitKey", "Farming Key", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("X"))
+			VoliMenu.lasthit:addParam("wLastHit", "Last Hit with (W)", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.lasthit:addParam("eLastHit", "Last Hit with (E)", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.lasthit:addParam("LastHitMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
+
+
+		VoliMenu:addSubMenu("Lane Clear Settings", "lane")
+			VoliMenu.lane:addParam("LaneKey", "Jungle Clear Key (V)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
+			VoliMenu.lane:addParam("qLane", "Use (Q)", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.lane:addParam("wLane", "Use (W)", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.lane:addParam("eLane", "Use (E)", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.lane:addParam("LaneMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
+
+			
+		VoliMenu:addSubMenu("Jungle Clear Settings", "jungle")
+			VoliMenu.jungle:addParam("JungleKey", "Jungle Clear Key (V)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
+			VoliMenu.jungle:addParam("qJungle", "Use (Q)", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.jungle:addParam("wJungle", "Use (W)", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.jungle:addParam("eJungle", "Use (E)", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.jungle:addParam("JungleMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
+		
+		VoliMenu:addSubMenu("Flee Settings", "flee")
+			VoliMenu.flee:addParam("FleeKey", "Flee Key (G)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("G"))
+			VoliMenu.flee:addParam("qFlee", "Use (Q)", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.flee:addParam("eFlee", "Use (E)", SCRIPT_PARAM_ONOFF, true)
+
+		VoliMenu:addSubMenu("KillSteal Settings", "ks")
+			VoliMenu.Ks:addParam("KillSteal", "Use Smart Kill Steal -", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.Ks:addParam("KsUlt", "+ Ultimate", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.Ks:addParam("AutoIgnite", "Auto Ignite", SCRIPT_PARAM_ONOFF, true)
+
+		--VoliMenu:addSubMenu("Misc Settings", "misc")
+
+		VoliMenu:addSubMenu("Item Settings", "items")
+			VoliMenu.items:addParam("Use", "Use Items", SCRIPT_PARAM_ONOFF, true) 
+    		VoliMenu.items:addParam("UseBRK", "Use BRK", SCRIPT_PARAM_ONOFF, true) 
+    		VoliMenu.items:addParam("UseHydra", "Use Hydra", SCRIPT_PARAM_ONOFF, true) 
+    		VoliMenu.items:addParam("UseYoumu", "Use Youmuu", SCRIPT_PARAM_ONOFF, true)
+    		VoliMenu.items:addParam("UseBilgewaterCutlass","Use BilgewaterCutlass", SCRIPT_PARAM_ONOFF, true)
+    		VoliMenu.items:addParam("UseTitanicHydra","Use Titanic Hydra", SCRIPT_PARAM_ONOFF, true)
+				
+
+		VoliMenu:addSubMenu("Draw Settings", "drawing")	
+			VoliMenu.drawing:addParam("mDraw", "Disable All Range Draws", SCRIPT_PARAM_ONOFF, false)
+			VoliMenu.drawing:addParam("Target", "Draw Circle on Target", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.drawing:addParam("wDraw", "Draw (W) Range", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.drawing:addParam("eDraw", "Draw (E) Range", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.drawing:addParam("rDraw", "Draw (R) Range", SCRIPT_PARAM_ONOFF, true)
+
+
+		VoliMenu:addParam("VoliVer", "Version: ", SCRIPT_PARAM_INFO, version)
+	end
+
+	function OnDraw()
+		
+		if not myHero.dead then
+
+			if not VoliMenu.drawing.mDraw then
+
+				if (VoliMenu.drawing.wDraw) and wReady then
+					DrawCircle3DW(myHero.x, myHero.y, myHero.z)
+				end
+
+				if (VoliMenu.drawing.eDraw) and eReady then
+					DrawCircle3DE(myHero.x, myHero.y, myHero.z)
+				end
+
+				if (VoliMenu.drawing.rDraw) and rReady then
+					DrawCircle3DR(myHero.x, myHero.y, myHero.z)
+				end
+			end
+		end
+	end
+
+	function OnTick()
+
+		ComboKey		= VoliMenu.combo.ComboKey
+		LastHitKey		= VoliMenu.lastHit.LastHitKey
+		LaneClearKey	= VoliMenu.laneClear.LaneClearKey
+		JungleClearKey	= VoliMenu.jungleClear.JungleClearKey
+		FleeKey			= VoliMenu.flee.FleeKey
+		AutoW 			= VoliMenu.harass.autoW
+		AutoE 			= VoliMenu.harass.autoE
+		KillSteal 		= VoliMenu.ks.KillSteal
+		AutoIgnite 		= VoliMenu.ks.AutoIgnite
+
+
+		ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 900, DAMAGE_PHYSICAL)
+		target = ts.target
+		ts:update()
+
+		
+		enemyMinions 	= minionManager(MINION_ENEMY, 1000, myHero, MINION_SORT_MAXHEALTH_ASC)
+		jungleMinions = minionManager(MINION_JUNGLE, 1100, myHero, MINION_SORT_MAXHEALTH_DEC)
+
+
+        qReady = myHero:CanUseSpell(_Q) == READY
+        wReady = myHero:CanUseSpell(_W) == READY
+        eReady = myHero:CanUseSpell(_E) == READY
+        rReady = myHero:CanUseSpell(_R) == READY
+
+        SpellQ = {name = "Rolling Thunder",			range =  	0	, ready = false, dmg = 0, manaUsage = 0				   }
+		SpellW = {name = "Frenzy",					range =  	400	, ready = false, dmg = 0, manaUsage = 0				   }
+		SpellE = {name = "Majestic Roar",			range =  	425	, ready = false, dmg = 0, manaUsage = 0				   }
+		SpellR = {name = "Thunder Claws",			range =		500	, ready = false, dmg = 0, manaUsage = 0				   }
+
+        SpellQ.manaUsage = myHero:GetSpellData(_Q).mana
+		SpellW.manaUsage = myHero:GetSpellData(_W).mana
+		SpellE.manaUsage = myHero:GetSpellData(_E).mana
+		SpellR.manaUsage = myHero:GetSpellData(_R).mana
+
+
+		 ___GetInventorySlotItem = rawget(_G, "GetInventorySlotItem")
+ 	 		_G.GetInventorySlotItem = GetSlotItem
+  			_G.ITEM_1 = 06
+  			_G.ITEM_2 = 07
+  			_G.ITEM_3 = 08
+  			_G.ITEM_4 = 09
+  			_G.ITEM_5 = 10
+  			_G.ITEM_6 = 11
+ 			_G.ITEM_7 = 12
+
+		ItemNames     = {
+		    [3144]        = "BilgewaterCutlass",
+		    [3748]		  =	"TitanicHydra",
+			[3153]        = "ItemSwordOfFeastAndFamine",
+			[3405]        = "TrinketSweeperLvl1",
+			[3166]        = "TrinketTotemLvl1",
+		  	[3361]        = "TrinketTotemLvl3",
+		  	[3362]        = "TrinketTotemLvl4",
+		  	[2003]        = "RegenerationPotion",
+		  	[3146]        = "HextechGunblade",
+		  	[3187]        = "HextechSweeper",
+		  	[3364]        = "TrinketSweeperLvl3",
+		  	[3074]        = "ItemTiamatCleave",
+		  	[3077]        = "ItemTiamatCleave",
+		  	[3340]        = "TrinketTotemLvl1",
+		 	[3090]        = "ZhonyasHourglass",
+		  	[3142]        = "YoumusBlade",
+			[3157]        = "ZhonyasHourglass",
+		 	[3350]        = "TrinketTotemLvl2",
+		 	[3140]        = "QuicksilverSash",
+		  	[3139]        = "ItemMercurial",
+			}
+
+
+		if ComboKey then
+			Combo()
+		end
+
+		if LastHitKey then
+			LastHit()
+		end
+
+		if LaneClearKey then
+			LaneClear()
+		end
+
+		if JungleClearKey then
+			JungleClear()
+		end
+
+		if FleeKey then
+			Flee()
+		end
+
+		if AutoW then
+			AutoW()
+		end
+
+		if AutoE then
+			AutoE()
+		end
+
+		if KillSteal then
+			KillSteal()
+		end
+
+		if AutoIgnite then
+			AutoIgnite()
+		end
+	end
+
+
+
+
+	function Combo()
+		
+		if ts.target and ValidTarget(ts.target) then
+
+			if qReady and wReady and eReady then
+
+				if ComboKey then
+					CastSpell(_Q)
+				end
+
+				if GetDistance(ts.target) <= 425 then
+					CastSpell(_E)
+				end
+
+				if GetDistance(ts.target) <= 400 then
+					CastSpell(_W, ts.target)
+				end
+
+				-- Ult
+			end
+		end
+	end
+
+	function LastHit()
+		
+		enemyMinions:update()
+
+		for each, minions in ipairs(enemyMinions.objects) do
+
+            if minions and ValidTarget(minions) then
+
+            	if minions.health <= getDmg("W",minions,myHero) and VoliMenu.LastHit.wLastHit and GetDistance(minions) >= 125 and not isLow('Mana', myHero, VoliMenu.LastHit.LastHitMana) then
+              		CastSpell(_W, minions)
+
+              	elseif minions.health <= getDmg("E",minions,myHero) and VoliMenu.LastHit.eLastHit and GetDistance(minions) >= 125 and not isLow('Mana', myHero, VoliMenu.LastHit.LastHitMana) then
+              		CastSpell(_E, minions)
+              	end
+            end
+        end
+    end
+
+	function LaneClear()
+
+		enemyMinions:update()
+
+        for each, minions in ipairs(enemyMinions.objects) do
+
+            if minions and ValidTarget(minions) then
+
+            	if GetDistance(minions) <= 125 and VoliMenu.Lane.qLane and not isLow('Mana', myHero, VoliMenu.Lane.LaneMana) then
+					CastSpell(_Q, minions)
+
+				elseif GetDistance(minions) <= 400 and VoliMenu.Lane.wLane and not isLow('Mana', myHero, VoliMenu.Lane.LaneMana) then
+					CastSpell(_W, minions)
+
+				elseif GetDistance(minions) <= 425 and GetMinionsaroundMinion(600, enemyMinions) and VoliMenu.Lane.eLane and not isLow('Mana', myHero, VoliMenu.Lane.LaneMana) then
+					CastSpell(_E, minions)	
+				end
+			end
+		end
+	end
+
+	function JungleClear()
+		
+		jungleMinions:update()
+
+		for _,jm in pairs(jungleMinions.objects) do
+
+            if jm and ValidTarget(jm) then
+
+            	if GetDistance(jm) <= 125 and VoliMenu.Jungle.qJungle and not isLow('Mana', myHero, VoliMenu.Jungle.JungleMana) then
+					CastSpell(_Q, jm)
+
+				elseif GetDistance(jm) <= 400 and VoliMenu.Jungle.wJungle and not isLow('Mana', myHero, VoliMenu.Jungle.JungleMana) then
+					CastSpell(_W, jm)
+
+				elseif GetDistance(jm) <= 425 and VoliMenu.Jungle.eJungle and not isLow('Mana', myHero, VoliMenu.Jungle.JungleMana) then
+					CastSpell(_E, jm)	
+				end
+			end
+		end
+	end
+
+	function Flee()
+		
+		local rastoyanie = math.sqrt((mousePos.x-myHero.x)*(mousePos.x-myHero.x) + (mousePos.z-myHero.z)*(mousePos.z-myHero.z))
+  		myHero:MoveTo(mousePos.x,mousePos.z)
+
+  		if FleeKey then
+
+  			if GetDistance(ts.target) <= 400 then
+  				CastSpell(_E)
+  			end
+
+  			if GetDistance(ts.target) <= 200 then
+  				CastSpell(_Q)
+  			end
+  		end
+	end
+
+	function AutoW()
+		
+		for each, enemy in ipairs(GetEnemyHeroes()) do
+
+            if enemy and ValidTarget(enemy) then
+
+				if ts.target and ValidTarget(ts.target) then
+
+					if GetDistance(ts.target) <= 400 and not isLow('Mana', myHero, VoliMenu.Harass.HarassMana) then
+						CastSpell(_W, ts.target)
+					end
+				end
+			end
+		end
+	end
+
+	function AutoE()
+		
+		for each, enemy in ipairs(GetEnemyHeroes()) do
+
+            if enemy and ValidTarget(enemy) then
+
+				if ts.target and ValidTarget(ts.target) then
+
+					if GetDistance(ts.target) <= 425 and not isLow('Mana', myHero, VoliMenu.Harass.HarassMana) then
+						CastSpell(_E, ts.target)
+					end
+				end
+			end
+		end
+	end
+
+	function KillSteal()
+		
+		for each, enemy in ipairs(GetEnemyHeroes()) do
+
+            if enemy and ValidTarget(enemy) then
+
+                if GetDistance(enemy) <= 400 and enemy.health <= getDmg("W",enemy,myHero) then
+   					CastSpell(_W, enemy)
+
+                elseif GetDistance(enemy) <= 425 and enemy.health <= getDmg("E",enemy,myHero) then
+                    CastSpell(_E, enemy)
+
+                elseif GetDistance(enemy) <= 500 and enemy.health <= getDMg("R",enemy,myHero) and (VoliMenu.Ks.KsUlt) then
+                	CastSpell(_R, enemy)
+
+                elseif GetDistance(enemy) <= 400 and enemy.health <= getDmg("E",enemy,myHero) + getDmg("W",enemy,myHero) then
+                	CastSpell(_W, enemy)
+                	CastSpell(_E, enemy)
+
+                elseif GetDistance(enemy) <= 400 and enemy.health <= getDmg("W",enemy,myHero) + getDmg("R",enemy,myHero) then
+                	CastSpell(_W, enemy)
+                	CastSpell(_R, enemy)
+
+                elseif GetDistance(enemy) <= 425 and enemy.health <= getDmg("E",enemy,myHero) + getDmg("R",enemy,myHero) and (VoliMenu.Ks.KsUlt) then
+                	CastSpell(_E, enemy)
+                	CastSpell(_R, enemy)
+                end       
+            end
+        end
+	end
+
+	function AutoIgnite()
+
+		if not Ignite then return end
+
+		for each, enemy in ipairs(GetEnemyHeroes()) do
+
+		       if enemy and ValidTarget(enemy) then
+
+				if enemy.health <= 50 + (20 * myHero.level) and VoliMenu.Ks.AutoIgnite and myHero:CanUseSpell(Ignite) == READY then
+						CastSpell(Ignite, enemy)
+				end
+			end
+		end
+	end
+
+
+
+	function DrawCircle3DW(x, y, z, radius, width, color, quality)
+                radius = radius or 400
+                quality = quality and 2 * math.pi / quality or 2 * math.pi / (radius / 5)
+                local points = {}
+                    for theta = 0, 2 * math.pi + quality, quality do
+                        local c = WorldToScreen(D3DXVECTOR3(x + radius * math.cos(theta), y, z - radius * math.sin(theta)))
+                        points[#points + 1] = D3DXVECTOR2(c.x, c.y)
+                    end
+                DrawLines2(points, width or 1, color or 2294967295)
+    end
+
+    function DrawCircle3DE(x, y, z, radius, width, color, quality)
+                radius = radius or 425
+                quality = quality and 2 * math.pi / quality or 2 * math.pi / (radius / 5)
+                local points = {}
+                    for theta = 0, 2 * math.pi + quality, quality do
+                        local c = WorldToScreen(D3DXVECTOR3(x + radius * math.cos(theta), y, z - radius * math.sin(theta)))
+                        points[#points + 1] = D3DXVECTOR2(c.x, c.y)
+                    end
+                DrawLines2(points, width or 1, color or 2294967295)
+    end
+
+    function DrawCircle3DR(x, y, z, radius, width, color, quality)
+                radius = radius or 500
+                quality = quality and 2 * math.pi / quality or 3 * math.pi / (radius / 5)
+                local points = {}
+                    for theta = 0, 2 * math.pi + quality, quality do
+                        local c = WorldToScreen(D3DXVECTOR3(x + radius * math.cos(theta), y, z - radius * math.sin(theta)))
+                        points[#points + 1] = D3DXVECTOR2(c.x, c.y)
+                    end
+                DrawLines2(points, width or 1, color or 4294967280)
+    end
+
+
+    function isLow(what, unit, slider)
+		if what == 'Mana' then
+			if unit.mana < (unit.maxMana * (slider / 100)) then
+				return true
+			else
+				return false
+			end
+		elseif what == 'HP' then
+			if unit.health < (unit.maxHealth * (slider / 100)) then
+				return true
+			else
+				return false
+			end
+		end
+	end
+
+
+	function GetMinionsaroundMinion(range, minions)
+		local n = 0
+		for _,v in pairs(minions.objects) do
+			if GetDistance(v) <= range then n = n+1 end
+		end
+		return n
+	end
+
+
+	function CastItems()
+
+  		if ts.target ~= nil then
+  			if VoliMenu.items.UseBRK then
+  				local slot = GetInventorySlotItem(3153)		--"BladeoftheRuinedKing"
+  				if ts.target ~= nil and ValidTarget(ts.target) and not ts.target.dead and slot ~= nil and myHero:CanUseSpell(slot) == READY and GetDistance(ts.target) <= 550 then
+  					CastSpell(slot, ts.target)
+  				end
+  			end
+
+  			if VoliMenu.items.UseBilgewaterCutlass then
+  				local slot = GetInventorySlotItem(3144)		--"BilgewaterCutlass"
+  				if ts.target ~= nil and ValidTarget(ts.target) and not ts.target.dead and slot ~= nil and myHero:CanUseSpell(slot) == READY and GetDistance(ts.target) <= 550 then
+  					CastSpell(slot, ts.target)
+  				end
+  			end
+
+  			if VoliMenu.items.UseHydra then
+  				local slot = GetInventorySlotItem(3074)		--"RavenousHydra"
+  				if ts.target ~= nil and ValidTarget(ts.target) and not ts.target.dead and slot ~= nil and myHero:CanUseSpell(slot) == READY and GetDistance(ts.target) <= 200 then
+  					CastSpell(slot)
+  				end
+  			end
+
+  			if VoliMenu.items.UseTitanicHydra then
+  				local slot = GetInventorySlotItem(3748)		--"TitanicHydra"
+  				if ts.target ~= nil and ValidTarget(ts.target) and not ts.target.dead and slot ~= nil and myHero:CanUseSpell(slot) == READY then
+  					CastSpell(slot)
+  				end
+  			end
+
+
+  			if VoliMenu.items.UseYoumu then
+  				local slot = GetInventorySlotItem(3142)		--"Youmuu'sGhostblade"
+  				if ts.target ~= nil and ValidTarget(ts.target) and not ts.target.dead and slot ~= nil and myHero:CanUseSpell(slot) == READY then
+  					CastSpell(slot)
+  				end
+  			end
+  		end
+  	end
+
+
+  	function GetSlotItem(id, unit)
+  
+  		unit = unit or myHero
+
+  		if (not ItemNames[id]) then
+  			return ___GetInventorySlotItem(id, unit)
+  		end
+
+  		local name  = ItemNames[id]
+  
+  		for slot = ITEM_1, ITEM_7 do
+  		local item = unit:GetSpellData(slot).name
+  			if ((#item > 0) and (item:lower() == name:lower())) then
+  				return slot
+  			end
+  		end
+  	end
