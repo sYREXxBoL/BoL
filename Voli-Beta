@@ -42,7 +42,7 @@ end
 			VoliMenu.lane:addParam("LaneKey", "Jungle Clear Key (V)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
 			VoliMenu.lane:addParam("qLane", "Use (Q)", SCRIPT_PARAM_ONOFF, true)
 			VoliMenu.lane:addParam("wLane", "Use (W)", SCRIPT_PARAM_ONOFF, true)
-			VoliMenu.lane:addParam("eLane", "Use (E)", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.lane:addParam("eLane", "Use (E) as", SCRIPT_PARAM_LIST, 1, { "Clear", "LastHit" })
 			VoliMenu.lane:addParam("LaneMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
 
 			
@@ -50,7 +50,7 @@ end
 			VoliMenu.jungle:addParam("JungleKey", "Jungle Clear Key (V)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
 			VoliMenu.jungle:addParam("qJungle", "Use (Q)", SCRIPT_PARAM_ONOFF, true)
 			VoliMenu.jungle:addParam("wJungle", "Use (W)", SCRIPT_PARAM_ONOFF, true)
-			VoliMenu.jungle:addParam("eJungle", "Use (E)", SCRIPT_PARAM_ONOFF, true)
+			VoliMenu.jungle:addParam("eJungle", "Use (E) as", SCRIPT_PARAM_LIST, 1, { "Clear", "LastHit" })
 			VoliMenu.jungle:addParam("JungleMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
 		
 		VoliMenu:addSubMenu("Flee Settings", "flee")
@@ -252,6 +252,7 @@ end
         end
     end
 
+
 	function LaneClear()
 
 		enemyMinions:update()
@@ -262,14 +263,23 @@ end
 
             	if GetDistance(minions) <= 125 and VoliMenu.lane.qLane and not isLow('Mana', myHero, VoliMenu.lane.LaneMana) then
 					CastSpell(_Q, minions)
-				elseif GetDistance(minions) <= 400 and VoliMenu.lane.wLane and not isLow('Mana', myHero, VoliMenu.lane.LaneMana) then
+				end
+
+				if GetDistance(minions) <= 400 and VoliMenu.lane.wLane == 1 and not isLow('Mana', myHero, VoliMenu.lane.LaneMana) then
 					CastSpell(_W, minions)
-				elseif GetDistance(minions) <= 425 and GetMinionsaroundMinion(425, enemyMinions) and VoliMenu.lane.eLane and not isLow('Mana', myHero, VoliMenu.lane.LaneMana) then
+				end
+
+				if GetDistance(minions) <= 400 and minions.health <= getDmg("W",minions,myHero) and VoliMenu.lane.wLane == 2 and not isLow('Mana', myHero, VoliMenu.lane.LaneMana) then
+					CastSpell(_W, minions)
+				end
+
+				if GetDistance(minions) <= 425 and GetMinionsaroundMinion(425, enemyMinions) and VoliMenu.lane.eLane and not isLow('Mana', myHero, VoliMenu.lane.LaneMana) then
 					CastSpell(_E, minions)	
 				end
 			end
 		end
 	end
+
 
 	function JungleClear()
 		
@@ -279,18 +289,25 @@ end
 
             if jm and ValidTarget(jm) then
 
-            	if GetDistance(jm) <= 125 and VoliMenu.jungle.qJungle and not isLow('Mana', myHero, VoliMenu.jungle.JungleMana) then
+            	if VoliMenu.jungle.qJungle and not isLow('Mana', myHero, VoliMenu.jungle.JungleMana) then
 					CastSpell(_Q, jm)
+				end
 
-				elseif GetDistance(jm) <= 400 and VoliMenu.jungle.wJungle and not isLow('Mana', myHero, VoliMenu.jungle.JungleMana) then
+				if GetDistance(jm) <= 400 and VoliMenu.jungle.wJungle == 1 and not isLow('Mana', myHero, VoliMenu.jungle.JungleMana) then
 					CastSpell(_W, jm)
+				end
 
-				elseif GetDistance(jm) <= 425 and VoliMenu.jungle.eJungle and not isLow('Mana', myHero, VoliMenu.jungle.JungleMana) then
-					CastSpell(_E, jm)	
+				if GetDistance(jm) <= 400 and jm.health <= getDmg("W",jm,myHero) and VoliMenu.jungle.wJungle == 2 and not isLow('Mana', myHero, VoliMenu.jungle.JungleMana) then
+					CastSpell(_W, jm)
+				end
+
+				if GetDistance(jm) <= 425 and VoliMenu.jungle.eJungle and not isLow('Mana', myHero, VoliMenu.jungle.JungleMana) then
+					CastSpell(_E)	
 				end
 			end
 		end
 	end
+
 
 	function Flee()
 		
@@ -308,6 +325,7 @@ end
   			end
   		end
 	end
+
 
 	function HarassAutoW()
 		
