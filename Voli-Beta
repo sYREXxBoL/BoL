@@ -41,16 +41,16 @@ end
 		VoliMenu:addSubMenu("Lane Clear Settings", "lane")
 			VoliMenu.lane:addParam("LaneKey", "Jungle Clear Key (V)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
 			VoliMenu.lane:addParam("qLane", "Use (Q)", SCRIPT_PARAM_ONOFF, true)
-			VoliMenu.lane:addParam("wLane", "Use (W)", SCRIPT_PARAM_ONOFF, true)
-			VoliMenu.lane:addParam("eLane", "Use (E) as", SCRIPT_PARAM_LIST, 1, { "Clear", "LastHit" })
+			VoliMenu.lane:addParam("wLane", "Use (W) as", SCRIPT_PARAM_LIST, 1, { "Clear", "LastHit" })
+			VoliMenu.lane:addParam("eLane", "Use (E)", SCRIPT_PARAM_ONOFF, true)
 			VoliMenu.lane:addParam("LaneMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
 
 			
 		VoliMenu:addSubMenu("Jungle Clear Settings", "jungle")
 			VoliMenu.jungle:addParam("JungleKey", "Jungle Clear Key (V)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
 			VoliMenu.jungle:addParam("qJungle", "Use (Q)", SCRIPT_PARAM_ONOFF, true)
-			VoliMenu.jungle:addParam("wJungle", "Use (W)", SCRIPT_PARAM_ONOFF, true)
-			VoliMenu.jungle:addParam("eJungle", "Use (E) as", SCRIPT_PARAM_LIST, 1, { "Clear", "LastHit" })
+			VoliMenu.jungle:addParam("wJungle", "Use (W) as", SCRIPT_PARAM_LIST, 1, { "Clear", "LastHit" })
+			VoliMenu.jungle:addParam("eJungle", "Use (E)", SCRIPT_PARAM_ONOFF, true)
 			VoliMenu.jungle:addParam("JungleMana", "Min. Mana Percent: ", SCRIPT_PARAM_SLICE, 50, 0, 100, 0)
 		
 		VoliMenu:addSubMenu("Flee Settings", "flee")
