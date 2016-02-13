@@ -1,3 +1,17 @@
+version = "1.00"
+
+--[[
+ __      __   _ _ _                           _   _            _______ _                     _           _       _____                  
+ \ \    / /  | (_) |                         | | | |          |__   __| |                   | |         ( )     |  __ \                 
+  \ \  / /__ | |_| |__   ___  __ _ _ __      | |_| |__   ___     | |  | |__  _   _ _ __   __| | ___ _ __|/ ___  | |__) |___   __ _ _ __ 
+   \ \/ / _ \| | | '_ \ / _ \/ _` | '__|     | __| '_ \ / _ \    | |  | '_ \| | | | '_ \ / _` |/ _ \ '__| / __| |  _  // _ \ / _` | '__|
+    \  / (_) | | | |_) |  __/ (_| | |        | |_| | | |  __/    | |  | | | | |_| | | | | (_| |  __/ |    \__ \ | | \ \ (_) | (_| | |   
+     \/ \___/|_|_|_.__/ \___|\__,_|_|         \__|_| |_|\___|    |_|  |_| |_|\__,_|_| |_|\__,_|\___|_|    |___/ |_|  \_\___/ \__,_|_|   
+                                                                                                                                        
+                                                                                                                                        
+--]]
+
+
 if myHero.charName ~= "Volibear" then
 	return 
 end
@@ -222,6 +236,7 @@ end
 
 				if ComboKey then
 					CastSpell(_Q)
+					CastItems()
 				end
 
 				if GetDistance(ts.target) <= 425 then
@@ -230,6 +245,10 @@ end
 
 				if GetDistance(ts.target) <= 400 and wReady then
 					CastSpell(_W, ts.target)
+				end
+
+				if GetDistance(ts.target) <= 500 then
+					CastSpell(_R, ts.target)
 				end
 		end
 	end
@@ -314,16 +333,19 @@ end
 		local rastoyanie = math.sqrt((mousePos.x-myHero.x)*(mousePos.x-myHero.x) + (mousePos.z-myHero.z)*(mousePos.z-myHero.z))
   		myHero:MoveTo(mousePos.x,mousePos.z)
 
-  		if FleeKey then
+  		if ts.target and ValidTarget(ts.target) then
 
-  			if GetDistance(ts.target) <= 400 then
-  				CastSpell(_E)
-  			end
+	  		if FleeKey then
 
-  			if GetDistance(ts.target) <= 200 then
-  				CastSpell(_Q)
-  			end
-  		end
+	  			if GetDistance(ts.target) <= 400 then
+	  				CastSpell(_E)
+	  			end
+
+	  			if GetDistance(ts.target) <= 200 then
+	  				CastSpell(_Q)
+	  			end
+	  		end
+	  	end
 	end
 
 
@@ -374,7 +396,7 @@ end
                 elseif GetDistance(enemy) <= 400 and enemy.health <= getDmg("E",enemy,myHero) + getDmg("W",enemy,myHero) then
                 	CastSpell(_W, enemy)
                 	CastSpell(_E, enemy)
-                elseif GetDistance(enemy) <= 400 and enemy.health <= getDmg("W",enemy,myHero) + getDmg("R",enemy,myHero) then
+                elseif GetDistance(enemy) <= 400 and enemy.health <= getDmg("W",enemy,myHero) + getDmg("R",enemy,myHero) and (VoliMenu.ks.KillStealUlt) then
                 	CastSpell(_W, enemy)
                 	CastSpell(_R, enemy)
                 elseif GetDistance(enemy) <= 425 and enemy.health <= getDmg("E",enemy,myHero) + getDmg("R",enemy,myHero) and (VoliMenu.ks.KillStealUlt) then
