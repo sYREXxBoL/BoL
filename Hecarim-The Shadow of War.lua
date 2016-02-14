@@ -12,8 +12,6 @@ version = "1.00"
 --]]
 
 
-
-
 if myHero.charName ~= "Hecarim" then
 	return 
 end
@@ -39,7 +37,7 @@ end
 		
 		HecaMenu:addSubMenu("Combo Settings", "combo")
 			HecaMenu.combo:addParam("comboKey", "Full Combo Key (SBTW)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte (" "))
-			HecaMenu.combo:addParam("amountenemies", "Only Ult If X Enemies", SCRIPT_PARAM_SLICE, 2, 0, 5, 0) 
+			--HecaMenu.combo:addParam("amountenemies", "Only Ult If X Enemies", SCRIPT_PARAM_SLICE, 2, 0, 5, 0) 
 
 		HecaMenu:addSubMenu("Harass Settings", "harass")
 			HecaMenu.harass:addParam("autoQ", "Auto-Q when Target in Range", SCRIPT_PARAM_ONKEYTOGGLE, false, GetKey('Z'))
@@ -89,10 +87,38 @@ end
 			HecaMenu.drawing:addParam("mDraw", "Disable All Range Draws", SCRIPT_PARAM_ONOFF, false)
 			HecaMenu.drawing:addParam("Target", "Draw Circle on Target", SCRIPT_PARAM_ONOFF, true)
 			HecaMenu.drawing:addParam("qDraw", "Draw (Q) Range", SCRIPT_PARAM_ONOFF, true)
-			HecaMenu.drawing:addParam("wDraw", "Draw (E) Range", SCRIPT_PARAM_ONOFF, true)
+			HecaMenu.drawing:addParam("wDraw", "Draw (W) Range", SCRIPT_PARAM_ONOFF, true)
+			HecaMenu.drawing:addParam("eDraw", "Draw (E) Range", SCRIPT_PARAM_ONOFF, true)
+			HecaMenu.drawing:addParam("rDraw", "Draw (R) Range", SCRIPT_PARAM_ONOFF, true)
 
 
 		HecaMenu:addParam("HecaVer", "Version: ", SCRIPT_PARAM_INFO, version)		
+	end
+
+
+	function OnDraw()
+
+		if not myHero.dead then
+
+			if not HecaMenu.drawing.mDraw then
+
+				if (HecaMenu.drawing.qDraw) and qReady then
+		            DrawCircle3DQ(myHero.x, myHero.y, myHero.z)
+		        end
+
+		        if (HecaMenu.drawing.wDraw) and wReady then
+		            DrawCircle3DW(myHero.x, myHero.y, myHero.z)
+		        end
+
+		        if (HecaMenu.drawing.eDraw) and eReady then
+		            DrawCircle3DE(myHero.x, myHero.y, myHero.z)
+		        end
+
+		        if (HecaMenu.drawing.rDraw) and rReady then
+		            DrawCircle3DR(myHero.x, myHero.y, myHero.z)
+		        end
+			end
+		end
 	end
 
 	function OnTick()
@@ -210,7 +236,7 @@ end
 				CastSpell(_E)
 			end
 
-			if GetDistance(ts.target) <= 325 then
+			if GetDistance(ts.target) <= 350 then
 				CastSpell(_Q)
 			end
 
@@ -229,7 +255,7 @@ end
 
             	if not isLow('Mana', myHero, HecaMenu.harass.harassMana) then
 
-					if ts.target and ValidTarget(ts.target) and GetDistance(ts.target) <= 325 then
+					if ts.target and ValidTarget(ts.target) and GetDistance(ts.target) <= 350 then
 						CastSpell(_Q)				
 					end
 				end
@@ -305,9 +331,9 @@ end
 
   		if ts.target and ValidTarget(ts.target) then
 
-			if FleeKey then
+			if FleeKey and HecaMenu.flee.fleee then
 				CastSpell(_E)
-			elseif GetDistance(ts.target) <= 350 then
+			elseif GetDistance(ts.target) <= 350 and HecaMenu.flee.fleeq  then
 				CastSpell(_Q)
 			end
 		end
@@ -331,6 +357,50 @@ end
         end
 	end
 
+
+	function DrawCircle3DQ(x, y, z, radius, width, color, quality)
+                radius = radius or 350
+                quality = quality and 2 * math.pi / quality or 2 * math.pi / (radius / 5)
+                local points = {}
+                    for theta = 0, 2 * math.pi + quality, quality do
+                        local c = WorldToScreen(D3DXVECTOR3(x + radius * math.cos(theta), y, z - radius * math.sin(theta)))
+                        points[#points + 1] = D3DXVECTOR2(c.x, c.y)
+                    end
+                DrawLines2(points, width or 1, color or 2294967295)
+    end
+
+    function DrawCircle3DW(x, y, z, radius, width, color, quality)
+                radius = radius or 525
+                quality = quality and 2 * math.pi / quality or 2 * math.pi / (radius / 5)
+                local points = {}
+                    for theta = 0, 2 * math.pi + quality, quality do
+                        local c = WorldToScreen(D3DXVECTOR3(x + radius * math.cos(theta), y, z - radius * math.sin(theta)))
+                        points[#points + 1] = D3DXVECTOR2(c.x, c.y)
+                    end
+                DrawLines2(points, width or 1, color or 2294967295)
+    end
+
+    function DrawCircle3DE(x, y, z, radius, width, color, quality)
+                radius = radius or 325
+                quality = quality and 2 * math.pi / quality or 2 * math.pi / (radius / 5)
+                local points = {}
+                    for theta = 0, 2 * math.pi + quality, quality do
+                        local c = WorldToScreen(D3DXVECTOR3(x + radius * math.cos(theta), y, z - radius * math.sin(theta)))
+                        points[#points + 1] = D3DXVECTOR2(c.x, c.y)
+                    end
+                DrawLines2(points, width or 1, color or 2294967295)
+    end
+
+    function DrawCircle3DR(x, y, z, radius, width, color, quality)
+                radius = radius or 100
+                quality = quality and 2 * math.pi / quality or 2 * math.pi / (radius / 5)
+                local points = {}
+                    for theta = 0, 2 * math.pi + quality, quality do
+                        local c = WorldToScreen(D3DXVECTOR3(x + radius * math.cos(theta), y, z - radius * math.sin(theta)))
+                        points[#points + 1] = D3DXVECTOR2(c.x, c.y)
+                    end
+                DrawLines2(points, width or 1, color or 2294967295)
+    end
 
 	function isLow(what, unit, slider)
 		if what == 'Mana' then
