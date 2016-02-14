@@ -12,6 +12,8 @@ version = "1.00"
 --]]
 
 
+
+
 if myHero.charName ~= "Hecarim" then
 	return 
 end
@@ -222,7 +224,7 @@ end
         end
 
         if HecaMenu.ks.autoIgnite then
-            --autoIgnite()
+            autoIgnite()
         end
 	end
 
