@@ -1,4 +1,4 @@
-version = "1.05"
+version = "1.06"
 
 
 --[[
@@ -17,20 +17,21 @@ if myHero.charName ~= "Pantheon" then
 end
 
 	function Hello()
-
 		PrintChat("<font color=\"#4000ff\">Pantheon - The Artisan of War</font>")
-
 	end
-	
+
+	local ATTACKITEMS = {"ItemTiamatCleave", "ItemTitanicHydraCleave", "BilgewaterCutlass", "YoumusBlade", "HextechGunblade", "ItemSwordOfFeastAndFamine"}
+	local ANTICCITEMS = {"QuicksilverSash", "ItemDervishBlade"}
+	local TIAMAT, TITANIC, CUTLASS, YOUMU, GUNBLADE, BOTRK, QSS, DERVISH = false
+	local TIAMATSLOT, TITANICSLOT, CUTLASSSLOT, YOUMUSLOT, GUNBLADESLOT, BOTRKSLOT, QSSSLOT, DERVISHSLOT, SMITESLOT
+
 
 
 	function OnLoad()
-
 		Menu()
 		Hello()
 
 		if myHero:GetSpellData(SUMMONER_1).name:find("summonerdot") then Ignite = SUMMONER_1 elseif myHero:GetSpellData(SUMMONER_2).name:find("summonerdot") then Ignite = SUMMONER_2 end
- 		
 	end
 
 
@@ -40,6 +41,7 @@ end
 		
 		PanthMenu:addSubMenu("Combo Settings", "combo")
 			PanthMenu.combo:addParam("comboKey", "Full Combo Key (SBTW)", SCRIPT_PARAM_ONKEYDOWN, false, string.byte (" "))
+			PanthMenu.combo:addParam("items", "Use Items in Combo", SCRIPT_PARAM_ONOFF, true)
 			--PanthMenu.combo:addParam("autoSmite", "Use Smite on Target if QWE Available", SCRIPT_PARAM_ONOFF, true)
 
 		
@@ -158,6 +160,9 @@ end
 		SpellE.manaUsage = myHero:GetSpellData(_E).mana
 		SpellR.manaUsage = myHero:GetSpellData(_R).mana
        
+		if PanthMenu.combo.items then
+    		FindItems()
+  		end
 
 		if ComboKey then
 			Combo(Target)
@@ -202,16 +207,25 @@ end
 
 		if ts.target and ValidTarget(ts.target) then
 
+			ListCC = 3, 5, 8, 10, 11, 21, 22, 24, 28, 29
+			if PanthMenu.combo.items and ImCC() then
+				CastDefItems()
+			end
+
 			if GetDistance(ts.target) <= 600 then
 				CastSpell(_Q, ts.target)
 			end
 
 			if GetDistance(ts.target) <= 600 then
 				CastSpell(_W, ts.target)
+				CastTITANIC() 
+			    CastTiamat() 
+			    CastYoumu() 
+			    CastBOTRK(ts.target) 
 			end
 
 			if GetDistance(ts.target) <= 600 then
-				if HaveBuffs(ts.target, 5) then
+				if HaveBuff(ts.target, 5) then
 					CastSpell(_E, ts.target)
 				end
 			end
@@ -395,7 +409,7 @@ end
 	end
 
 	
-	function HaveBuffs(unit, buffs)
+	function HaveBuff(unit, buffs)
         for i = 1, unit.buffCount, 1 do      
             local buff = unit:getBuff(i) 
             if buff.valid and buff.type == buffs then
@@ -445,3 +459,224 @@ end
 			end
 		end
 	end
+
+	function ImCC()
+    	if HaveBuff(myHero, 3) then return true
+    	elseif HaveBuff(myHero, 5) then return true
+        elseif HaveBuff(myHero, 8) then return true
+        elseif HaveBuff(myHero, 10) then return true
+        elseif HaveBuff(myHero, 11) then return true
+        elseif HaveBuff(myHero, 21) then return true
+        elseif HaveBuff(myHero, 22) then return true
+        elseif HaveBuff(myHero, 24) then return true
+        elseif HaveBuff(myHero, 28) then return true
+        elseif HaveBuff(myHero, 29) then return true
+        else
+        return false
+        end
+    end
+
+    --------------
+
+    --[[SpellReady]]--
+
+	function SpellReady(spell)
+	  return myHero:CanUseSpell(spell) == READY
+	end
+    --[[FindItems]]--
+
+	function FindItems()
+	  if (PanthMenu.combo.items) then
+	    GetTiamat()
+	  end
+	  if (PanthMenu.combo.items) then
+	    GetTitanic()
+	  end
+	  if (PanthMenu.combo.items) then
+	    GetBOTRK()
+	  end
+	  if (PanthMenu.combo.items) then
+	    GetCutlass()
+	  end
+	  if (PanthMenu.combo.items) then
+	    GetYoumu()
+	  end
+	  if (PanthMenu.combo.items) then
+	    GetGunblade()
+	  end
+	  if (PanthMenu.combo.items) then
+	    GetQSS()
+	  end
+	  if (PanthMenu.combo.items) then
+	    GetDervish()
+	  end
+	end
+
+	--[[Get Items]]--
+
+	function GetTiamat()
+	  local slot = GetItem(ATTACKITEMS[1])
+	  if (slot ~= nil) then
+	    TIAMAT = true
+	    TIAMATSLOT = slot
+	  else
+	    TIAMAT = false
+	  end
+	end
+
+	function GetTitanic()
+	  local slot = GetItem(ATTACKITEMS[2])
+	  if (slot ~= nil) then
+	    TITANIC = true
+	    TITANICSLOT = slot
+	  else
+	    TITANIC = false
+	  end
+	end
+
+	function GetCutlass()
+	  local slot = GetItem(ATTACKITEMS[3])
+	  if (slot ~= nil) then
+	    CUTLASS = true
+	    CUTLASSSLOT = slot
+	  else
+	    CUTLASS = false
+	  end
+	end
+
+	function GetYoumu()
+	  local slot = GetItem(ATTACKITEMS[4])
+	  if (slot ~= nil) then
+	    YOUMU = true
+	    YOUMUSLOT = slot
+	  else
+	    YOUMU = false
+	  end
+	end
+
+	function GetGunblade()
+	  local slot = GetItem(ATTACKITEMS[5])
+	  if (slot ~= nil) then
+	    GUNBLADE = true
+	    GUNBLADESLOT = slot
+	  else
+	    GUNBLADE = false
+	  end
+	end
+
+	function GetBOTRK()
+	  local slot = GetItem(ATTACKITEMS[6])
+	  if (slot ~= nil) then
+	    BOTRK = true
+	    BOTRKSLOT = slot
+	  else
+	    BOTRK = false
+	  end
+	end
+
+	function GetQSS()
+	  local slot = GetItem(ANTICCITEMS[1])
+	  if (slot ~= nil) then
+	    QSS = true
+	    QSSSLOT = slot
+	  else
+	    QSS = false
+	  end
+	end
+
+	function GetDervish()
+	  local slot = GetItem(ANTICCITEMS[2])
+	  if (slot ~= nil) then
+	    DERVISH = true
+	    DERVISHSLOT = slot
+	  else
+	    DERVISH = false
+	  end
+	end
+
+	--[[Cast Items]]--
+
+	function CastTiamat()
+	  if TIAMAT then
+	    if (SpellReady(TIAMATSLOT)) then
+	      CastSpell(TIAMATSLOT)
+	    end
+	  end
+	end
+
+	function CastYoumu()
+	  if YOUMU then
+	    if (SpellReady(YOUMUSLOT)) then
+	      CastSpell(YOUMUSLOT)
+	    end
+	  end
+	end
+
+	function CastBOTRK(target)
+	  if BOTRK then
+	    if (SpellReady(BOTRKSLOT)) then
+	      CastSpell(BOTRKSLOT, target)
+	    end
+	  end
+	end
+
+	function CastTITANIC()
+	  if TITANIC then
+	    if (SpellReady(TITANICSLOT)) then
+	      CastSpell(TITANICSLOT)
+	    end
+	  end
+	end
+
+	function CastCutlass(target)
+	  if CUTLASS then
+	    if (SpellReady(CUTLASSSLOT)) then
+	      CastSpell(CUTLASSSLOT, target)
+	    end
+	  end
+	end
+
+	function CastGunblade(target)
+	  if GUNBLADE then
+	    if (SpellReady(GUNBLADESLOT)) then
+	      CastSpell(GUNBLADESLOT, target)
+	    end
+	  end
+	end
+
+	function CastQSS()
+	  if QSS then
+	    if SpellReady(QSSSLOT) then
+	      CastSpell(QSSSLOT)
+	    end
+	  end
+	end
+
+	function CastDervish()
+	  if DERVISH then
+	    if SpellReady(DERVISHSLOT) then
+	      CastSpell(DERVISHSLOT)
+	    end
+	  end
+	end
+
+	--[[Find Slot]]--
+
+	function FindSlotByName(name)
+	  if name ~= nil then
+	    for i=0, 12 do
+	      if string.lower(myHero:GetSpellData(i).name) == string.lower(name) then
+	        return i
+	      end
+	    end
+	  end  
+	  return nil
+	end
+
+	--[[Get Item]]--
+
+	function GetItem(name)
+	  local slot = FindSlotByName(name)
+	  return slot 
+	end
+
