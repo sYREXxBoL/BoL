@@ -89,12 +89,6 @@ end
 			OlafMenu.misc:addParam("autopickAxerange", "Auto Pick Axe Range", SCRIPT_PARAM_SLICE, 365, 0, 1000)
 
 		OlafMenu:addSubMenu("Item Settings", "items")
-			OlafMenu.items:addParam("Use", "Use Items", SCRIPT_PARAM_ONOFF, true) 
-    		OlafMenu.items:addParam("UseBRK", "Use BRK", SCRIPT_PARAM_ONOFF, true) 
-    		OlafMenu.items:addParam("UseHydra", "Use Hydra", SCRIPT_PARAM_ONOFF, true) 
-    		OlafMenu.items:addParam("UseYoumu", "Use Youmuu", SCRIPT_PARAM_ONOFF, true)
-    		OlafMenu.items:addParam("UseBilgewaterCutlass","Use BilgewaterCutlass", SCRIPT_PARAM_ONOFF, true)
-    		OlafMenu.items:addParam("UseTitanicHydra","Use Titanic Hydra", SCRIPT_PARAM_ONOFF, true)
 				
 
 		OlafMenu:addSubMenu("Draw Settings", "drawing")	
@@ -167,40 +161,6 @@ end
 		SpellE.manaUsage = myHero:GetSpellData(_E).mana
 		SpellR.manaUsage = myHero:GetSpellData(_R).mana
 
-		 ___GetInventorySlotItem = rawget(_G, "GetInventorySlotItem")
- 	 		_G.GetInventorySlotItem = GetSlotItem
-  			_G.ITEM_1 = 06
-  			_G.ITEM_2 = 07
-  			_G.ITEM_3 = 08
-  			_G.ITEM_4 = 09
-  			_G.ITEM_5 = 10
-  			_G.ITEM_6 = 11
- 			_G.ITEM_7 = 12
-
-
-		ItemNames     = {
-		    			[3144]        = "BilgewaterCutlass",
-		    			[3748]		  =	"TitanicHydra",
-		    			[3153]        = "ItemSwordOfFeastAndFamine",
-		  				[3405]        = "TrinketSweeperLvl1",
-		  				[3166]        = "TrinketTotemLvl1",
-		  				[3361]        = "TrinketTotemLvl3",
-		  				[3362]        = "TrinketTotemLvl4",
-		  				[2003]        = "RegenerationPotion",
-		  				[3146]        = "HextechGunblade",
-		  				[3187]        = "HextechSweeper",
-		  				[3364]        = "TrinketSweeperLvl3",
-		  				[3074]        = "ItemTiamatCleave",
-		  				[3077]        = "ItemTiamatCleave",
-		  				[3340]        = "TrinketTotemLvl1",
-		 				[3090]        = "ZhonyasHourglass",
-		  				[3142]        = "YoumusBlade",
-		  				[3157]        = "ZhonyasHourglass",
-		 				[3350]        = "TrinketTotemLvl2",
-		 				[3140]        = "QuicksilverSash",
-		  				[3139]        = "ItemMercurial",
-						}
-
 
         if ComboKey then
 			Combo(Target)
@@ -260,7 +220,6 @@ end
 
 			if ComboKey then
 				CastQ(ts.target)
-				CastItems()
 			end
 
 			if GetDistance(ts.target) <= 125 then
@@ -587,64 +546,3 @@ end
 	        pickingaxe = false
 	    end
 	end
-
-
-	function CastItems()
-
-  		if ts.target ~= nil then
-  			if OlafMenu.items.UseBRK then
-  				local slot = GetInventorySlotItem(3153)		--"BladeoftheRuinedKing"
-  				if ts.target ~= nil and ValidTarget(ts.target) and not ts.target.dead and slot ~= nil and myHero:CanUseSpell(slot) == READY and GetDistance(ts.target) <= 550 then
-  					CastSpell(slot, ts.target)
-  				end
-  			end
-
-  			if OlafMenu.items.UseBilgewaterCutlass then
-  				local slot = GetInventorySlotItem(3144)		--"BilgewaterCutlass"
-  				if ts.target ~= nil and ValidTarget(ts.target) and not ts.target.dead and slot ~= nil and myHero:CanUseSpell(slot) == READY and GetDistance(ts.target) <= 550 then
-  					CastSpell(slot, ts.target)
-  				end
-  			end
-
-  			if OlafMenu.items.UseHydra then
-  				local slot = GetInventorySlotItem(3074)		--"RavenousHydra"
-  				if ts.target ~= nil and ValidTarget(ts.target) and not ts.target.dead and slot ~= nil and myHero:CanUseSpell(slot) == READY and GetDistance(ts.target) <= 200 then
-  					CastSpell(slot)
-  				end
-  			end
-
-  			if OlafMenu.items.UseTitanicHydra then
-  				local slot = GetInventorySlotItem(3748)		--"TitanicHydra"
-  				if ts.target ~= nil and ValidTarget(ts.target) and not ts.target.dead and slot ~= nil and myHero:CanUseSpell(slot) == READY then
-  					CastSpell(slot)
-  				end
-  			end
-
-
-  			if OlafMenu.items.UseYoumu then
-  				local slot = GetInventorySlotItem(3142)		--"Youmuu'sGhostblade"
-  				if ts.target ~= nil and ValidTarget(ts.target) and not ts.target.dead and slot ~= nil and myHero:CanUseSpell(slot) == READY then
-  					CastSpell(slot)
-  				end
-  			end
-  		end
-  	end
-
-
-  	function GetSlotItem(id, unit)
-  
-  		unit = unit or myHero
-
-  		if (not ItemNames[id]) then
-  			return ___GetInventorySlotItem(id, unit)
-  		end
-
-  		local name  = ItemNames[id]
-  
-  		for slot = ITEM_1, ITEM_7 do
-  		local item = unit:GetSpellData(slot).name
-  			if ((#item > 0) and (item:lower() == name:lower())) then
-  				return slot
-  			end
-  		end
-  	end
