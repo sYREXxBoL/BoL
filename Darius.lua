@@ -457,14 +457,14 @@ function Combo(enemy)
     	CastDervish()
     end
 	if ValidTarget(ts.target) then
-		if Menu.Combo.E and ManaCheck(Menu.Combo.ManaE, Menu.Combo.ManaCheck) then CastE(ts.target) end
-		if Menu.Combo.Q and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(ts.target) end
+		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then CastW(ts.target) end
 		CastTITANIC() 
 		CastTiamat() 
 		CastYoumu() 
 		CastBOTRK(ts.target)
 		CastCutlass(ts.target)
-		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then CastW(ts.target) end
+		if Menu.Combo.Q and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(ts.target) end
+		if Menu.Combo.E and ManaCheck(Menu.Combo.ManaE, Menu.Combo.ManaCheck) then CastE(ts.target) end
 		if Menu.Combo.R and ManaCheck(Menu.Combo.ManaR, Menu.Combo.ManaCheck) then CastR(ts.target) end
 	end
 end
