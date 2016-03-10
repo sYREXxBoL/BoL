@@ -469,7 +469,7 @@ function Combo(enemy)
 	end
 end
 ---------------------------------------------------------------------------------
-function Harass()
+function Harass(enemy)
 	if ValidTarget(ts.target) then
 		if Menu.Harass.Q and ManaCheck(Menu.Harass.ManaQ, Menu.Harass.ManaCheck) then
 			CastQ(ts.target)
