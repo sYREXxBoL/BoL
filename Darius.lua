@@ -1,4 +1,4 @@
-Version = "0.02"
+Version = "0.01"
 
 --[[
   _____             _                      _______ _            _   _   ____                _____ _           _ _                            
@@ -564,7 +564,7 @@ function OnProcessSpell(unit, spell)
 end
 
 function OnProcessAttack(unit, spell)
-    if unit and spell and unit.isMe and spell.name:lower():find("attack") and myHero:CanUseSpell(_W) and (ComboKey or HarassKey) then
+    if unit and spell and unit.isMe and spell.name:lower():find("attack") and myHero:CanUseSpell(_W) and ComboKey then
         CastSpell(_W)
     end
 end
