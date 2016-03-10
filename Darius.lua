@@ -97,7 +97,7 @@ end
 --[[Menu]]--
 ---------------------------------------------------------------------------------
 function Menu()
-	Menu = scriptConfig("Darius: The N B A Challenger", "DariussYREXx")
+	Menu = scriptConfig("Darius - The N B A Challenger", "DariussYREXx")
 
 		UOL:AddToMenu(scriptConfig("OrbWalker", "OrbWalker"))
 
