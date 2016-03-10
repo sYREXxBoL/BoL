@@ -186,12 +186,12 @@ end
 			Flee()
 		end
 
-		if OlafMenu.misc.autopickAxe and axepos and not FleeKey and not qReady and GetDistance(myHero, axepos) <= (OlafMenu.misc.autopickAxerange) then
+		if OlafMenu.misc.autopickAxe and ComboKey and axepos and not FleeKey and not qReady and GetDistance(myHero, axepos) <= (OlafMenu.misc.autopickAxerange) then
             pickingaxe = true
             myHero:MoveTo(tonumber(axepos.x), tonumber(axepos.z))
         end
 
-        if OlafMenu.misc.autopickAxe and axepos and not FleeKey and not qReady and GetDistance(myHero, axepos) > (OlafMenu.misc.autopickAxerange) then
+        if OlafMenu.misc.autopickAxe and ComboKey and axepos and not FleeKey and not qReady and GetDistance(myHero, axepos) > (OlafMenu.misc.autopickAxerange) then
             pickingaxe = false
         end
 
