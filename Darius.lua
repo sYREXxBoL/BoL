@@ -67,7 +67,7 @@ end
 ---------------------------------------------------------------------------------
 function AutoUpdater()
 	HostUpdate = "raw.githubusercontent.com"
-	PathUpdate = "/Jaikor/BoL-1/master/"
+	PathUpdate = "/sYREXxBoL/BoL/master/"
 	local ServerVersionDATA = GetWebResult(HostUpdate , PathUpdate.."Darius.version")
 	local ServerVersion = tonumber(ServerVersionDATA)
 	if ServerVersion then
