@@ -1,4 +1,4 @@
-Version = "0.06"
+Version = "0.07"
 
 --[[
   _____             _                      _______ _            _   _   ____                _____ _           _ _                            
@@ -58,7 +58,7 @@ function OnLoad()
 	require "UOL"
 	require "HPrediction"
 	Variables()
-	PrintChat("<b><font color=\"#FF3300\">Darius - The <font color=\"#006bff\">N</font> <font color=\"#ffffff\">B</font> <font color=\"#ff2b00\">A</font> Challenger.</font></b>")
+	PrintChat("<b><font color=\"#FF3300\">Darius - The <font color=\"#006bff\">N</font><font color=\"#ffffff\">B</font><font color=\"#ff2b00\">A</font> Challenger.</font></b>")
 	PrintChat("<b><font color=\"#FF3300\">Welcome </font><font color=\"#0097ff\"><u>"..GetUser().."</u></font><font color=\"#FF3300\"> to Dunk City!</font></b>")
 	PrintChat("<b><font color=\"#FF3300\">Contact me on Skype: </font> <font color=\"#0097ff\">dj-koby1.</font></b>")
 	Menu()
@@ -98,7 +98,7 @@ end
 --[[Menu]]--
 ---------------------------------------------------------------------------------
 function Menu()
-	Menu = scriptConfig("Darius - The N B A Challenger", "DariussYREXx")
+	Menu = scriptConfig("Darius - The NBA Challenger", "DariussYREXx")
 
 		UOL:AddToMenu(scriptConfig("OrbWalker", "OrbWalker"))
 
@@ -427,7 +427,7 @@ end
 
 --[[E Settings]]--
 function CastE(unit)
-	if not E.ready or GetDistance(unit) > E.range and GetDistance(unit) <= (350/2) then return end
+	if not E.ready and GetDistance(unit) > E.range or GetDistance(unit) <= (350/2) then return end
 	if ValidTarget(unit) and not Q.ready then
 		if Menu.Prediction.Prediction == 2 then
 			local Pos, HitChance = HP:GetPredict(HPrediction_E, unit, myHero)
@@ -464,16 +464,18 @@ function ComboQ(enemy)
     	CastDervish()
     end
 	if ValidTarget(ts.target) then
-		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then CastW(ts.target) end
-		UOL:ForceTarget(attack)
-		CastTITANIC() 
-		CastTiamat() 
-		CastYoumu() 
-		CastBOTRK(ts.target)
-		CastCutlass(ts.target)
-		if Menu.Combo.Q and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(ts.target) end
-		if Menu.Combo.E and ManaCheck(Menu.Combo.ManaE, Menu.Combo.ManaCheck) then CastE(ts.target) end
-		if Menu.Combo.R and ManaCheck(Menu.Combo.ManaR, Menu.Combo.ManaCheck) then CastR(ts.target) end
+		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then 
+			CastW(ts.target)
+		elseif lastattack == true then
+			CastTITANIC() 
+			CastTiamat() 
+			CastYoumu() 
+			CastBOTRK(ts.target)
+			CastCutlass(ts.target)
+			if Menu.Combo.Q and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(ts.target) end
+			if Menu.Combo.E and ManaCheck(Menu.Combo.ManaE, Menu.Combo.ManaCheck) then CastE(ts.target) end
+			if Menu.Combo.R and ManaCheck(Menu.Combo.ManaR, Menu.Combo.ManaCheck) then CastR(ts.target) end
+		end
 	end
 end
 function ComboW(enemy)
@@ -484,8 +486,9 @@ function ComboW(enemy)
     end
 	if ValidTarget(ts.target) then
 		if Menu.Combo.Q and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(ts.target) end
-		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then CastW(ts.target) end
-		UOL:ForceTarget(attack)
+		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then 
+			CastW(ts.target)
+		elseif lastattack == true then
 		CastTITANIC() 
 		CastTiamat() 
 		CastYoumu() 
@@ -503,8 +506,9 @@ function ComboE(enemy)
     end
 	if ValidTarget(ts.target) then
 		if Menu.Combo.E and ManaCheck(Menu.Combo.ManaE, Menu.Combo.ManaCheck) then CastE(ts.target) end
-		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then CastW(ts.target) end
-		UOL:ForceTarget(attack)
+		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then 
+			CastW(ts.target)
+		elseif lastattack == true then
 		CastTITANIC() 
 		CastTiamat() 
 		CastYoumu() 
@@ -610,8 +614,12 @@ function OnProcessSpell(unit, spell)
 end
 
 function OnProcessAttack(unit, spell)
-    if unit and spell and unit.isMe and spell.name:lower():find("attack") and myHero:CanUseSpell(_W) and ComboKey then
+	local lastattack == false
+    if unit and spell and unit.isMe and spell.name:lower():find("attack") and W.ready and ComboKey then
         CastSpell(_W)
+    end
+    if unit and spell and unit.isMe and spell.name:lower():find("attack") then
+        lastattack == true
     end
 end
 ---------------------------------------------------------------------------------
