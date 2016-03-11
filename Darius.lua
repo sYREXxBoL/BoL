@@ -1,4 +1,4 @@
-Version = "0.04"
+Version = "0.05"
 
 --[[
   _____             _                      _______ _            _   _   ____                _____ _           _ _                            
@@ -73,11 +73,11 @@ function AutoUpdater()
 	local ServerVersion = tonumber(ServerVersionDATA)
 	if ServerVersion then
 		if ServerVersion > tonumber(Version) then
-			PrintChat("<b><font color=\"#FF3300\">Updating: </font><font color=\"#0097ff\">Darius The NBA Challenger</font><font color=\"#FF3300\"> to version: "..ServerVersion..".</font>")
+			PrintChat("<b><font color=\"#FF3300\">Updating: </font><font color=\"#0097ff\">Darius - The NBA Challenger</font><font color=\"#FF3300\"> to version: "..ServerVersion..".</font>")
     		DelayAction(function()
     			DownloadFile("https://"..HostUpdate..PathUpdate.."Darius.lua", DraFile, 
     				function()
-    					PrintChat("<b><font color=\"#FF3300\">Updated: </font><font color=\"#0097ff\">Darius The NBA Challenger</font><font color=\"#FF3300\"> to version: "..ServerVersion..", press 2x F9</font>") 
+    					PrintChat("<b><font color=\"#FF3300\">Updated: </font><font color=\"#0097ff\">Darius - The NBA Challenger</font><font color=\"#FF3300\"> to version: "..ServerVersion..", press 2x F9</font>") 
     				end)
    			 end,0.15)
 		end
@@ -98,7 +98,7 @@ end
 --[[Menu]]--
 ---------------------------------------------------------------------------------
 function Menu()
-	Menu = scriptConfig("Darius - The N B A Challenger", "DariussYREXx")
+	Menu = scriptConfig("Darius - The NBA Challenger", "DariussYREXx")
 
 		UOL:AddToMenu(scriptConfig("OrbWalker", "OrbWalker"))
 
