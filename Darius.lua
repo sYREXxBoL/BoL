@@ -1,4 +1,4 @@
-Version = "0.01"
+Version = "0.02"
 
 --[[
   _____             _                      _______ _            _   _   ____                _____ _           _ _                            
@@ -304,7 +304,13 @@ function Keys()
   	end
 
 	if ComboKey then
-		Combo()
+		if GetDistance(ts.target) <= Q.range then
+			ComboQ()
+		elseif GetDistance(ts.target) <= (200+175)/2 then
+			ComboW()
+		elseif GetDistance(ts.target) <= E.range then
+			ComboE()
+		end
 	end
 
 	if HarassKey then
@@ -401,9 +407,9 @@ function QWalker()
 	if target ~= nil then
 		if (os.clock() - lastCastQ) < 0.75 then
 			local E = myHero-(Vector(ts.target)-myHero): normalized()*(205+410)/2 
-			if GetDistance(ts.target) >= (205+435)/2 then
+			if GetDistance(ts.target) >= (205+410)/2 then
 				myHero:MoveTo(target.x, target.z)
-			elseif GetDistance(ts.target) <= (205+435)/2 then
+			elseif GetDistance(ts.target) <= (205+410)/2 then
 				myHero:MoveTo(E.x, E.z)
 			end
 		end
@@ -450,7 +456,7 @@ end
 ---------------------------------------------------------------------------------
 --[[Mode's]]--
 ---------------------------------------------------------------------------------
-function Combo(enemy)
+function ComboQ(enemy)
 	ListCC = 3, 5, 8, 10, 11, 21, 22, 24, 28, 29
     if Menu.Combo.useItems and ImCC() then
     	CastQSS()
@@ -458,6 +464,7 @@ function Combo(enemy)
     end
 	if ValidTarget(ts.target) then
 		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then CastW(ts.target) end
+		UOL:ForceTarget(attack)
 		CastTITANIC() 
 		CastTiamat() 
 		CastYoumu() 
@@ -465,6 +472,44 @@ function Combo(enemy)
 		CastCutlass(ts.target)
 		if Menu.Combo.Q and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(ts.target) end
 		if Menu.Combo.E and ManaCheck(Menu.Combo.ManaE, Menu.Combo.ManaCheck) then CastE(ts.target) end
+		if Menu.Combo.R and ManaCheck(Menu.Combo.ManaR, Menu.Combo.ManaCheck) then CastR(ts.target) end
+	end
+end
+function ComboW(enemy)
+	ListCC = 3, 5, 8, 10, 11, 21, 22, 24, 28, 29
+    if Menu.Combo.useItems and ImCC() then
+    	CastQSS()
+    	CastDervish()
+    end
+	if ValidTarget(ts.target) then
+		if Menu.Combo.Q and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(ts.target) end
+		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then CastW(ts.target) end
+		UOL:ForceTarget(attack)
+		CastTITANIC() 
+		CastTiamat() 
+		CastYoumu() 
+		CastBOTRK(ts.target)
+		CastCutlass(ts.target)
+		if Menu.Combo.E and ManaCheck(Menu.Combo.ManaE, Menu.Combo.ManaCheck) then CastE(ts.target) end
+		if Menu.Combo.R and ManaCheck(Menu.Combo.ManaR, Menu.Combo.ManaCheck) then CastR(ts.target) end
+	end
+end
+function ComboE(enemy)
+	ListCC = 3, 5, 8, 10, 11, 21, 22, 24, 28, 29
+    if Menu.Combo.useItems and ImCC() then
+    	CastQSS()
+    	CastDervish()
+    end
+	if ValidTarget(ts.target) then
+		if Menu.Combo.E and ManaCheck(Menu.Combo.ManaE, Menu.Combo.ManaCheck) then CastE(ts.target) end
+		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then CastW(ts.target) end
+		UOL:ForceTarget(attack)
+		CastTITANIC() 
+		CastTiamat() 
+		CastYoumu() 
+		CastBOTRK(ts.target)
+		CastCutlass(ts.target)
+		if Menu.Combo.Q and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(ts.target) en
 		if Menu.Combo.R and ManaCheck(Menu.Combo.ManaR, Menu.Combo.ManaCheck) then CastR(ts.target) end
 	end
 end
