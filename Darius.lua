@@ -1,4 +1,4 @@
-Version = "0.02"
+Version = "0.03"
 
 --[[
   _____             _                      _______ _            _   _   ____                _____ _           _ _                            
@@ -304,11 +304,11 @@ function Keys()
   	end
 
 	if ComboKey then
-		if GetDistance(ts.target) <= Q.range then
+		if GetDistance(ts.target) <= Q.range and Q.ready then
 			ComboQ()
-		elseif GetDistance(ts.target) <= (200+175)/2 then
+		elseif GetDistance(ts.target) <= (200+175)/2 and W.ready then
 			ComboW()
-		elseif GetDistance(ts.target) <= E.range then
+		elseif GetDistance(ts.target) <= E.range and E.ready then
 			ComboE()
 		end
 	end
