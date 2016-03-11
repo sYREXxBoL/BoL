@@ -68,13 +68,14 @@ end
 function AutoUpdater()
 	HostUpdate = "raw.githubusercontent.com"
 	PathUpdate = "/sYREXxBoL/BoL/master/"
+        DraFile = SCRIPT_PATH..GetCurrentEnv().FILE_NAME
 	local ServerVersionDATA = GetWebResult(HostUpdate , PathUpdate.."Darius.version")
 	local ServerVersion = tonumber(ServerVersionDATA)
 	if ServerVersion then
 		if ServerVersion > tonumber(Version) then
 			PrintChat("<b><font color=\"#FF3300\">Updating: </font><font color=\"#0097ff\">Darius The NBA Challenger</font><font color=\"#FF3300\"> to version: "..ServerVersion..".</font>")
     		DelayAction(function()
-    			DownloadFile("https://"..HostUpdate..PathUpdate.."Darius.lua", SCRIPT_PATH..GetCurrentEnv().FILE_NAME, 
+    			DownloadFile("https://"..HostUpdate..PathUpdate.."Darius.lua", DraFile, 
     				function()
     					PrintChat("<b><font color=\"#FF3300\">Updated: </font><font color=\"#0097ff\">Darius The NBA Challenger</font><font color=\"#FF3300\"> to version: "..ServerVersion..", press 2x F9</font>") 
     				end)
