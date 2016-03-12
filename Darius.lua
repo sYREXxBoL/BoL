@@ -1,4 +1,4 @@
-Version = "1.02"
+Version = "1.03"
 
 --[[
   _____             _                      _______ _            _   _   ____                _____ _           _ _                            
@@ -309,7 +309,7 @@ function Keys()
 	end
 
 	if HarassKey then
-		Harass()
+		Harass(ts.target)
 	end
 
 	if LaneKey then
@@ -465,7 +465,7 @@ function Combo(enemy)
 			CastBOTRK(enemy)
 			CastCutlass(enemy)
 		end
-		if Menu.Combo.Q and GetDistance(enemy) <= Q.range and Q.ready and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(enemy) end
+		if Menu.Combo.Q and GetDistance(enemy) <= Q.range and Q.ready and GetDistance(ts.target) > (200+175)/2 and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(enemy) end
 		if Menu.Combo.W and GetDistance(enemy) <= (200+175)/2 and W.ready and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then CastW(enemy) end
 		if Menu.Combo.E and GetDistance(enemy) <= E.range and E.ready and ManaCheck(Menu.Combo.ManaE, Menu.Combo.ManaCheck) then CastE(enemy) end
 		if Menu.Combo.R and ManaCheck(Menu.Combo.ManaR, Menu.Combo.ManaCheck) then CastR(enemy) end
@@ -474,12 +474,8 @@ end
 ---------------------------------------------------------------------------------
 function Harass(enemy)
 	if ValidTarget(enemy) then
-		if Menu.Harass.Q and ManaCheck(Menu.Harass.ManaQ, Menu.Harass.ManaCheck) then
-			CastQ(enemy)
-		end
-		if Menu.Harass.W and ManaCheck(Menu.Harass.ManaW, Menu.Harass.ManaCheck) then
-			CastW(enemy)
-		end
+		if Menu.Harass.Q and GetDistance(enemy) <= Q.range and Q.ready and GetDistance(ts.target) > (200+175)/2 and ManaCheck(Menu.Harass.ManaQ, Menu.Harass.ManaCheck) then CastQ(enemy) end
+		if Menu.Harass.W and GetDistance(enemy) <= (200+175)/2 and W.ready and ManaCheck(Menu.Harass.ManaW, Menu.Harass.ManaCheck) then CastW(enemy) end
 	end
 end
 ---------------------------------------------------------------------------------
