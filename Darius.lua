@@ -1,4 +1,4 @@
-Version = "0.07"
+Version = "0.08"
 
 --[[
   _____             _                      _______ _            _   _   ____                _____ _           _ _                            
@@ -309,7 +309,7 @@ function Keys()
 			ComboQ()
 		elseif GetDistance(ts.target) <= (200+175)/2 and W.ready then
 			ComboW()
-		elseif GetDistance(ts.target) <= E.range and E.ready then
+		elseif GetDistance(ts.target) <= E.range and GetDistance(ts.target) >= Q.range and E.ready then
 			ComboE()
 		end
 	end
@@ -489,13 +489,14 @@ function ComboW(enemy)
 		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then 
 			CastW(ts.target)
 		elseif lastattack == true then
-		CastTITANIC() 
-		CastTiamat() 
-		CastYoumu() 
-		CastBOTRK(ts.target)
-		CastCutlass(ts.target)
-		if Menu.Combo.E and ManaCheck(Menu.Combo.ManaE, Menu.Combo.ManaCheck) then CastE(ts.target) end
-		if Menu.Combo.R and ManaCheck(Menu.Combo.ManaR, Menu.Combo.ManaCheck) then CastR(ts.target) end
+			CastTITANIC() 
+			CastTiamat() 
+			CastYoumu() 
+			CastBOTRK(ts.target)
+			CastCutlass(ts.target)
+			if Menu.Combo.E and ManaCheck(Menu.Combo.ManaE, Menu.Combo.ManaCheck) then CastE(ts.target) end
+			if Menu.Combo.R and ManaCheck(Menu.Combo.ManaR, Menu.Combo.ManaCheck) then CastR(ts.target) end
+		end
 	end
 end
 function ComboE(enemy)
@@ -509,14 +510,16 @@ function ComboE(enemy)
 		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then 
 			CastW(ts.target)
 		elseif lastattack == true then
-		CastTITANIC() 
-		CastTiamat() 
-		CastYoumu() 
-		CastBOTRK(ts.target)
-		CastCutlass(ts.target)
-		if Menu.Combo.Q and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(ts.target) end
-		if Menu.Combo.R and ManaCheck(Menu.Combo.ManaR, Menu.Combo.ManaCheck) then CastR(ts.target) end
+			CastTITANIC() 
+			CastTiamat() 
+			CastYoumu() 
+			CastBOTRK(ts.target)
+			CastCutlass(ts.target)
+			if Menu.Combo.Q and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(ts.target) end
+			if Menu.Combo.R and ManaCheck(Menu.Combo.ManaR, Menu.Combo.ManaCheck) then CastR(ts.target) end
+		end
 	end
+end
 end
 ---------------------------------------------------------------------------------
 function Harass(enemy)
@@ -614,12 +617,12 @@ function OnProcessSpell(unit, spell)
 end
 
 function OnProcessAttack(unit, spell)
-	local lastattack == false
+	local lastattack = false
     if unit and spell and unit.isMe and spell.name:lower():find("attack") and W.ready and ComboKey then
         CastSpell(_W)
     end
     if unit and spell and unit.isMe and spell.name:lower():find("attack") then
-        lastattack == true
+        lastattack = true
     end
 end
 ---------------------------------------------------------------------------------
