@@ -520,7 +520,6 @@ function ComboE(enemy)
 		end
 	end
 end
-end
 ---------------------------------------------------------------------------------
 function Harass(enemy)
 	if ValidTarget(ts.target) then
