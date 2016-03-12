@@ -1,4 +1,4 @@
-Version = "1.01"
+Version = "1.02"
 
 --[[
   _____             _                      _______ _            _   _   ____                _____ _           _ _                            
@@ -305,13 +305,7 @@ function Keys()
   	end
 
 	if ComboKey then
-		if GetDistance(ts.target) <= Q.range and Q.ready then
-			ComboQ()
-		elseif GetDistance(ts.target) <= (200+175)/2 and W.ready then
-			ComboW()
-		elseif GetDistance(ts.target) <= E.range and GetDistance(ts.target) >= Q.range and E.ready then
-			ComboE()
-		end
+		Combo(ts.target)
 	end
 
 	if HarassKey then
@@ -388,10 +382,10 @@ end
 ---------------------------------------------------------------------------------
 
 --[[Q Settings]]--
-function CastQ(unit)
-	if not Q.ready or (GetDistance(unit) >= Q.range) then return end
+function CastQ(unit)	
 	if ValidTarget(unit) then
-		CastSpell(_Q, unit)
+		if not Q.ready or (GetDistance(unit) >= Q.range) then return end
+		CastSpell(_Q)
 	end
 end
 
@@ -418,17 +412,17 @@ function QWalker()
 end
 
 --[[W Settings]]--
-function CastW(unit)
-	if not W.ready or (GetDistance(unit) > W.range) then return end
+function CastW(unit)	
 	if ValidTarget(unit) then
+		if not W.ready or (GetDistance(unit) > W.range) then return end
 		CastSpell(_W)
 	end
 end
 
 --[[E Settings]]--
-function CastE(unit)
-	if not E.ready and GetDistance(unit) > E.range or GetDistance(unit) <= (350/2) then return end
+function CastE(unit)	
 	if ValidTarget(unit) and not Q.ready then
+		if not E.ready and GetDistance(unit) > E.range or GetDistance(unit) <= (350/2) then return end
 		if Menu.Prediction.Prediction == 2 then
 			local Pos, HitChance = HP:GetPredict(HPrediction_E, unit, myHero)
 	 		if Pos and HitChance >= Menu.Prediction.HPredictionHitchanceE then
@@ -457,77 +451,34 @@ end
 ---------------------------------------------------------------------------------
 --[[Mode's]]--
 ---------------------------------------------------------------------------------
-function ComboQ(enemy)
-	ListCC = 3, 5, 8, 10, 11, 21, 22, 24, 28, 29
-    if Menu.Combo.useItems and ImCC() then
-    	CastQSS()
-    	CastDervish()
-    end
-	if ValidTarget(ts.target) then
-		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then 
-			CastW(ts.target)
-		elseif lastattack == true then
-			CastTITANIC() 
-			CastTiamat() 
-			CastYoumu() 
-			CastBOTRK(ts.target)
-			CastCutlass(ts.target)
-			if Menu.Combo.Q and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(ts.target) end
-			if Menu.Combo.E and ManaCheck(Menu.Combo.ManaE, Menu.Combo.ManaCheck) then CastE(ts.target) end
-			if Menu.Combo.R and ManaCheck(Menu.Combo.ManaR, Menu.Combo.ManaCheck) then CastR(ts.target) end
+function Combo(enemy)
+	if ValidTarget(enemy) then
+		ListCC = 3, 5, 8, 10, 11, 21, 22, 24, 28, 29
+   		if Menu.Combo.useItems and ImCC() then
+    		CastQSS()
+    		CastDervish()
+    	end
+		if lastattack == true then
+			CastTITANIC()
+			CastTiamat()
+			CastYoumu()
+			CastBOTRK(enemy)
+			CastCutlass(enemy)
 		end
-	end
-end
-function ComboW(enemy)
-	ListCC = 3, 5, 8, 10, 11, 21, 22, 24, 28, 29
-    if Menu.Combo.useItems and ImCC() then
-    	CastQSS()
-    	CastDervish()
-    end
-	if ValidTarget(ts.target) then
-		if Menu.Combo.Q and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(ts.target) end
-		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then 
-			CastW(ts.target)
-		elseif lastattack == true then
-			CastTITANIC() 
-			CastTiamat() 
-			CastYoumu() 
-			CastBOTRK(ts.target)
-			CastCutlass(ts.target)
-			if Menu.Combo.E and ManaCheck(Menu.Combo.ManaE, Menu.Combo.ManaCheck) then CastE(ts.target) end
-			if Menu.Combo.R and ManaCheck(Menu.Combo.ManaR, Menu.Combo.ManaCheck) then CastR(ts.target) end
-		end
-	end
-end
-function ComboE(enemy)
-	ListCC = 3, 5, 8, 10, 11, 21, 22, 24, 28, 29
-    if Menu.Combo.useItems and ImCC() then
-    	CastQSS()
-    	CastDervish()
-    end
-	if ValidTarget(ts.target) then
-		if Menu.Combo.E and ManaCheck(Menu.Combo.ManaE, Menu.Combo.ManaCheck) then CastE(ts.target) end
-		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then 
-			CastW(ts.target)
-		elseif lastattack == true then
-			CastTITANIC() 
-			CastTiamat() 
-			CastYoumu() 
-			CastBOTRK(ts.target)
-			CastCutlass(ts.target)
-			if Menu.Combo.Q and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(ts.target) end
-			if Menu.Combo.R and ManaCheck(Menu.Combo.ManaR, Menu.Combo.ManaCheck) then CastR(ts.target) end
-		end
+		if Menu.Combo.Q and GetDistance(enemy) <= Q.range and Q.ready and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(enemy) end
+		if Menu.Combo.W and GetDistance(enemy) <= (200+175)/2 and W.ready and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then CastW(enemy) end
+		if Menu.Combo.E and GetDistance(enemy) <= E.range and E.ready and ManaCheck(Menu.Combo.ManaE, Menu.Combo.ManaCheck) then CastE(enemy) end
+		if Menu.Combo.R and ManaCheck(Menu.Combo.ManaR, Menu.Combo.ManaCheck) then CastR(enemy) end
 	end
 end
 ---------------------------------------------------------------------------------
 function Harass(enemy)
-	if ValidTarget(ts.target) then
+	if ValidTarget(enemy) then
 		if Menu.Harass.Q and ManaCheck(Menu.Harass.ManaQ, Menu.Harass.ManaCheck) then
-			CastQ(ts.target)
+			CastQ(enemy)
 		end
 		if Menu.Harass.W and ManaCheck(Menu.Harass.ManaW, Menu.Harass.ManaCheck) then
-			CastW(ts.target)
+			CastW(enemy)
 		end
 	end
 end
