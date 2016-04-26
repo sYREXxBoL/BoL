@@ -1,4 +1,4 @@
-version = "1.06"
+version = "1.07"
 
 
 --[[
@@ -209,7 +209,8 @@ end
 
 			ListCC = 3, 5, 8, 10, 11, 21, 22, 24, 28, 29
 			if PanthMenu.combo.items and ImCC() then
-				CastDefItems()
+				CastQSS()
+				CastDervish()
 			end
 
 			if GetDistance(ts.target) <= 600 then
@@ -679,4 +680,3 @@ end
 	  local slot = FindSlotByName(name)
 	  return slot 
 	end
-
