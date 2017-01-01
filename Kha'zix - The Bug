@@ -1,0 +1,662 @@
+if myHero.charName ~= "Khazix" then return end
+
+local version = "1.001"
+
+-- BoL Tracker --
+assert(load(Base64Decode("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"), nil, "bt", _ENV))()
+TrackerLoad("c10Ib8FZJhZLZEre")
+-- BoL Tracker --
+
+local function PrintMsg(msg)
+	PrintChat("<font color=\"#7b00ff\"><b>[KhaZix]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
+end
+
+if not _G.UPLloaded then
+  if FileExist(LIB_PATH .. "/UPL.lua") then
+    require("UPL")
+    _G.UPL = UPL()
+  else 
+    print("Downloading UPL, please don't press F9")
+    DelayAction(function() DownloadFile("https://raw.github.com/nebelwolfi/BoL/master/Common/UPL.lua".."?rand="..math.random(1,10000), LIB_PATH.."UPL.lua", function () print("Successfully downloaded UPL. Press F9 twice.") end) end, 3) 
+    return
+  end
+end
+
+local Passiv = {ready = true}
+local Q = {Color = {255,100,200,200}, range = 325, evo = false, ready = false}
+local W = {Color = {255,100,200,200}, range = 1000, speed = 1700, delay = 0.25, width = 70, evo = false, ready = false}
+local E = {Color = {255,100,200,200}, range = 700, speed = 400 , delay = 0.25, width = 300, evo = false, ready = false}
+local R = {Color = {255,100,200,200}, evo = false, ready = false}
+local S = {Color = {255,100,200,200}, range = 560}
+local B = {Color = {255,100,200,200}}
+
+UPL:AddSpell(_W, { speed = W.speed, delay = W.delay, range = W.range, width = W.width, collision = true, aoe = true, type = "linear" })
+UPL:AddSpell(_E, { speed = E.speed, delay = E.delay, range = E.range, width = E.width, collision = false, aoe = true, type = "circular" })
+
+local OutOfCombat = false
+
+local Ignite = nil
+if myHero:GetSpellData(SUMMONER_1).name:find("summonerdot") then Ignite = SUMMONER_1 elseif myHero:GetSpellData(SUMMONER_2).name:lower():find("summonerdot") then Ignite = SUMMONER_2 end
+
+local Smite = nil
+if myHero:GetSpellData(SUMMONER_1).name:find("smite") then Smite = SUMMONER_1 elseif myHero:GetSpellData(SUMMONER_2).name:lower():find("smite") then Smite = SUMMONER_2 end
+
+local enemies = GetEnemyHeroes()
+local minions 	= minionManager(MINION_ENEMY, 1000, myHero, MINION_SORT_MAXHEALTH_ASC)
+local jungleMinions = minionManager(MINION_JUNGLE, 1100, myHero, MINION_SORT_MAXHEALTH_DEC)
+
+local ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 900, DAMAGE_PHYSICAL)
+
+local qlvl 	= GetSpellData(_Q).level
+local wlvl 	= GetSpellData(_W).level
+local elvl 	= GetSpellData(_E).level
+local mylvl	= myHero.level
+local bAD = myHero.addDamage
+
+local baseP = 8 * mylvl + 2
+local Pdmg = baseP + bAD * 0.4
+
+local baseQ = 25 * qlvl + 45
+local Qdmg = baseQ + bAD * 1.4
+
+local baseW = 30 * wlvl + 50
+local Wdmg = baseW + bAD * 1
+
+local baseE = 35 * elvl + 30
+local Edmg = baseE + bAD * 0.2
+
+
+local lpairs = pairs
+local mathfloor = math.floor
+local mathhuge = math.huge
+
+local myHero = myHero
+local GetGameTimer = GetGameTimer
+local GetDistance = GetDistance
+local GetUser = GetUser
+local PrintChat = PrintChat
+
+local ultPassiveAvailable = true
+local lastFightTime = GetGameTimer() - 5
+local lastMinimumHealth = myHero.health
+
+local bushList = {
+
+	["BlueSideBotJungleTribrush"] 			= { x = 10350, y = 51, z = 3100, cd = 0 },
+	["BlueSideBotJungleBanana"] 			= { x = 6850, y = 51, z = 3150, cd = 0 },
+	["BlueSideBotJungleBrambleback"] 		= { x = 8000, y = 51, z = 3550, cd = 0 },
+	["BlueSideBotJungleBramblebackCross"] 	= { x = 8600, y = 51, z = 4800, cd = 0 },
+	["BlueSideBotJungleRaptor"] 			= { x = 6550, y = 51, z = 4750, cd = 0 },
+	["BlueSideBotJungleKrug"] 				= { x = 9200, y = 51, z = 2200, cd = 0 },
+	["BlueSideBotJungleGate"] 				= { x = 5550, y = 51, z = 3550, cd = 0 },
+	["BlueSideBotJungleLane"] 				= { x = 7775, y = 51, z = 900, cd = 0 },
+
+	["BlueSideTopJungleBanana"] 			= { x = 5000, y = 51, z = 8500, cd = 0 },
+	["BlueSideTopJungleSentinel"] 			= { x = 3375, y = 51, z = 7850, cd = 0 },
+	["BlueSideTopJungleWolf"] 				= { x = 4800, y = 51, z = 7175 , cd = 0 },
+	["BlueSideTopJungleTriTower"] 			= { x = 2300, y = 51, z = 9800, cd = 0 },				
+	["BlueSideTopJungleLane"] 				= { x = 816, y = 51, z = 8200, cd = 0 },
+
+	["RedSideTopJungleTribrush"] 			= { x = 4450, y = 51, z = 11850, cd = 0 },	
+	["RedSideTopJungleBanana"] 				= { x = 8000, y = 51, z = 11900, cd = 0 },
+	["RedSideTopJungleBrambleback"] 		= { x = 6750, y = 51, z = 11600, cd = 0 },
+	["RedSideTopJungleBramblebackCross"] 	= { x = 6200, y = 51, z = 10350, cd = 0 },
+	["RedSideTopJungleRaptor"] 				= { x = 8250, y = 51, z = 10300, cd = 0 },
+	["RedSideTopJungleKrug"] 				= { x = 5650, y = 51, z = 12800, cd = 0 }, 
+	["RedSideTopJungleGate"] 				= { x = 9200, y = 51, z = 11450, cd = 0 },
+	["RedSideTopJungleLane"] 				= { x = 7150, y = 51, z = 14150, cd = 0 },
+
+	["RedSideBotJungleBanana"] 				= { x = 9800, y = 51, z = 6500, cd = 0 },
+	["RedSideBotJungleSentinel"] 			= { x = 11450, y = 51, z = 7200, cd = 0 },
+	["RedSideBotJungleWolf"] 				= { x = 9950, y = 51, z = 7950, cd = 0 },
+	["RedSideBotJungleTriTower"]			= { x = 12500, y = 51, z = 5250, cd = 0 },
+	["RedSideBotJungleLane"] 				= { x = 14100, y = 51, z = 7075, cd = 0 },
+
+	["TopJungleRiverTop"] 					= { x = 3000, y = 51, z = 11050, cd = 0 },
+	["TopJungleRiverCenter"] 				= { x = 5200, y = 51, z = 9100, cd = 0 },
+	["TopJungleRiverMid"] 					= { x = 6500, y = 51, z = 8300, cd = 0 },
+
+	["BotJungleRiverMid"] 					= { x = 8350, y = 51, z = 6450, cd = 0 },
+	["BotJungleRiverCenter"] 				= { x = 9400, y = 51, z = 5650, cd = 0 },
+	["BotJungleRiverBot"] 					= { x = 11850, y = 51, z = 3900, cd = 0 },
+
+	["LaneBrushesTopBlue"] 					= { x = 1150, y = 51, z = 12350, cd = 0 },
+	["LaneBrushesTopCenter"] 				= { x = 1650, y = 51, z = 13100, cd = 0 },
+	["LaneBrushesTopRed"] 					= { x = 2400, y = 51, z = 13600, cd = 0 },
+
+	["LaneBrushesBotBlue"] 					= { x = 12500, y = 51, z = 1575, cd = 0 },
+	["LaneBrushesBotRed"] 					= { x = 13350, y = 51, z = 2550, cd = 0 }
+}
+
+local OffensiveItemsList = {
+	TMT = { id = 3077, range = 189, reqTarget = false, slot = nil }, -- Tiamat
+	THD = { id = 3074, range = 189, reqTarget = false, slot = nil }, -- Ravenous Hydra
+	THD = { id = 3748, range = 189, reqTarget = false, slot = nil }, -- Titanic Hydra
+	BWC = { id = 3144, range = 400, reqTarget = true, slot = nil }, -- Bilgewater Cutlass
+	BRK = { id = 3153, range = 450, reqTarget = true, slot = nil }, --Blade of the ruined king
+	SR 	= { id = 3715, range = 560, reqTarget = true, slot = nil }, -- Red Smite
+	SB 	= { id = 3706, range = 560, reqTarget = true, slot = nil }, -- Blue Smite
+	SRW = { id = 1412, range = 560, reqTarget = true, slot = nil }, -- Red Warrior
+	SBW = { id = 1400, range = 560, reqTarget = true, slot = nil }, -- Blue Warrior
+	YGB = { id = 3142, range = 1000, reqTarget = false, slot = nil } -- Youmuu Ghostblade
+}
+
+local DefensiveItemsList = {
+	QSS = { id = 3140, slot = nil }, -- Quicksilver Sash
+	MCS = { id = 3139, slot = nil } -- Mercurial Scimitar
+}
+
+local function ARGBT(t)
+	return ARGB(t[1], t[2], t[3], t[4])
+end
+
+local function Menu()
+
+	Menu = scriptConfig("KhaZix", "KhaZix")
+
+		UPL:AddToMenu(scriptConfig("Predition", "Predition"))
+
+		--[[Keybindings]]--
+		Menu:addSubMenu("> Keybindings", "Keys")
+			Menu.Keys:addParam("Fight", "> Fight ", SCRIPT_PARAM_INFO, "")
+			Menu.Keys:addParam("keysCombo", "Combo ", SCRIPT_PARAM_ONKEYDOWN, false, 32)
+			Menu.Keys:addParam("keysHarass", "Harass ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("C"))
+			Menu.Keys:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Keys:addParam("Farm", "> Farm keys", SCRIPT_PARAM_INFO, "")
+			Menu.Keys:addParam("keysClear", "Clear ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
+
+		--[[Combo]]--
+		Menu:addSubMenu("> Combo", "Combo")
+			Menu.Combo:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
+			Menu.Combo:addParam("useItems", "Use Items", SCRIPT_PARAM_ONOFF, true)
+			Menu.Combo:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Combo:addParam("Mana", "> Manage your mana:", SCRIPT_PARAM_INFO, "")
+			Menu.Combo:addParam("ManaCheck", "Check mana", SCRIPT_PARAM_ONOFF, false)
+			Menu.Combo:addParam("ManaQ","Minimum % of mana (Q)", SCRIPT_PARAM_SLICE, 7, 0, 100, 0)
+			Menu.Combo:addParam("ManaW","Minimum % of mana (W)", SCRIPT_PARAM_SLICE, 7, 0, 100, 0)
+			Menu.Combo:addParam("ManaE","Minimum % of mana (E)", SCRIPT_PARAM_SLICE, 7, 0, 100, 0)
+			Menu.Combo:addParam("ManaR","Minimum % of mana (R)", SCRIPT_PARAM_SLICE, 7, 0, 100, 0)
+			Menu.Combo:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Combo:addParam("Spell", "> Choose your spells:", SCRIPT_PARAM_INFO, "")
+			Menu.Combo:addParam("Q", "(Q) - Use ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Combo:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Combo:addParam("E", "(E) - Use ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Combo:addParam("R", "(R) - Use ", SCRIPT_PARAM_ONOFF, true)
+
+		--[[Harass]]--
+		Menu:addSubMenu("> Harass", "Harass")
+			Menu.Harass:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
+			Menu.Harass:addParam("useItems", "Use Items", SCRIPT_PARAM_ONOFF, true)
+			Menu.Harass:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Harass:addParam("Mana", "> Manage your mana:", SCRIPT_PARAM_INFO, "")
+			Menu.Harass:addParam("ManaCheck", "Check mana", SCRIPT_PARAM_ONOFF, true)
+			Menu.Harass:addParam("ManaQ","Minimum % of mana (Q)", SCRIPT_PARAM_SLICE, 15, 0, 100, 0)
+			Menu.Harass:addParam("ManaW","Minimum % of mana (W)", SCRIPT_PARAM_SLICE, 15, 0, 100, 0)
+			Menu.Harass:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Harass:addParam("Spell", "> Choose your spells:", SCRIPT_PARAM_INFO, "")
+			Menu.Harass:addParam("Q", "(Q) - Use ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Harass:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, true)
+
+		--[[Killsteal]]--
+		Menu:addSubMenu("> Killsteal", "Killsteal")
+			Menu.Killsteal:addParam("generalInfo", "> General settings:", SCRIPT_PARAM_INFO, "")
+		    Menu.Killsteal:addParam("Killsteal", "Use Killsteal", SCRIPT_PARAM_ONOFF, true)
+		    Menu.Killsteal:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Killsteal:addParam("Spell", "> Choose your spells:", SCRIPT_PARAM_INFO, "")
+			Menu.Killsteal:addParam("Q", "(Q) - Use ", SCRIPT_PARAM_ONOFF, false)
+			Menu.Killsteal:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, false)
+			Menu.Killsteal:addParam("E", "(E) - Use ", SCRIPT_PARAM_ONOFF, false)
+
+		--[[Laneclear]]--
+		Menu:addSubMenu("> Laneclear", "Laneclear")
+			Menu.Laneclear:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
+			Menu.Laneclear:addParam("laneclearItems", "Use Items", SCRIPT_PARAM_ONOFF, true)
+			Menu.Laneclear:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Laneclear:addParam("Mana", "> Manage your mana:", SCRIPT_PARAM_INFO, "")
+			Menu.Laneclear:addParam("ManaCheck", "Check mana", SCRIPT_PARAM_ONOFF, true)
+			Menu.Laneclear:addParam("ManaQ","Minimum % of mana (Q)", SCRIPT_PARAM_SLICE, 25, 0, 100, 0)
+			Menu.Laneclear:addParam("ManaW","Minimum % of mana (W)", SCRIPT_PARAM_SLICE, 25, 0, 100, 0)
+			Menu.Laneclear:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Laneclear:addParam("Spell", "> Choose your spells:", SCRIPT_PARAM_INFO, "")
+			Menu.Laneclear:addParam("Q", "(Q) - Use ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Laneclear:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, true)
+			
+		--[[Jungleclear]]--
+		Menu:addSubMenu("> Jungleclear", "Jungleclear")
+			Menu.Jungleclear:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
+			Menu.Jungleclear:addParam("jungleItems", "Use Items", SCRIPT_PARAM_ONOFF, true)
+			Menu.Jungleclear:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Jungleclear:addParam("Mana", "> Manage your mana:", SCRIPT_PARAM_INFO, "")
+			Menu.Jungleclear:addParam("ManaCheck", "Check mana", SCRIPT_PARAM_ONOFF, true)
+			Menu.Jungleclear:addParam("ManaQ","Minimum % of mana (Q)", SCRIPT_PARAM_SLICE, 25, 0, 100, 0)
+			Menu.Jungleclear:addParam("ManaW","Minimum % of mana (W)", SCRIPT_PARAM_SLICE, 25, 0, 100, 0)
+			Menu.Jungleclear:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Jungleclear:addParam("Spell", "> Choose your spells:", SCRIPT_PARAM_INFO, "")
+			Menu.Jungleclear:addParam("Q", "(Q) - Use ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Jungleclear:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, true)
+
+		--[[Def Item Settings]]--
+		Menu:addSubMenu("> Item Settings", "ItemsSettings")
+			Menu.ItemsSettings:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
+			Menu.ItemsSettings:addParam("ItemsSettings", "Use Def Item", SCRIPT_PARAM_ONOFF, true)
+			Menu.ItemsSettings:addParam("Humanizer", "Humanizer", SCRIPT_PARAM_SLICE, 250, 0, 500, 0)
+
+
+		--[[Smite]]--
+		if Smite then
+			Menu:addSubMenu("> Smite", "Smite")
+			Menu.Smite:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
+			Menu.Smite:addParam("UseSmite", "Use Smite on big Monster", SCRIPT_PARAM_ONOFF, true)
+			Menu.Smite:addParam("UseSmiteT", "Use Smite on Target", SCRIPT_PARAM_ONOFF, true)
+		end
+
+		--[[Misc]]--
+		Menu:addSubMenu("> Misc", "Misc")
+			Menu.Misc:addParam("SkinChanger", "> SkinChanger:", SCRIPT_PARAM_INFO, "")
+			Menu.Misc:addParam("UseSkin", "Use Skin", SCRIPT_PARAM_ONOFF, true)
+			Menu.Misc:addParam("SetSkin", "Select Skin", SCRIPT_PARAM_LIST, 1, {"Default", "Mecha", "Guardian of the Sand", "Death Blossom"})
+			Menu.Misc:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Misc:addParam("Fap", "Fap in Air", SCRIPT_PARAM_ONOFF, true)
+
+		--[[Drawings]]--
+		Menu:addSubMenu("> Drawings", "Draw")
+			Menu.Draw:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("drawSpellsReady", "Draw spells only if not on cooldown", SCRIPT_PARAM_ONOFF, true)
+			Menu.Draw:addParam("drawCircleSize", "Choose the strength of the circle", SCRIPT_PARAM_SLICE, 1, 1, 10, 0)
+			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("Spell", "> Draw range of spell:", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("drawQrange", "(Q) - Draw ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Draw:addParam("drawWrange", "(W) - Draw ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Draw:addParam("drawErange", "(E) - Draw ", SCRIPT_PARAM_ONOFF, true)
+			if Smite then
+				Menu.Draw:addParam("drawSrange", "(Smite) - Draw ", SCRIPT_PARAM_ONOFF, true)
+			end
+			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("drawBrush", "(Brush Text) - Draw ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("Color", "> Draw color of spell:", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("drawQrangeColor", "(Q) Color:", SCRIPT_PARAM_COLOR, Q.Color)
+			Menu.Draw:addParam("drawWrangeColor", "(W) Color:", SCRIPT_PARAM_COLOR, W.Color)
+			Menu.Draw:addParam("drawErangeColor", "(E) Color:", SCRIPT_PARAM_COLOR, E.Color)
+			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("extra", "> Extra:", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("drawBrushColor", "(Brush Text) Color:", SCRIPT_PARAM_COLOR, B.Color)
+			if Smite then
+				Menu.Draw:addParam("drawSrangeColor", "(Smite) Color:", SCRIPT_PARAM_COLOR, S.Color)
+			end
+
+
+	Menu:addParam("space", "", 5, "")
+	Menu:addParam("signature0", "            [KhaZix] v"..version, 5, "")
+	Menu:addParam("space1", "", 5, "")
+	Menu:addParam("signature1", "              by sYREXx    ", 5, "")
+end
+
+local function Checks()
+	Q.ready = myHero:CanUseSpell(_Q) == READY
+	W.ready = myHero:CanUseSpell(_W) == READY
+	E.ready = myHero:CanUseSpell(_E) == READY
+	R.ready = myHero:CanUseSpell(_R) == READY
+	IgniteReady = (Ignite ~= nil and myHero:CanUseSpell(Ignite) == READY)
+	SmiteReady = (Smite ~= nil and myHero:CanUseSpell(Smite) == READY)
+end
+
+local function EvolutionCheck()
+	if myHero:GetSpellData(_Q).name == "KhazixQLong" then
+		Q.range = 375
+		Q.evo = true
+	end
+	if myHero:GetSpellData(_W).name == "KhazixWLong" then
+		W.evo = true
+	end
+	if myHero:GetSpellData(_E).name == "KhazixELong" then
+		E.range = 900
+		E.evo = true
+	end 
+end
+
+function ManaCheck(ManaValue, ManaMenu)
+	if not ManaMenu then return true
+	else
+		if ManaValue <= 100 * myHero.mana / myHero.maxMana
+			then return true
+		else
+			return false
+		end
+	end
+end
+
+local function Isolated(unit)
+    if TargetHaveBuff("Buff", unit) then
+            return true
+        end
+    return false
+end
+
+local function CastQ(unit)
+	if not Q.ready or (GetDistance(unit) > Q.range) then return end
+	if ValidTarget(unit) then
+		CastSpell(_Q, unit)
+	end
+end
+
+local function CastW(unit)
+	if not W.ready or (GetDistance(unit) > W.range) then return end
+	local CastPosition, HitChance, HeroPosition = UPL:Predict(_W, myHero, unit)
+    if CastPosition and HitChance > 0 then
+      	CastSpell(_W, CastPosition.x, CastPosition.z)
+    end
+end
+
+ local function CastE(unit)
+	if not E.ready or (GetDistance(unit) > E.range) then return end
+	local CastPosition, HitChance, HeroPosition = UPL:Predict(_E, myHero, unit)
+    if CastPosition and HitChance > 0 then
+      	CastSpell(_E, CastPosition.x, CastPosition.z)
+    end
+end
+
+local function CastR(unit)
+	if not R.ready then return end
+	if ValidTarget(unit) then
+		CastSpell(_R, unit)
+	end
+end
+
+local function GetSmiteDamage()
+	if myHero.level <= 4 then
+		SmiteDamage = 370 + (myHero.level*20)
+	end
+	if myHero.level > 4 and myHero.level <= 9 then
+		SmiteDamage = 330 + (myHero.level*30)
+	end
+	if myHero.level > 9 and myHero.level <= 14 then
+		SmiteDamage = 240 + (myHero.level*40)
+	end
+	if myHero.level > 14 then
+		SmiteDamage = 100 + (myHero.level*50)
+	end
+	return SmiteDamage
+end
+
+local function OffensiveItems(unit)
+	if ValidTarget(unit) then
+		for _, item in pairs(OffensiveItemsList) do
+			item.slot = GetInventorySlotItem(item.id)
+			if item.slot then
+				if item.id == 3715 or item.id == 3706 or item.id == 1412 or item.id == 1400 then
+					if GetDistance(unit, myHero) <= item.range and Menu.Smite.UseSmiteT then
+						CastSpell(Smite, unit)
+					end
+				end
+				if item.reqTarget and GetDistance(unit, myHero) <= item.range then
+					CastSpell(item.slot, unit)
+				elseif not item.reqTarget and GetDistance(target, myHero) <= item.range then
+					CastSpell(item.slot)
+				end
+			end
+		end
+	end
+end
+
+local function DefensiveItems()
+	for _, item in pairs(DefensiveItemsList) do
+		item.slot = GetInventorySlotItem(item.id)
+		if item.slot then
+			DelayAction(function() CastSpell(item.slot) end, Menu.ItemsSettings.Humanizer/1000)
+		end
+	end
+end
+
+local function Combo()
+	if ValidTarget(ts.target) then
+		if Menu.Combo.Q and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(ts.target) end
+		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then CastW(ts.target) end
+		if Menu.Combo.useItems then OffensiveItems(ts.target) end
+		if Menu.Combo.R and not Passiv.ready then CastR(ts.target) end
+	end
+end
+
+local function Harass()
+	if ValidTarget(ts.target) then
+		if Menu.Harass.W and ManaCheck(Menu.Harass.ManaW, Menu.Harass.ManaCheck) then CastW(ts.target) end
+		if Menu.Harass.Q and ManaCheck(Menu.Harass.ManaQ, Menu.Harass.ManaCheck) then CastQ(ts.target) end
+	end
+end
+
+local function Laneclear()
+	for _, minions in ipairs(minions.objects) do
+		if minions and ValidTarget(minions) then
+			if Menu.Laneclear.W and ManaCheck(Menu.Laneclear.ManaW, Menu.Laneclear.ManaCheck) then CastW(minions) end
+			if Menu.Laneclear.Q and ManaCheck(Menu.Laneclear.ManaQ, Menu.Laneclear.ManaCheck) then CastQ(minions) end
+			if Menu.Laneclear.LaneclearItems then OffensiveItems(minions) end
+		end
+	end
+end
+
+local function Jungleclear()
+	for _, minions in ipairs(jungleMinions.objects) do
+		if minions and ValidTarget(minions) then
+			if Menu.Jungleclear.W and ManaCheck(Menu.Jungleclear.ManaW, Menu.Jungleclear.ManaCheck) then CastW(minions) end
+			if Menu.Jungleclear.Q and ManaCheck(Menu.Jungleclear.ManaQ, Menu.Jungleclear.ManaCheck) then CastQ(minions) end
+			if Menu.Jungleclear.JungleItems then OffensiveItems(minions) end
+		end
+	end
+end
+
+local function Killsteal()
+	for i,enemy in pairs(enemies) do
+		if enemy ~= nil and ValidTarget(enemy) then
+			if enemy.health < Qdmg and Menu.Killsteal.Q then CastQ(enemy) end
+			if enemy.health < Qdmg and Menu.Killsteal.Q and Menu.Killsteal.E then CastE(enemy) CastQ(enemy) end
+
+			if enemy.health < Wdmg and Menu.Killsteal.W then CastW(enemy) end
+			if enemy.health < Wdmg and Menu.Killsteal.W and Menu.Killsteal.E then CastE(enemy) CastW(enemy) end
+
+			if enemy.health < (Qdmg + Wdmg) and Menu.Killsteal.Q and Menu.Killsteal.W then CastW(enemy) CastQ(enemy) end
+			if enemy.health < (Qdmg + Wdmg) and Menu.Killsteal.Q and Menu.Killsteal.W and Menu.Killsteal.E then CastE(enemy) CastQ(enemy) CastW(enemy) end
+		end
+	end
+end
+
+local function CheckJungle()
+	if Smite then
+		if Menu.Smite.UseSmite then
+			for i, mob in pairs(jungleMinions.objects) do
+				if mob and mob.valid and mob.visible and not mob.dead and SmitePos and myHero:CanUseSpell(SmitePos) == READY and GetDistance(mob) <= 560 and mob.health <= GetSmiteDamage() then
+					if mob.charName == "SRU_Baron" or mob.charName == "SRU_Dragon_Water" or mob.charName == "SRU_Dragon_Fire" or mob.charName == "SRU_Dragon_Earth" or mob.charName == "SRU_Dragon_Air" or mob.charName == "SRU_Dragon_Elder" or mob.charName == "SRU_RiftHerald" then
+						CastSpell(SmitePos, mob)
+					end
+				end
+			end
+		end
+	end	 
+end
+
+--[[
+
+	Kha'Zix UltPassive Helper
+	by DrPhoenix
+
+]]
+
+local function CheckBush()
+	if IsGrass(D3DXVECTOR3(myHero.x, myHero.y, myHero.z)) and R.evo == true then
+		local bushID = nil
+		local bushDistance = mathhuge
+		for i, bush in lpairs(bushList) do
+			local localDistance = GetDistance(D3DXVECTOR3(bush.x, bush.y, bush.z))
+			if localDistance < bushDistance then
+				bushID = i
+				bushDistance = localDistance
+			end
+		end
+		if bushList[bushID] and bushList[bushID].cd < GetGameTimer() then
+			bushList[bushID].cd = GetGameTimer() + 10
+		end
+	end
+end
+
+local function DrawBushInfos()
+	for _, bush in lpairs(bushList) do
+		if R.evo and Menu.Draw.drawBrush then
+			local bushCd = ( bush.cd - GetGameTimer() )
+			if bushCd > 0 and OutOfCombat then
+				DrawText3D("Ready in "..mathfloor(bushCd).."s", bush.x-50, bush.y, bush.z, 25, ARGBT((Menu.Draw.drawBrushColor)))
+			else
+				DrawText3D("Ready", bush.x-50, bush.y, bush.z, 25, ARGBT((Menu.Draw.drawBrushColor)))
+			end
+		end
+	end
+end
+
+--[[
+
+	Kha'Zix UltPassive Helper
+	by DrPhoenix
+
+]]
+
+AddApplyBuffCallback(function(unit, source, buff)
+	if source and source.isMe and source.valid and not source.dead and not source.charName:lower():find("baron") and not source.charName:lower():find("spiderboss") then
+		if buff.name == "SummonerExhaust" and Menu.ItemsSettings.QSS.Exhaust then
+			DefensiveItems()
+		end
+		if buff.type == 5 and Menu.ItemsSettings.ItemsSettings then
+			DefensiveItems()
+		end
+		if buff.type == 7 and Menu.ItemsSettings.ItemsSettings then
+			DefensiveItems()
+		end
+		if buff.type == 8 and Menu.ItemsSettings.ItemsSettings then
+			DefensiveItems()
+		end
+		if buff.type == 10 and Menu.ItemsSettings.ItemsSettings then
+			DefensiveItems()
+		end
+		if buff.type == 11 and Menu.ItemsSettings.ItemsSettings then
+			DefensiveItems()
+		end
+		if buff.type == 21 and Menu.ItemsSettings.ItemsSettings then
+			DefensiveItems()
+		end
+		if buff.type == 24 and Menu.ItemsSettings.ItemsSettings then
+			DefensiveItems()
+		end
+		if buff.type == 25 and Menu.ItemsSettings.ItemsSettings then
+			DefensiveItems()
+		end
+		if buff.type == 29 and Menu.ItemsSettings.ItemsSettings then
+			DefensiveItems()
+		end
+		if buff.name == "khazixrevostealth" then
+			OutOfCombat = true
+			R.evo = true
+		end
+		if buff.name == "KhazixPDamage" then
+			Passiv.ready = true
+		end
+	end
+end)
+
+AddRemoveBuffCallback(function(source, buff)
+	if source and source.isMe and source.valid and not source.dead then
+		if buff.name == "khazixrevostealth" then
+			OutOfCombat = false
+		end
+		if buff.name == "KhazixPDamage" then
+			Passiv.ready = false
+		end
+	end
+end)
+
+AddAnimationCallback(function(unit, animation)
+	if unit and unit.isMe and unit.valid and not unit.dead then
+		if animation and (animation == "Spell3" or animation == "Spell3_evo") and Menu.Misc.Fap then
+			SendChat("/laugh")
+			SendChat("/laugh")
+		end
+		if animation and animation == "Evo2Q" then
+			PrintChat"<font color=\"#7b00ff\"><b>[REAPER CLAWS EVOLVED]</b></font>"
+		end
+		if animation and animation == "Evo2W" then
+			PrintChat"<font color=\"#7b00ff\"><b>[SPIKE RACKS EVOLVED]</b></font>"
+		end
+		if animation and animation == "Evo2E" then
+			PrintChat"<font color=\"#7b00ff\"><b>[WINGS EVOLVED]</b></font>"
+		end
+		if animation and animation == "Evo2R" then
+			PrintChat"<font color=\"#7b00ff\"><b>[ADAPTIVE CLOAKING EVOLVED]</b></font>"
+		end
+	end
+end)
+
+AddLoadCallback(function()
+	PrintMsg("Welcome <font color=\"#00faff\"><b>"..GetUser().."</b></font>, Have Fun and Good Luck !")
+	Menu()
+end)
+
+AddTickCallback(function()
+	if Menu.Misc.UseSkin then
+		SetSkin(myHero, Menu.Misc.SetSkin-1)
+	elseif not Menu.Misc.UseSkin then
+		SetSkin(myHero, 0)
+	end
+
+	if myHero.dead then return end
+	
+	CKey = 	Menu.Keys.keysCombo
+	HKey =  Menu.Keys.keysHarass
+	LKey =  Menu.Keys.keysClear
+	JKey =  Menu.Keys.keysClear
+
+	if CKey then Combo() end
+	if HKey then Harass() end
+	if LKey then Laneclear() end
+	if JKey then Jungleclear() end
+
+	if ultPassiveAvailable then
+		CheckBush()
+	end
+
+	jungleMinions:update()
+	minions:update()
+
+	Checks()
+
+	CheckJungle()
+
+	EvolutionCheck()
+
+	Isolated()
+end)
+
+AddDrawCallback(function()
+	if myHero.dead then return end
+
+	DrawBushInfos()
+
+	if Menu.Draw.drawQrange and ((Menu.Draw.drawSpellsReady and Q.ready) or Menu.Draw.drawSpellsReady == false) then
+		DrawCircle3D(myHero.x, myHero.y, myHero.z, Q.range, Menu.Draw.drawCircleSize, ARGBT((Menu.Draw.drawQrangeColor)))
+	end
+	if Menu.Draw.drawQrange and ((Menu.Draw.drawSpellsReady and W.ready) or Menu.Draw.drawSpellsReady == false) then
+		DrawCircle3D(myHero.x, myHero.y, myHero.z, W.range, Menu.Draw.drawCircleSize, ARGBT((Menu.Draw.drawWrangeColor)))
+	end
+	if Menu.Draw.drawErange and ((Menu.Draw.drawSpellsReady and E.ready) or Menu.Draw.drawSpellsReady == false) then
+		DrawCircle3D(myHero.x, myHero.y, myHero.z, E.range, Menu.Draw.drawCircleSize, ARGBT((Menu.Draw.drawErangeColor)))
+	end
+	if Menu.Draw.drawSrange and ((Menu.Draw.drawSpellsReady and SmiteReady) or Menu.Draw.drawSpellsReady == false) then
+		DrawCircle3D(myHero.x, myHero.y, myHero.z, S.range, Menu.Draw.drawCircleSize, ARGBT((Menu.Draw.drawSrangeColor)))
+	end
+end)
+
+AddUnloadCallback(function ()
+	PrintMsg("Unloading")
+end)
+
+AddBugsplatCallback(function ()
+	local file = io.open(SCRIPT_PATH.."KhaZix.bugsplat", "a")
+	file:write("\n"..tostring(debug.traceback()))
+	file:close()
+end)
