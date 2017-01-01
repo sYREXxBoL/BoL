@@ -448,14 +448,14 @@ end
 local function Killsteal()
 	for i,enemy in pairs(enemies) do
 		if enemy ~= nil and ValidTarget(enemy) then
-			if enemy.health < Qdmg and Menu.Killsteal.Q then CastQ(enemy) end
-			if enemy.health < Qdmg and Menu.Killsteal.Q and Menu.Killsteal.E then CastE(enemy) CastQ(enemy) end
+			if enemy.health < Qdmg and Menu.Killsteal.Q and GetDistance(enemy) < Q.range then CastQ(enemy) end
+			if enemy.health < Qdmg and Menu.Killsteal.Q and Menu.Killsteal.E and GetDistance(enemy) < E.range then CastE(enemy) CastQ(enemy) end
 
-			if enemy.health < Wdmg and Menu.Killsteal.W then CastW(enemy) end
-			if enemy.health < Wdmg and Menu.Killsteal.W and Menu.Killsteal.E then CastE(enemy) CastW(enemy) end
+			if enemy.health < Wdmg and Menu.Killsteal.W and GetDistance(enemy) < W.range then CastW(enemy) end
+			if enemy.health < Wdmg and Menu.Killsteal.W and Menu.Killsteal.E and GetDistance(enemy) < E.range then CastE(enemy) CastW(enemy) end
 
-			if enemy.health < (Qdmg + Wdmg) and Menu.Killsteal.Q and Menu.Killsteal.W then CastW(enemy) CastQ(enemy) end
-			if enemy.health < (Qdmg + Wdmg) and Menu.Killsteal.Q and Menu.Killsteal.W and Menu.Killsteal.E then CastE(enemy) CastQ(enemy) CastW(enemy) end
+			if enemy.health < (Qdmg + Wdmg) and Menu.Killsteal.Q and Menu.Killsteal.W and GetDistance(enemy) < Q.range then CastW(enemy) CastQ(enemy) end
+			if enemy.health < (Qdmg + Wdmg) and Menu.Killsteal.Q and Menu.Killsteal.W and Menu.Killsteal.E and GetDistance(enemy) < Q.range then CastE(enemy) CastQ(enemy) CastW(enemy) end
 		end
 	end
 end
