@@ -1,14 +1,57 @@
-if myHero.charName ~= "Khazix" then return end
+if myHero.charName ~= "Khazix" then
+	return 
+end
 
-local version = "1.001"
+local version = "2.001"
 
 -- BoL Tracker --
 assert(load(Base64Decode("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"), nil, "bt", _ENV))()
 TrackerLoad("2SprgUKdBqtw5R3O")
 -- BoL Tracker --
 
-local function PrintMsg(msg)
-	PrintChat("<font color=\"#7b00ff\"><b>[KhaZix]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
+local function TCPGetRequest(server, path, data, port)
+ 	local start_t = os.clock()
+ 	local port = port or 80
+ 	local data = data or {}
+ 	local lua_socket = require("socket")
+ 	local connection_tcp = lua_socket.connect(server,port)
+ 	local requeststring = "GET "..path
+ 	local first = true
+ 	for i,v in pairs(data)do
+  		requeststring = requeststring..(first and "?" or "&")..i.."="..v
+  		first = false
+ 	end
+ 	requeststring = requeststring.. " HTTP/1.0\r\nHost: "..server.."\r\n\r\n"
+ 	connection_tcp:send(requeststring)
+ 	local response = ""
+ 	local status
+ 	while true do
+  		s,status, partial = connection_tcp:receive('*a')
+  		response = response..(s or partial)
+  		if(status == "closed" or status == "timeout")then
+   			break
+ 		end
+ 	end
+ 	local end_t = os.clock()
+ 	local start_content = response:find("\r\n\r\n")+4
+ 	response = response:sub(start_content)
+ 	return response, status, end_t-start_t
+end
+
+local function update()
+	local host = "s1mplescripts.de"
+	local web_path = "/S1mple/Scripts/BolStudio/s1mple_ingame_bol_tools/getGit.php"
+	local version_url_b64 = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3NZUkVYeEJvTC9Cb0wvbWFzdGVyL0toYVppeCUyMC0lMjBUaGUlMjBCdWcudmVyc2lvbg=="
+	local file_url_b64 = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3NZUkVYeEJvTC9Cb0wvbWFzdGVyL0toYVppeCUyMC0lMjBUaGUlMjBCdWc="
+	
+	local resp, st, t = TCPGetRequest(host, web_path, {url = version_url_b64})
+	local server_version = tonumber(Base64Decode(resp))
+	if (server_version > version) then
+		local file,st,t = TCPGetRequest(host, web_path, {url = file_url_b64})
+		local f = io.open(FILE_NAME, "wb")
+		f:write(Base64Decode(file))
+		f:close()
+	end
 end
 
 if not _G.UPLloaded then
@@ -22,65 +65,64 @@ if not _G.UPLloaded then
   end
 end
 
-local Passiv = {ready = true}
-local Q = {Color = {255,100,200,200}, range = 325, evo = false, ready = false}
-local W = {Color = {255,100,200,200}, range = 1000, speed = 1700, delay = 0.25, width = 70, evo = false, ready = false}
-local E = {Color = {255,100,200,200}, range = 700, speed = 400 , delay = 0.25, width = 300, evo = false, ready = false}
-local R = {Color = {255,100,200,200}, evo = false, ready = false}
-local S = {Color = {255,100,200,200}, range = 560}
-local B = {Color = {255,100,200,200}}
+if not _G.UOLloaded then
+  if FileExist(LIB_PATH .. "/UOL.lua") then
+    require("UOL")
+  else 
+    print("Downloading UOL, please don't press F9")
+    DelayAction(function() DownloadFile("https://raw.github.com/nebelwolfi/BoL/master/Common/UOL.lua".."?rand="..math.random(1,10000), LIB_PATH.."UOL.lua", function () print("Successfully downloaded UOL. Press F9 twice.") end) end, 3) 
+    return
+  end
+end
 
-UPL:AddSpell(_W, { speed = W.speed, delay = W.delay, range = W.range, width = W.width, collision = true, aoe = true, type = "linear" })
-UPL:AddSpell(_E, { speed = E.speed, delay = E.delay, range = E.range, width = E.width, collision = false, aoe = true, type = "circular" })
+if FileExist(LIB_PATH .. "/CastItems.lua") then
+	require "CastItems"
+else 
+    print("Downloading CastItems, please don't press F9")
+    DelayAction(function() DownloadFile("https://raw.githubusercontent.com/Icesythe7/GOS/master/CastItems.lua".."?rand="..math.random(1,10000), LIB_PATH.."CastItems.lua", function () print("Successfully downloaded CastItems. Press F9 twice.") end) end, 3) 
+    return
+end
 
-local OutOfCombat = false
+local function PrintMsg(msg)
+	PrintChat("<font color=\"#7b00ff\"><b>[KhaZix]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
+end
 
+local Passiv = {ready = false}
+local Q = {range = 325, evo = false}
+local W = {range = 1000, speed = 1700, delay = 0.25, width = 70, evo = false}
+local E = {range = 700, speed = 400 , delay = 0.25, width = 300, evo = false}
+local R = {evo = false}
+local minions 	= minionManager(MINION_ENEMY, 1000, myHero, MINION_SORT_MAXHEALTH_ASC)
+local jungleMinions = minionManager(MINION_JUNGLE, 1100, myHero, MINION_SORT_MAXHEALTH_DEC)
 local Ignite = nil
 if myHero:GetSpellData(SUMMONER_1).name:find("summonerdot") then Ignite = SUMMONER_1 elseif myHero:GetSpellData(SUMMONER_2).name:lower():find("summonerdot") then Ignite = SUMMONER_2 end
 
 local Smite = nil
 if myHero:GetSpellData(SUMMONER_1).name:find("smite") then Smite = SUMMONER_1 elseif myHero:GetSpellData(SUMMONER_2).name:lower():find("smite") then Smite = SUMMONER_2 end
 
-local enemies = GetEnemyHeroes()
-local minions 	= minionManager(MINION_ENEMY, 1000, myHero, MINION_SORT_MAXHEALTH_ASC)
-local jungleMinions = minionManager(MINION_JUNGLE, 1100, myHero, MINION_SORT_MAXHEALTH_DEC)
-
-local ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 900, DAMAGE_PHYSICAL)
-
-local qlvl 	= GetSpellData(_Q).level
-local wlvl 	= GetSpellData(_W).level
-local elvl 	= GetSpellData(_E).level
-local mylvl	= myHero.level
-local bAD = myHero.addDamage
-
-local baseP = 8 * mylvl + 2
-local Pdmg = baseP + bAD * 0.4
-
-local baseQ = 25 * qlvl + 45
-local Qdmg = baseQ + bAD * 1.4
-
-local baseW = 30 * wlvl + 50
-local Wdmg = baseW + bAD * 1
-
-local baseE = 35 * elvl + 30
-local Edmg = baseE + bAD * 0.2
-
-
-local lpairs = pairs
-local mathfloor = math.floor
-local mathhuge = math.huge
-
-local myHero = myHero
-local GetGameTimer = GetGameTimer
-local GetDistance = GetDistance
-local GetUser = GetUser
-local PrintChat = PrintChat
-
+local OutOfCombat = false
 local ultPassiveAvailable = true
-local lastFightTime = GetGameTimer() - 5
-local lastMinimumHealth = myHero.health
 
-local bushList = {
+local smiteitem = 
+{
+	SR 	= { id = 3715, slot = nil }, -- Red Smite
+	SB 	= { id = 3706, slot = nil }, -- Blue Smite
+	SRW = { id = 1412, slot = nil }, -- Red Warrior
+	SBW = { id = 1400, slot = nil }, -- Blue Warrior
+}
+
+local buffs = 
+{
+	[5]=nil, [7]=nil, [8]=nil, [10]=nil, [11]=nil, [21]=nil, [24]=nil, [25]=nil, [29]=nil
+}
+
+local skins = 
+{
+	["Khazix"] = {"Default", "Mecha", "Guardian of the Sand", "Death Blossom"}
+}
+
+local bushList = 
+{
 
 	["BlueSideBotJungleTribrush"] 			= { x = 10350, y = 51, z = 3100, cd = 0 },
 	["BlueSideBotJungleBanana"] 			= { x = 6850, y = 51, z = 3150, cd = 0 },
@@ -128,42 +170,19 @@ local bushList = {
 	["LaneBrushesBotRed"] 					= { x = 13350, y = 51, z = 2550, cd = 0 }
 }
 
-local OffensiveItemsList = {
-	TMT = { id = 3077, range = 189, reqTarget = false, slot = nil }, -- Tiamat
-	THD = { id = 3074, range = 189, reqTarget = false, slot = nil }, -- Ravenous Hydra
-	THD = { id = 3748, range = 189, reqTarget = false, slot = nil }, -- Titanic Hydra
-	BWC = { id = 3144, range = 400, reqTarget = true, slot = nil }, -- Bilgewater Cutlass
-	BRK = { id = 3153, range = 450, reqTarget = true, slot = nil }, --Blade of the ruined king
-	SR 	= { id = 3715, range = 560, reqTarget = true, slot = nil }, -- Red Smite
-	SB 	= { id = 3706, range = 560, reqTarget = true, slot = nil }, -- Blue Smite
-	SRW = { id = 1412, range = 560, reqTarget = true, slot = nil }, -- Red Warrior
-	SBW = { id = 1400, range = 560, reqTarget = true, slot = nil }, -- Blue Warrior
-	YGB = { id = 3142, range = 1000, reqTarget = false, slot = nil } -- Youmuu Ghostblade
-}
+UPL:AddSpell(_W, { speed = W.speed, delay = W.delay, range = W.range, width = W.width, collision = true, aoe = true, type = "linear" })
+UPL:AddSpell(_E, { speed = E.speed, delay = E.delay, range = E.range, width = E.width, collision = false, aoe = true, type = "circular" })
 
-local DefensiveItemsList = {
-	QSS = { id = 3140, slot = nil }, -- Quicksilver Sash
-	MCS = { id = 3139, slot = nil } -- Mercurial Scimitar
-}
 
-local function ARGBT(t)
-	return ARGB(t[1], t[2], t[3], t[4])
-end
 
-local function Menu()
+---------------------------------------------------------------------------------
+--[[Menu]]--
+---------------------------------------------------------------------------------
+
+local Menu
+function Menu()
 
 	Menu = scriptConfig("KhaZix", "KhaZix")
-
-		UPL:AddToMenu(scriptConfig("Predition", "Predition"))
-
-		--[[Keybindings]]--
-		Menu:addSubMenu("> Keybindings", "Keys")
-			Menu.Keys:addParam("Fight", "> Fight ", SCRIPT_PARAM_INFO, "")
-			Menu.Keys:addParam("keysCombo", "Combo ", SCRIPT_PARAM_ONKEYDOWN, false, 32)
-			Menu.Keys:addParam("keysHarass", "Harass ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("C"))
-			Menu.Keys:addParam("divider", "", SCRIPT_PARAM_INFO, "")
-			Menu.Keys:addParam("Farm", "> Farm keys", SCRIPT_PARAM_INFO, "")
-			Menu.Keys:addParam("keysClear", "Clear ", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
 
 		--[[Combo]]--
 		Menu:addSubMenu("> Combo", "Combo")
@@ -235,57 +254,65 @@ local function Menu()
 			Menu.Jungleclear:addParam("Q", "(Q) - Use ", SCRIPT_PARAM_ONOFF, true)
 			Menu.Jungleclear:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, true)
 
-		--[[Def Item Settings]]--
+		--[[Def Item Settings]]
 		Menu:addSubMenu("> Item Settings", "ItemsSettings")
 			Menu.ItemsSettings:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
 			Menu.ItemsSettings:addParam("ItemsSettings", "Use Def Item", SCRIPT_PARAM_ONOFF, true)
 			Menu.ItemsSettings:addParam("Humanizer", "Humanizer", SCRIPT_PARAM_SLICE, 250, 0, 500, 0)
-
+			Menu.ItemsSettings:addSubMenu("QSS","QSS")
+				Menu.ItemsSettings.QSS:addParam("Stun", "Remove stun", SCRIPT_PARAM_ONOFF, true) --5
+				Menu.ItemsSettings.QSS:addParam("Silence", "Remove silence", SCRIPT_PARAM_ONOFF, true)--7
+				Menu.ItemsSettings.QSS:addParam("Taunt", "Remove taunt", SCRIPT_PARAM_ONOFF, true)--8
+				Menu.ItemsSettings.QSS:addParam("Root", "Remove root", SCRIPT_PARAM_ONOFF, true)--11
+				Menu.ItemsSettings.QSS:addParam("Fear", "Remove fear", SCRIPT_PARAM_ONOFF, true)--10
+				Menu.ItemsSettings.QSS:addParam("Charm", "Remove charm", SCRIPT_PARAM_ONOFF, true)--21
+				Menu.ItemsSettings.QSS:addParam("Suppression", "Remove suppression", SCRIPT_PARAM_ONOFF, true)--24
+				Menu.ItemsSettings.QSS:addParam("Blind", "Remove blind", SCRIPT_PARAM_ONOFF, true)--25
+				Menu.ItemsSettings.QSS:addParam("KnockUp", "Remove knock up", SCRIPT_PARAM_ONOFF, true)--29 k let me think a sec best way to do this ofc :)
 
 		--[[Smite]]--
 		if Smite then
 			Menu:addSubMenu("> Smite", "Smite")
 			Menu.Smite:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
-			Menu.Smite:addParam("UseSmite", "Use Smite on big Monster", SCRIPT_PARAM_ONOFF, true)
+			Menu.Smite:addParam("UseSmite", "Smite neutral monster", SCRIPT_PARAM_ONOFF, true)
 			Menu.Smite:addParam("UseSmiteT", "Use Smite on Target", SCRIPT_PARAM_ONOFF, true)
 		end
 
 		--[[Misc]]--
 		Menu:addSubMenu("> Misc", "Misc")
 			Menu.Misc:addParam("SkinChanger", "> SkinChanger:", SCRIPT_PARAM_INFO, "")
-			Menu.Misc:addParam("UseSkin", "Use Skin", SCRIPT_PARAM_ONOFF, true)
-			Menu.Misc:addParam("SetSkin", "Select Skin", SCRIPT_PARAM_LIST, 1, {"Default", "Mecha", "Guardian of the Sand", "Death Blossom"})
-			Menu.Misc:addParam("divider", "", SCRIPT_PARAM_INFO, "")
-			Menu.Misc:addParam("Fap", "Fap in Air", SCRIPT_PARAM_ONOFF, true)
+			Menu.Misc:addParam("UseSkin", "Use Skin", SCRIPT_PARAM_ONOFF, true) 
+			Menu.Misc:setCallback("UseSkin", StartSkin)
+			Menu.Misc:addParam("SetSkin", myHero.charName.. " Skins", SCRIPT_PARAM_LIST, 1, skins[myHero.charName])
+			Menu.Misc:setCallback("SetSkin", StartSkin)
 
 		--[[Drawings]]--
 		Menu:addSubMenu("> Drawings", "Draw")
-			Menu.Draw:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
-			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
-			Menu.Draw:addParam("drawSpellsReady", "Draw spells only if not on cooldown", SCRIPT_PARAM_ONOFF, true)
-			Menu.Draw:addParam("drawCircleSize", "Choose the strength of the circle", SCRIPT_PARAM_SLICE, 1, 1, 10, 0)
+			Menu.Draw:addParam("lfps", "Low Fps Circles", SCRIPT_PARAM_ONOFF, true)
 			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
 			Menu.Draw:addParam("Spell", "> Draw range of spell:", SCRIPT_PARAM_INFO, "")
 			Menu.Draw:addParam("drawQrange", "(Q) - Draw ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Draw:addParam("Qcolor", "(Q) Color", SCRIPT_PARAM_COLOR, {255, 186, 85, 211})
 			Menu.Draw:addParam("drawWrange", "(W) - Draw ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Draw:addParam("Wcolor", "(W) Color", SCRIPT_PARAM_COLOR, {255, 186, 85, 211})
 			Menu.Draw:addParam("drawErange", "(E) - Draw ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Draw:addParam("Ecolor", "(E) Color", SCRIPT_PARAM_COLOR, {255, 186, 85, 211})
 			if Smite then
 				Menu.Draw:addParam("drawSrange", "(Smite) - Draw ", SCRIPT_PARAM_ONOFF, true)
 			end
 			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
-			Menu.Draw:addParam("drawBrush", "(Brush Text) - Draw ", SCRIPT_PARAM_ONOFF, true)
-			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
-			Menu.Draw:addParam("Color", "> Draw color of spell:", SCRIPT_PARAM_INFO, "")
-			Menu.Draw:addParam("drawQrangeColor", "(Q) Color:", SCRIPT_PARAM_COLOR, Q.Color)
-			Menu.Draw:addParam("drawWrangeColor", "(W) Color:", SCRIPT_PARAM_COLOR, W.Color)
-			Menu.Draw:addParam("drawErangeColor", "(E) Color:", SCRIPT_PARAM_COLOR, E.Color)
-			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
 			Menu.Draw:addParam("extra", "> Extra:", SCRIPT_PARAM_INFO, "")
-			Menu.Draw:addParam("drawBrushColor", "(Brush Text) Color:", SCRIPT_PARAM_COLOR, B.Color)
+			Menu.Draw:addParam("drawBrush", "(Brush Text) - Draw ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Draw:addParam("drawBrushColor", "(Brush) Text Color", SCRIPT_PARAM_COLOR, {255, 186, 85, 211})
 			if Smite then
 				Menu.Draw:addParam("drawSrangeColor", "(Smite) Color:", SCRIPT_PARAM_COLOR, S.Color)
 			end
 
+			Menu:addSubMenu("> Prediction", "pred")
+			UPL:AddToMenu(Menu.pred)
+
+			Menu:addSubMenu("> Orbwalker", "Orbwalker")
+			UOL:AddToMenu(Menu.Orbwalker)
 
 	Menu:addParam("space", "", 5, "")
 	Menu:addParam("signature0", "            [KhaZix] v"..version, 5, "")
@@ -293,75 +320,29 @@ local function Menu()
 	Menu:addParam("signature1", "              by sYREXx    ", 5, "")
 end
 
-local function Checks()
-	Q.ready = myHero:CanUseSpell(_Q) == READY
-	W.ready = myHero:CanUseSpell(_W) == READY
-	E.ready = myHero:CanUseSpell(_E) == READY
-	R.ready = myHero:CanUseSpell(_R) == READY
-	IgniteReady = (Ignite ~= nil and myHero:CanUseSpell(Ignite) == READY)
-	SmiteReady = (Smite ~= nil and myHero:CanUseSpell(Smite) == READY)
+---------------------------------------------------------------------------------
+--[[Spell Check's]]--
+---------------------------------------------------------------------------------
+
+local function isReady(slot)
+	return myHero:CanUseSpell(slot) == READY
 end
 
-local function EvolutionCheck()
-	if myHero:GetSpellData(_Q).name == "KhazixQLong" then
-		Q.range = 375
-		Q.evo = true
-	end
-	if myHero:GetSpellData(_W).name == "KhazixWLong" then
-		W.evo = true
-	end
-	if myHero:GetSpellData(_E).name == "KhazixELong" then
-		E.range = 900
-		E.evo = true
-	end 
+local function isLevel(slot)
+	if myHero:GetSpellData(slot).level > 0 then
+    	return true
+  	else
+    	return false
+  	end
 end
 
-function ManaCheck(ManaValue, ManaMenu)
-	if not ManaMenu then return true
-	else
-		if ManaValue <= 100 * myHero.mana / myHero.maxMana
-			then return true
-		else
-			return false
-		end
-	end
-end
-
-local function Isolated(unit)
-    if TargetHaveBuff("Buff", unit) then
-            return true
-        end
-    return false
-end
-
-local function CastQ(unit)
-	if not Q.ready or (GetDistance(unit) > Q.range) then return end
-	if ValidTarget(unit) then
-		CastSpell(_Q, unit)
-	end
-end
-
-local function CastW(unit)
-	if not W.ready or (GetDistance(unit) > W.range) then return end
-	local CastPosition, HitChance, HeroPosition = UPL:Predict(_W, myHero, unit)
-    if CastPosition and HitChance > 0 then
-      	CastSpell(_W, CastPosition.x, CastPosition.z)
-    end
-end
-
- local function CastE(unit)
-	if not E.ready or (GetDistance(unit) > E.range) then return end
-	local CastPosition, HitChance, HeroPosition = UPL:Predict(_E, myHero, unit)
-    if CastPosition and HitChance > 0 then
-      	CastSpell(_E, CastPosition.x, CastPosition.z)
-    end
-end
-
-local function CastR(unit)
-	if not R.ready then return end
-	if ValidTarget(unit) then
-		CastSpell(_R, unit)
-	end
+local function GetDamage(spell, unit)
+	local truedamage = 0
+	if spell == _Passiv and Passiv.ready then truedamage = myHero:CalcDamage(unit, (((mylvl * 8) + 2) + (bAD * 0.4)))
+	elseif spell == _Q and Q.ready then truedamage = myHero:CalcDamage(unit, (((qlvl * 25) + 45) + (bAD * 1.4)))
+	elseif spell == _W and W.ready then truedamage = myHero:CalcDamage(unit, (((wlvl * 30) + 50) + (bAD * 1)))
+	elseif spell == _E and E.ready then truedamage = myHero:CalcDamage(unit, (((elvl * 35) + 30) + (bAD * 0.2))) end
+	return truedamage
 end
 
 local function GetSmiteDamage()
@@ -380,82 +361,168 @@ local function GetSmiteDamage()
 	return SmiteDamage
 end
 
-local function OffensiveItems(unit)
-	if ValidTarget(unit) then
-		for _, item in pairs(OffensiveItemsList) do
+local function ManaCheck(ManaValue, ManaMenu)
+	if not ManaMenu then return true
+	else
+		if ManaValue <= 100 * myHero.mana / myHero.maxMana
+			then return true
+		else
+			return false
+		end
+	end
+end
+
+---------------------------------------------------------------------------------
+--[[Cast Spell's]]--
+---------------------------------------------------------------------------------
+
+local function CastQ(unit)
+	if unit ~= nil and ValidTarget(unit) and isReady(_Q) and GetDistanceSqr(unit) < Q.range * Q.range then
+		CastSpell(_Q, unit)
+	end
+end
+
+local function CastW(unit)
+	if unit ~= nil and ValidTarget(unit) and isReady(_W) and GetDistanceSqr(unit) < W.range * W.range then
+		local CastPosition, HitChance, HeroPosition = UPL:Predict(_W, myHero, unit)
+    	if CastPosition and HitChance > 0 then
+      		CastSpell(_W, CastPosition.x, CastPosition.z)
+    	end
+    end
+end
+
+local function CastE(unit)
+	if unit ~= nil and ValidTarget(unit) and isReady(_E) and GetDistanceSqr(unit) < E.range * E.range then
+		local CastPosition, HitChance, HeroPosition = UPL:Predict(_E, myHero, unit)
+    	if CastPosition and HitChance > 0 then
+      		CastSpell(_E, CastPosition.x, CastPosition.z)
+    	end
+    end
+end
+
+local function CastR()
+	if isReady(_R) then
+		CastSpell(_R)
+	end
+end
+
+---------------------------------------------------------------------------------
+--[[Mode's]]--
+---------------------------------------------------------------------------------
+
+local function Combo()
+	local target = UOL:GetTarget()
+	if Menu.Smite.UseSmiteT then
+		for _, item in pairs (smiteitem) do
 			item.slot = GetInventorySlotItem(item.id)
 			if item.slot then
 				if item.id == 3715 or item.id == 3706 or item.id == 1412 or item.id == 1400 then
-					if GetDistance(unit, myHero) <= item.range and Menu.Smite.UseSmiteT then
-						CastSpell(Smite, unit)
-					end
+					CastSpell(Smite, target)
 				end
-				if item.reqTarget and GetDistance(unit, myHero) <= item.range then
-					CastSpell(item.slot, unit)
-				elseif not item.reqTarget and GetDistance(target, myHero) <= item.range then
-					CastSpell(item.slot)
+			end
+		end
+	end
+	if Menu.Combo.E then
+		CastE(target) 
+	end
+	if Menu.Combo.Q then
+		CastQ(target) 
+	end
+	if Menu.Combo.W then
+		CastW(target)
+	end
+	if Menu.Combo.useItems then
+		if GetDistanceSqr(target) <= 189 * 189 then
+			CastItem(3077)
+			CastItem(3074)
+			CastItem(3748)
+		elseif GetDistanceSqr(target) <= 1000 * 1000 then
+			CastItem(3142)
+		end
+
+	end
+	if Menu.Combo.R and not Passiv.ready then 
+		CastR() 
+	end
+end
+
+local function Harass()
+	local target = UOL:GetTarget()
+	if Menu.Harass.W and ManaCheck(Menu.Harass.ManaW, Menu.Harass.ManaCheck) then 
+		CastW(target) 
+	end
+	if Menu.Harass.Q and ManaCheck(Menu.Harass.ManaQ, Menu.Harass.ManaCheck) then 
+		CastQ(target) 
+	end
+end
+
+local function Laneclear()
+	minions:update()
+	for _, minions in pairs(minions.objects) do
+		if minions and ValidTarget(minions) then
+			if Menu.Laneclear.W and ManaCheck(Menu.Laneclear.ManaW, Menu.Laneclear.ManaCheck) then
+				CastW(minions) 
+			end
+			if Menu.Laneclear.Q and ManaCheck(Menu.Laneclear.ManaQ, Menu.Laneclear.ManaCheck) then 
+				CastQ(minions) 
+			end
+			if Menu.Laneclear.laneclearItems then
+				if GetDistanceSqr(minions) <= 189 * 189 then
+					CastItem(3077)
+					CastItem(3074)
+					CastItem(3748) 
 				end
 			end
 		end
 	end
 end
 
-local function DefensiveItems()
-	for _, item in pairs(DefensiveItemsList) do
-		item.slot = GetInventorySlotItem(item.id)
-		if item.slot then
-			DelayAction(function() CastSpell(item.slot) end, Menu.ItemsSettings.Humanizer/1000)
-		end
-	end
-end
-
-local function Combo()
-	if ValidTarget(ts.target) then
-		if Menu.Combo.Q and ManaCheck(Menu.Combo.ManaQ, Menu.Combo.ManaCheck) then CastQ(ts.target) end
-		if Menu.Combo.W and ManaCheck(Menu.Combo.ManaW, Menu.Combo.ManaCheck) then CastW(ts.target) end
-		if Menu.Combo.useItems then OffensiveItems(ts.target) end
-		if Menu.Combo.R and not Passiv.ready then CastR(ts.target) end
-	end
-end
-
-local function Harass()
-	if ValidTarget(ts.target) then
-		if Menu.Harass.W and ManaCheck(Menu.Harass.ManaW, Menu.Harass.ManaCheck) then CastW(ts.target) end
-		if Menu.Harass.Q and ManaCheck(Menu.Harass.ManaQ, Menu.Harass.ManaCheck) then CastQ(ts.target) end
-	end
-end
-
-local function Laneclear()
-	for _, minions in ipairs(minions.objects) do
-		if minions and ValidTarget(minions) then
-			if Menu.Laneclear.W and ManaCheck(Menu.Laneclear.ManaW, Menu.Laneclear.ManaCheck) then CastW(minions) end
-			if Menu.Laneclear.Q and ManaCheck(Menu.Laneclear.ManaQ, Menu.Laneclear.ManaCheck) then CastQ(minions) end
-			if Menu.Laneclear.LaneclearItems then OffensiveItems(minions) end
-		end
-	end
-end
-
 local function Jungleclear()
-	for _, minions in ipairs(jungleMinions.objects) do
+	jungleMinions:update()
+	for _, minions in pairs(jungleMinions.objects) do
+		if minions.name:find("Plant") then
+			return 
+		end
 		if minions and ValidTarget(minions) then
-			if Menu.Jungleclear.W and ManaCheck(Menu.Jungleclear.ManaW, Menu.Jungleclear.ManaCheck) then CastW(minions) end
-			if Menu.Jungleclear.Q and ManaCheck(Menu.Jungleclear.ManaQ, Menu.Jungleclear.ManaCheck) then CastQ(minions) end
-			if Menu.Jungleclear.JungleItems then OffensiveItems(minions) end
+			if Menu.Jungleclear.W and ManaCheck(Menu.Jungleclear.ManaW, Menu.Jungleclear.ManaCheck) then 
+				CastW(minions) 
+			end
+			if Menu.Jungleclear.Q and ManaCheck(Menu.Jungleclear.ManaQ, Menu.Jungleclear.ManaCheck) then
+				CastQ(minions) 
+			end
+			if Menu.Jungleclear.jungleItems then
+				if GetDistanceSqr(minions) <= 189 * 189 then
+					CastItem(3077)
+					CastItem(3074)
+					CastItem(3748) 
+				end 
+			end
 		end
 	end
 end
 
 local function Killsteal()
-	for i,enemy in pairs(enemies) do
-		if enemy ~= nil and ValidTarget(enemy) then
-			if enemy.health < Qdmg and Menu.Killsteal.Q and GetDistance(enemy) < Q.range then CastQ(enemy) end
-			if enemy.health < Qdmg and Menu.Killsteal.Q and Menu.Killsteal.E and GetDistance(enemy) < E.range then CastE(enemy) CastQ(enemy) end
-
-			if enemy.health < Wdmg and Menu.Killsteal.W and GetDistance(enemy) < W.range then CastW(enemy) end
-			if enemy.health < Wdmg and Menu.Killsteal.W and Menu.Killsteal.E and GetDistance(enemy) < E.range then CastE(enemy) CastW(enemy) end
-
-			if enemy.health < (Qdmg + Wdmg) and Menu.Killsteal.Q and Menu.Killsteal.W and GetDistance(enemy) < Q.range then CastW(enemy) CastQ(enemy) end
-			if enemy.health < (Qdmg + Wdmg) and Menu.Killsteal.Q and Menu.Killsteal.W and Menu.Killsteal.E and GetDistance(enemy) < Q.range then CastE(enemy) CastQ(enemy) CastW(enemy) end
+	if Menu.Killsteal.Killsteal then
+		for _, enemy in pairs(GetEnemyHeroes()) do
+			local realHPi = (enemy.health + (enemy.hpRegen * 0.05))
+			if Ignite and isReady(Ignite) then
+				local iDamage = (50 + (20 * mylvl))
+				if enemy ~= nil and enemy.valid and GetDistanceSqr(enemy) < 600 * 600 and realHPi <= iDamge then
+					CastSpell(Ignite, enemy)
+				end
+			elseif Menu.Killsteal.Q and isReady(_Q) then
+				if enemy ~= nil and enemy.valid and GetDistanceSqr(enemy) < Q.range * Q.range and realHPi <= GetDamage(_Q, enemy) then
+					CastQ(enemy)
+				end
+			elseif Menu.Killsteal.W and isReady(_W) then
+				if enemy ~= nil and enemy.valid and GetDistanceSqr(enemy) < W.range * W.range and realHPi <= GetDamage(_W, enemy) then
+					CastW(enemy)
+				end
+			elseif Menu.Killsteal.E and isReady(_E) then
+				if enemy ~= nil and enemy.valid and GetDistanceSqr(enemy) < E.range * E.range and realHPi <= GetDamage(_E, enemy) then
+					CastE(enemy)
+				end
+			end
 		end
 	end
 end
@@ -466,7 +533,7 @@ local function CheckJungle()
 			for i, mob in pairs(jungleMinions.objects) do
 				if mob and mob.valid and mob.visible and not mob.dead and SmitePos and myHero:CanUseSpell(SmitePos) == READY and GetDistance(mob) <= 560 and mob.health <= GetSmiteDamage() then
 					if mob.charName == "SRU_Baron" or mob.charName == "SRU_Dragon_Water" or mob.charName == "SRU_Dragon_Fire" or mob.charName == "SRU_Dragon_Earth" or mob.charName == "SRU_Dragon_Air" or mob.charName == "SRU_Dragon_Elder" or mob.charName == "SRU_RiftHerald" then
-						CastSpell(SmitePos, mob)
+						CastSpell(Smite, mob)
 					end
 				end
 			end
@@ -474,18 +541,63 @@ local function CheckJungle()
 	end	 
 end
 
---[[
+---------------------------------------------------------------------------------
+--[[Check's]]--
+---------------------------------------------------------------------------------
 
-	Kha'Zix UltPassive Helper
-	by DrPhoenix
-
-]]
+local function CC()
+	if Menu.ItemsSettings.QSS.Stun then
+		buffs[5] = true
+	else 
+		buffs[5] = false
+	end
+	if Menu.ItemsSettings.QSS.Silence then
+		buffs[7] = true
+	else 
+		buffs[7] = false
+	end
+	if Menu.ItemsSettings.QSS.Taunt then
+		buffs[8] = true
+	else 
+		buffs[8] = false
+	end
+	if Menu.ItemsSettings.QSS.Fear then
+		buffs[10] = true
+	else 
+		buffs[10] = false
+	end
+	if Menu.ItemsSettings.QSS.Roat then
+		buffs[11] = true
+	else 
+		buffs[11] = false
+	end
+	if Menu.ItemsSettings.QSS.Charm then
+		buffs[21] = true
+	else 
+		buffs[21] = false
+	end
+	if Menu.ItemsSettings.QSS.Suppression then
+		buffs[24] = true
+	else 
+		buffs[24] = false
+	end
+	if Menu.ItemsSettings.QSS.Blind then
+		buffs[25] = true
+	else 
+		buffs[25] = false
+	end
+	if Menu.ItemsSettings.QSS.KnockUp then
+		buffs[29] = true
+	else 
+		buffs[29] = false
+	end
+end
 
 local function CheckBush()
-	if IsGrass(D3DXVECTOR3(myHero.x, myHero.y, myHero.z)) and R.evo == true then
+	if IsGrass(D3DXVECTOR3(myHero.x, myHero.y, myHero.z)) and R.evo then
 		local bushID = nil
-		local bushDistance = mathhuge
-		for i, bush in lpairs(bushList) do
+		local bushDistance = math.huge
+		for i, bush in pairs(bushList) do
 			local localDistance = GetDistance(D3DXVECTOR3(bush.x, bush.y, bush.z))
 			if localDistance < bushDistance then
 				bushID = i
@@ -498,165 +610,188 @@ local function CheckBush()
 	end
 end
 
-local function DrawBushInfos()
-	for _, bush in lpairs(bushList) do
-		if R.evo and Menu.Draw.drawBrush then
-			local bushCd = ( bush.cd - GetGameTimer() )
+local function OnUpdateBuff(unit, buff)
+ 	if unit and unit.isMe and buff and buff.valid then
+  		if buff.name == "KhazixQEvo" then
+  			Q.evo = true
+  			Q.range = 375
+  			PrintChat("<font color=\"#7b00ff\"><b>[REAPER CLAWS EVOLVED]</b></font>")
+  		elseif buff.name == "KhazixWEvo" then
+  			W.evo = true
+  			PrintChat("<font color=\"#7b00ff\"><b>[SPIKE RACKS EVOLVED]</b></font>")
+  		elseif buff.name == "KhazixEEvo" then
+  			E.evo = true
+  			E.range = 900
+  			PrintChat("<font color=\"#7b00ff\"><b>[WINGS EVOLVED]</b></font>")
+  		elseif buff.name == "KhazixREvo" then
+  			R.evo = true
+  			PrintChat("<font color=\"#7b00ff\"><b>[ADAPTIVE CLOAKING EVOLVED]</b></font>")
+  		elseif buff.name == "KhazixPDamage" then
+			Passiv.ready = true
+		end
+		if buff.name == "khazixrevostealth" then
+			OutOfCombat = true
+		end
+		if Menu.ItemsSettings.ItemsSettings and buffs[buff.type] == true then
+			CastItem(3137)
+			CastItem(3140)
+			CastItem(3139)
+		end
+ 	end
+end
+
+local function OnRemoveBuff(unit, buff)
+	if unit and unit.isMe then
+		if buff.name == "KhazixPDamage" then
+			Passiv.ready = false
+		elseif buff.name == "khazixrevostealth" then
+			OutOfCombat = false
+		end
+	end
+end
+
+---------------------------------------------------------------------------------
+--[[OnLoad]]--
+---------------------------------------------------------------------------------
+
+function OnLoad()
+	DelayAction(function()PrintMsg("Welcome <font color=\"#3393FF\"><b>"..GetUser().."</b></font>, Have Fun and Good Luck !") end, 0.5)
+	Menu()
+	StartSkin()
+	for i = 1, myHero.buffCount do
+	    local buff = myHero:getBuff(i)
+		if buff and buff.valid then
+		    if buff.name == "KhazixQEvo" then
+	  			Q.evo = true
+	  			Q.range = 375
+	  			PrintChat("<font color=\"#7b00ff\"><b>[REAPER CLAWS EVOLVED]</b></font>")
+	  		elseif buff.name == "KhazixWEvo" then
+	  			W.evo = true
+	  			PrintChat("<font color=\"#7b00ff\"><b>[SPIKE RACKS EVOLVED]</b></font>")
+	  		elseif buff.name == "KhazixEEvo" then
+	  			E.evo = true
+	  			E.range = 900
+	  			PrintChat("<font color=\"#7b00ff\"><b>[WINGS EVOLVED]</b></font>")
+	  		elseif buff.name == "KhazixREvo" then
+	  			R.evo = true
+	  			PrintChat("<font color=\"#7b00ff\"><b>[ADAPTIVE CLOAKING EVOLVED]</b></font>")
+	  		elseif buff.name == "khazixrevostealth" then
+	  			OutOfCombat = true
+	  		end
+	    end
+	end
+end
+
+---------------------------------------------------------------------------------
+--[[OnTick]]--
+---------------------------------------------------------------------------------
+
+function OnTick()
+	if myHero.dead then 
+		return
+	end
+	if UOL:GetOrbWalkMode() == "Combo" then
+		Combo()
+	end
+	if UOL:GetOrbWalkMode() == "Harass" then
+		Harass()
+	end
+	if UOL:GetOrbWalkMode() == "LaneClear" then
+		Laneclear()
+		Jungleclear()
+	end
+	if ultPassiveAvailable then
+		CheckBush()
+	end
+	buffs = {[5]=Menu.ItemsSettings.QSS.Stun, [7]=Menu.ItemsSettings.QSS.Silence, [8]=Menu.ItemsSettings.QSS.Taunt, [10]=Menu.ItemsSettings.QSS.Fear, [11]=Menu.ItemsSettings.QSS.Roat, [21]=Menu.ItemsSettings.QSS.Charm, [24]=Menu.ItemsSettings.QSS.Suppression, [25]=Menu.ItemsSettings.QSS.Blind, [29]=Menu.ItemsSettings.QSS.KnockUp}
+end
+
+---------------------------------------------------------------------------------
+--[[Draw Stuff]]--
+---------------------------------------------------------------------------------
+
+local function DrawCircleNextLvl(x, y, z, radius, width, color, chordlength)
+	radius = radius or 300
+	quality = math.max(8,math.floor(180/math.deg((math.asin((chordlength/(2*radius)))))))
+	quality = 2 * math.pi / quality
+	local points = {}
+	for theta = 0, 2 * math.pi + quality, quality do
+		local c = WorldToScreen(D3DXVECTOR3(x + radius * math.cos(theta), y, z - radius * math.sin(theta)))
+		points[#points + 1] = D3DXVECTOR2(c.x, c.y)
+	end
+	DrawLines2(points, width or 1, color or 4294967295)
+end
+
+local function DrawCircle2(x, y, z, radius, color)
+	local vPos1 = Vector(x, y, z)
+	local vPos2 = Vector(cameraPos.x, cameraPos.y, cameraPos.z)
+	local tPos = vPos1 - (vPos1 - vPos2):normalized() * radius
+	local sPos = WorldToScreen(D3DXVECTOR3(tPos.x, tPos.y, tPos.z))
+	if OnScreen({ x = sPos.x, y = sPos.y }, { x = sPos.x, y = sPos.y })  then
+		DrawCircleNextLvl(x, y, z, radius, 1, color, 75)	
+	end
+end
+
+function OnDraw()
+	if myHero.dead then
+		return
+	end
+	if Menu.Draw.lfps then
+		if Menu.Draw.drawQrange and isReady(_Q) then 
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, Q.range, ARGB(Menu.Draw.Qcolor[1], Menu.Draw.Qcolor[2], Menu.Draw.Qcolor[3], Menu.Draw.Qcolor[4]))
+  		elseif Menu.Draw.drawQrange and not isReady(_Q) and isLevel(_Q) then
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, Q.range, ARGB(255, 255, 0, 0))
+  		end
+  		if Menu.Draw.drawWrange and isReady(_W) then
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, W.range, ARGB(Menu.Draw.Wcolor[1], Menu.Draw.Wcolor[2], Menu.Draw.Wcolor[3], Menu.Draw.Wcolor[4]))
+  		elseif Menu.Draw.drawWrange and not isReady(_W) and isLevel(_W) then
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, W.range, ARGB(255, 255, 0, 0))
+  		end
+  		if Menu.Draw.drawErange and isReady(_E) then 
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, E.range, ARGB(Menu.Draw.Ecolor[1], Menu.Draw.Ecolor[2], Menu.Draw.Ecolor[3], Menu.Draw.Ecolor[4]))
+  		elseif Menu.Draw.drawErange and not isReady(_E) and isLevel(_E) then
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, E.range, ARGB(255, 255, 0, 0))
+  		end
+	else
+		if Menu.Draw.drawQrange and isReady(_Q) then
+    		DrawCircle(myHero.x, myHero.y, myHero.z, Q.range, ARGB(Menu.Draw.Qcolor[1], Menu.Draw.Qcolor[2], Menu.Draw.Qcolor[3], Menu.Draw.Qcolor[4]))
+  		elseif Menu.Draw.drawQrange and not isReady(_Q) and isLevel(_Q) then
+    		DrawCircle(myHero.x, myHero.y, myHero.z, Q.range, ARGB(255, 255, 0, 0))
+  		end
+  		if Menu.Draw.drawWrange and isReady(_W) then
+    		DrawCircle(myHero.x, myHero.y, myHero.z, W.range, ARGB(Menu.Draw.Wcolor[1], Menu.Draw.Wcolor[2], Menu.Draw.Wcolor[3], Menu.Draw.Wcolor[4]))
+  		elseif Menu.Draw.drawWrange and not isReady(_W) and isLevel(_W) then
+    		DrawCircle(myHero.x, myHero.y, myHero.z, W.range, ARGB(255, 255, 0, 0))
+  		end
+  		if Menu.Draw.drawErange and isReady(_E) then 
+    		DrawCircle(myHero.x, myHero.y, myHero.z, E.range, ARGB(Menu.Draw.Ecolor[1], Menu.Draw.Ecolor[2], Menu.Draw.Ecolor[3], Menu.Draw.Ecolor[4]))
+  		elseif Menu.Draw.drawErange and not isReady(_E) and isLevel(_E) then
+    		DrawCircle(myHero.x, myHero.y, myHero.z, E.range, ARGB(255, 255, 0, 0))
+  		end
+	end
+	if R.evo and Menu.Draw.drawBrush then
+		for _, bush in pairs(bushList) do
+			local bushCd = (bush.cd - GetGameTimer())
 			if bushCd > 0 and OutOfCombat then
-				DrawText3D("Ready in "..mathfloor(bushCd).."s", bush.x-50, bush.y, bush.z, 25, ARGBT((Menu.Draw.drawBrushColor)))
+				DrawText3D("Ready in "..math.floor(bushCd).."s", bush.x-50, bush.y, bush.z, 25, ARGB(Menu.Draw.drawBrushColor[1], Menu.Draw.drawBrushColor[2], Menu.Draw.drawBrushColor[3], Menu.Draw.drawBrushColor[4]))
+			elseif not OutOfCombat then
+				DrawText3D("Get Out of Combat", bush.x-50, bush.y, bush.z, 25, ARGB(Menu.Draw.drawBrushColor[1], Menu.Draw.drawBrushColor[2], Menu.Draw.drawBrushColor[3], Menu.Draw.drawBrushColor[4]))
 			else
-				DrawText3D("Ready", bush.x-50, bush.y, bush.z, 25, ARGBT((Menu.Draw.drawBrushColor)))
+				DrawText3D("Ready", bush.x-50, bush.y, bush.z, 25, ARGB(Menu.Draw.drawBrushColor[1], Menu.Draw.drawBrushColor[2], Menu.Draw.drawBrushColor[3], Menu.Draw.drawBrushColor[4]))
 			end
 		end
 	end
 end
 
---[[
+---------------------------------------------------------------------------------
+--[[Skin]]--
+---------------------------------------------------------------------------------
 
-	Kha'Zix UltPassive Helper
-	by DrPhoenix
-
-]]
-
-AddApplyBuffCallback(function(unit, source, buff)
-	if source and source.isMe and source.valid and not source.dead and not source.charName:lower():find("baron") and not source.charName:lower():find("spiderboss") then
-		if buff.name == "SummonerExhaust" and Menu.ItemsSettings.QSS.Exhaust then
-			DefensiveItems()
-		end
-		if buff.type == 5 and Menu.ItemsSettings.ItemsSettings then
-			DefensiveItems()
-		end
-		if buff.type == 7 and Menu.ItemsSettings.ItemsSettings then
-			DefensiveItems()
-		end
-		if buff.type == 8 and Menu.ItemsSettings.ItemsSettings then
-			DefensiveItems()
-		end
-		if buff.type == 10 and Menu.ItemsSettings.ItemsSettings then
-			DefensiveItems()
-		end
-		if buff.type == 11 and Menu.ItemsSettings.ItemsSettings then
-			DefensiveItems()
-		end
-		if buff.type == 21 and Menu.ItemsSettings.ItemsSettings then
-			DefensiveItems()
-		end
-		if buff.type == 24 and Menu.ItemsSettings.ItemsSettings then
-			DefensiveItems()
-		end
-		if buff.type == 25 and Menu.ItemsSettings.ItemsSettings then
-			DefensiveItems()
-		end
-		if buff.type == 29 and Menu.ItemsSettings.ItemsSettings then
-			DefensiveItems()
-		end
-		if buff.name == "khazixrevostealth" then
-			OutOfCombat = true
-			R.evo = true
-		end
-		if buff.name == "KhazixPDamage" then
-			Passiv.ready = true
-		end
-	end
-end)
-
-AddRemoveBuffCallback(function(source, buff)
-	if source and source.isMe and source.valid and not source.dead then
-		if buff.name == "khazixrevostealth" then
-			OutOfCombat = false
-		end
-		if buff.name == "KhazixPDamage" then
-			Passiv.ready = false
-		end
-	end
-end)
-
-AddAnimationCallback(function(unit, animation)
-	if unit and unit.isMe and unit.valid and not unit.dead then
-		if animation and (animation == "Spell3" or animation == "Spell3_evo") and Menu.Misc.Fap then
-			SendChat("/laugh")
-			SendChat("/laugh")
-		end
-		if animation and animation == "Evo2Q" then
-			PrintChat"<font color=\"#7b00ff\"><b>[REAPER CLAWS EVOLVED]</b></font>"
-		end
-		if animation and animation == "Evo2W" then
-			PrintChat"<font color=\"#7b00ff\"><b>[SPIKE RACKS EVOLVED]</b></font>"
-		end
-		if animation and animation == "Evo2E" then
-			PrintChat"<font color=\"#7b00ff\"><b>[WINGS EVOLVED]</b></font>"
-		end
-		if animation and animation == "Evo2R" then
-			PrintChat"<font color=\"#7b00ff\"><b>[ADAPTIVE CLOAKING EVOLVED]</b></font>"
-		end
-	end
-end)
-
-AddLoadCallback(function()
-	PrintMsg("Welcome <font color=\"#00faff\"><b>"..GetUser().."</b></font>, Have Fun and Good Luck !")
-	Menu()
-end)
-
-AddTickCallback(function()
+function StartSkin()
 	if Menu.Misc.UseSkin then
-		SetSkin(myHero, Menu.Misc.SetSkin-1)
-	elseif not Menu.Misc.UseSkin then
-		SetSkin(myHero, 0)
+		local id = Menu.Misc.SetSkin-1
+		SetSkin(myHero, id)
+	else
+		SetSkin(myHero, -1)
 	end
-
-	if myHero.dead then return end
-	
-	CKey = 	Menu.Keys.keysCombo
-	HKey =  Menu.Keys.keysHarass
-	LKey =  Menu.Keys.keysClear
-	JKey =  Menu.Keys.keysClear
-
-	if CKey then Combo() end
-	if HKey then Harass() end
-	if LKey then Laneclear() end
-	if JKey then Jungleclear() end
-
-	if ultPassiveAvailable then
-		CheckBush()
-	end
-
-	jungleMinions:update()
-	minions:update()
-
-	Checks()
-
-	CheckJungle()
-
-	EvolutionCheck()
-
-	Isolated()
-end)
-
-AddDrawCallback(function()
-	if myHero.dead then return end
-
-	DrawBushInfos()
-
-	if Menu.Draw.drawQrange and ((Menu.Draw.drawSpellsReady and Q.ready) or Menu.Draw.drawSpellsReady == false) then
-		DrawCircle3D(myHero.x, myHero.y, myHero.z, Q.range, Menu.Draw.drawCircleSize, ARGBT((Menu.Draw.drawQrangeColor)))
-	end
-	if Menu.Draw.drawQrange and ((Menu.Draw.drawSpellsReady and W.ready) or Menu.Draw.drawSpellsReady == false) then
-		DrawCircle3D(myHero.x, myHero.y, myHero.z, W.range, Menu.Draw.drawCircleSize, ARGBT((Menu.Draw.drawWrangeColor)))
-	end
-	if Menu.Draw.drawErange and ((Menu.Draw.drawSpellsReady and E.ready) or Menu.Draw.drawSpellsReady == false) then
-		DrawCircle3D(myHero.x, myHero.y, myHero.z, E.range, Menu.Draw.drawCircleSize, ARGBT((Menu.Draw.drawErangeColor)))
-	end
-	if Menu.Draw.drawSrange and ((Menu.Draw.drawSpellsReady and SmiteReady) or Menu.Draw.drawSpellsReady == false) then
-		DrawCircle3D(myHero.x, myHero.y, myHero.z, S.range, Menu.Draw.drawCircleSize, ARGBT((Menu.Draw.drawSrangeColor)))
-	end
-end)
-
-AddUnloadCallback(function ()
-	PrintMsg("Unloading")
-end)
-
-AddBugsplatCallback(function ()
-	local file = io.open(SCRIPT_PATH.."KhaZix.bugsplat", "a")
-	file:write("\n"..tostring(debug.traceback()))
-	file:close()
-end)
+end
