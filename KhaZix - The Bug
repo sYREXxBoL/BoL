@@ -417,7 +417,7 @@ local function Combo()
 				end
 			end
 		end
-		if Menu.Combo.E and GetDistnaceSqr(target) < Q.range * Q.range then
+		if Menu.Combo.E then
 			CastE(target) 
 		end
 		if Menu.Combo.Q then
