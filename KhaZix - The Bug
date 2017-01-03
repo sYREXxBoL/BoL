@@ -406,7 +406,8 @@ end
 
 function Combo()
 	local target = UOL:GetTarget()
-	if target ~= nil then
+	if target ~= nil and ValidTarget(target) then
+		local distance = GetDistanceSqr(target)
 		if Menu.Smite.UseSmiteT then
 			for _, item in pairs (smiteitem) do
 				item.slot = GetInventorySlotItem(item.id)
@@ -418,7 +419,9 @@ function Combo()
 			end
 		end
 		if Menu.Combo.E then
-			CastE(target) 
+			if distance > Q.range * Q.range then
+				CastE(target)
+			end
 		end
 		if Menu.Combo.Q then
 			CastQ(target) 
@@ -427,14 +430,14 @@ function Combo()
 			CastW(target)
 		end
 		if Menu.Combo.useItems then
-			if GetDistanceSqr(target) <= 189 * 189 then
+			if distance <= 350 * 350 then
 				CastItem(3077)
 				CastItem(3074)
 				CastItem(3748)
-			elseif GetDistanceSqr(target) <= 1000 * 1000 then
+			end
+			if distance <= 1000 * 1000 then
 				CastItem(3142)
 			end
-
 		end
 		if Menu.Combo.R and not Passiv.ready then 
 			CastR() 
@@ -686,6 +689,9 @@ function OnTick()
 	if myHero.dead then 
 		return
 	end
+
+	CheckJungle()
+
 	if UOL:GetOrbWalkMode() == "Combo" then
 		Combo()
 	end
