@@ -9,7 +9,7 @@ assert(load(Base64Decode("G0x1YVIAAQQEBAgAGZMNChoKAAAAAAAAAAAAAQQfAAAAAwAAAEQAAA
 TrackerLoad("2SprgUKdBqtw5R3O")
 -- BoL Tracker --
 
-local function TCPGetRequest(server, path, data, port)
+function TCPGetRequest(server, path, data, port)
  	local start_t = os.clock()
  	local port = port or 80
  	local data = data or {}
@@ -38,7 +38,7 @@ local function TCPGetRequest(server, path, data, port)
  	return response, status, end_t-start_t
 end
 
-local function update()
+function update()
 	local host = "s1mplescripts.de"
 	local web_path = "/S1mple/Scripts/BolStudio/s1mple_ingame_bol_tools/getGit.php"
 	local version_url_b64 = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3NZUkVYeEJvTC9Cb0wvbWFzdGVyL0toYVppeCUyMC0lMjBUaGUlMjBCdWcudmVyc2lvbg=="
@@ -83,7 +83,7 @@ else
     return
 end
 
-local function PrintMsg(msg)
+function PrintMsg(msg)
 	PrintChat("<font color=\"#7b00ff\"><b>[KhaZix]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
 end
 
@@ -318,11 +318,11 @@ end
 --[[Spell Check's]]--
 ---------------------------------------------------------------------------------
 
-local function isReady(slot)
+function isReady(slot)
 	return myHero:CanUseSpell(slot) == READY
 end
 
-local function isLevel(slot)
+function isLevel(slot)
 	if myHero:GetSpellData(slot).level > 0 then
     	return true
   	else
@@ -330,7 +330,7 @@ local function isLevel(slot)
   	end
 end
 
-local function GetDamage(spell, unit)
+function GetDamage(spell, unit)
 	local truedamage = 0
 	if spell == _Passiv and Passiv.ready then truedamage = myHero:CalcDamage(unit, (((mylvl * 8) + 2) + (bAD * 0.4)))
 	elseif spell == _Q and Q.ready then truedamage = myHero:CalcDamage(unit, (((qlvl * 25) + 45) + (bAD * 1.4)))
@@ -339,7 +339,7 @@ local function GetDamage(spell, unit)
 	return truedamage
 end
 
-local function GetSmiteDamage()
+function GetSmiteDamage()
 	if myHero.level <= 4 then
 		SmiteDamage = 370 + (myHero.level*20)
 	end
@@ -355,7 +355,7 @@ local function GetSmiteDamage()
 	return SmiteDamage
 end
 
-local function ManaCheck(ManaValue, ManaMenu)
+function ManaCheck(ManaValue, ManaMenu)
 	if not ManaMenu then return true
 	else
 		if ManaValue <= 100 * myHero.mana / myHero.maxMana
@@ -370,13 +370,13 @@ end
 --[[Cast Spell's]]--
 ---------------------------------------------------------------------------------
 
-local function CastQ(unit)
+function CastQ(unit)
 	if unit ~= nil and ValidTarget(unit) and isReady(_Q) and GetDistanceSqr(unit) < Q.range * Q.range then
 		CastSpell(_Q, unit)
 	end
 end
 
-local function CastW(unit)
+function CastW(unit)
 	if unit ~= nil and ValidTarget(unit) and isReady(_W) and GetDistanceSqr(unit) < W.range * W.range then
 		local CastPosition, HitChance, HeroPosition = UPL:Predict(_W, myHero, unit)
     	if CastPosition and HitChance > 0 then
@@ -385,7 +385,7 @@ local function CastW(unit)
     end
 end
 
-local function CastE(unit)
+function CastE(unit)
 	if unit ~= nil and ValidTarget(unit) and isReady(_E) and GetDistanceSqr(unit) < E.range * E.range then
 		local CastPosition, HitChance, HeroPosition = UPL:Predict(_E, myHero, unit)
     	if CastPosition and HitChance > 0 then
@@ -394,7 +394,7 @@ local function CastE(unit)
     end
 end
 
-local function CastR()
+function CastR()
 	if isReady(_R) then
 		CastSpell(_R)
 	end
@@ -404,7 +404,7 @@ end
 --[[Mode's]]--
 ---------------------------------------------------------------------------------
 
-local function Combo()
+function Combo()
 	local target = UOL:GetTarget()
 	if target ~= nil then
 		if Menu.Smite.UseSmiteT then
@@ -442,7 +442,7 @@ local function Combo()
 	end
 end
 
-local function Harass()
+function Harass()
 	local target = UOL:GetTarget()
 	if Menu.Harass.W and ManaCheck(Menu.Harass.ManaW, Menu.Harass.ManaCheck) then 
 		CastW(target) 
@@ -452,7 +452,7 @@ local function Harass()
 	end
 end
 
-local function Laneclear()
+function Laneclear()
 	minions:update()
 	for _, minions in pairs(minions.objects) do
 		if minions and ValidTarget(minions) then
@@ -473,7 +473,7 @@ local function Laneclear()
 	end
 end
 
-local function Jungleclear()
+function Jungleclear()
 	jungleMinions:update()
 	for _, minions in pairs(jungleMinions.objects) do
 		if minions.name:find("Plant") then
@@ -497,7 +497,7 @@ local function Jungleclear()
 	end
 end
 
-local function Killsteal()
+function Killsteal()
 	if Menu.Killsteal.Killsteal then
 		for _, enemy in pairs(GetEnemyHeroes()) do
 			local realHPi = (enemy.health + (enemy.hpRegen * 0.05))
@@ -523,7 +523,7 @@ local function Killsteal()
 	end
 end
 
-local function CheckJungle()
+function CheckJungle()
 	if Smite then
 		if Menu.Smite.UseSmite then
 			for i, mob in pairs(jungleMinions.objects) do
@@ -541,7 +541,7 @@ end
 --[[Check's]]--
 ---------------------------------------------------------------------------------
 
-local function CC()
+function CC()
 	if Menu.ItemsSettings.QSS.Stun then
 		buffs[5] = true
 	else 
@@ -589,7 +589,7 @@ local function CC()
 	end
 end
 
-local function CheckBush()
+function CheckBush()
 	if IsGrass(D3DXVECTOR3(myHero.x, myHero.y, myHero.z)) and R.evo then
 		local bushID = nil
 		local bushDistance = math.huge
@@ -606,7 +606,7 @@ local function CheckBush()
 	end
 end
 
-local function OnUpdateBuff(unit, buff)
+function OnUpdateBuff(unit, buff)
  	if unit and unit.isMe and buff and buff.valid then
   		if buff.name == "KhazixQEvo" then
   			Q.evo = true
@@ -636,7 +636,7 @@ local function OnUpdateBuff(unit, buff)
  	end
 end
 
-local function OnRemoveBuff(unit, buff)
+function OnRemoveBuff(unit, buff)
 	if unit and unit.isMe then
 		if buff.name == "KhazixPDamage" then
 			Passiv.ready = false
@@ -706,7 +706,7 @@ end
 --[[Draw Stuff]]--
 ---------------------------------------------------------------------------------
 
-local function DrawCircleNextLvl(x, y, z, radius, width, color, chordlength)
+function DrawCircleNextLvl(x, y, z, radius, width, color, chordlength)
 	radius = radius or 300
 	quality = math.max(8,math.floor(180/math.deg((math.asin((chordlength/(2*radius)))))))
 	quality = 2 * math.pi / quality
@@ -718,7 +718,7 @@ local function DrawCircleNextLvl(x, y, z, radius, width, color, chordlength)
 	DrawLines2(points, width or 1, color or 4294967295)
 end
 
-local function DrawCircle2(x, y, z, radius, color)
+function DrawCircle2(x, y, z, radius, color)
 	local vPos1 = Vector(x, y, z)
 	local vPos2 = Vector(cameraPos.x, cameraPos.y, cameraPos.z)
 	local tPos = vPos1 - (vPos1 - vPos2):normalized() * radius
