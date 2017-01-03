@@ -2,7 +2,7 @@ if myHero.charName ~= "Khazix" then
 	return 
 end
 
-local version = "2.003"
+local version = "2.000"
 
 -- BoL Tracker --
 assert(load(Base64Decode("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"), nil, "bt", _ENV))()
@@ -92,18 +92,35 @@ local Q = {range = 325, evo = false}
 local W = {range = 1000, speed = 1700, delay = 0.25, width = 70, evo = false}
 local E = {range = 700, speed = 400 , delay = 0.25, width = 300, evo = false}
 local R = {evo = false}
+
+local mylvl = myHero.level
+local qlvl = myHero:GetSpellData(_Q).level
+local wlvl = myHero:GetSpellData(_W).level
+local elvl = myHero:GetSpellData(_E).level
+
+local ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 900, DAMAGE_PHYSICAL)
+
 local minions 	= minionManager(MINION_ENEMY, 1000, myHero, MINION_SORT_MAXHEALTH_ASC)
-local jungleMinions = minionManager(MINION_JUNGLE, 1100, myHero, MINION_SORT_MAXHEALTH_DEC)
+local jungleMinions = minionManager(MINION_JUNGLE, 600, myHero, MINION_SORT_MAXHEALTH_DEC)
+
 local Ignite = nil
-if myHero:GetSpellData(SUMMONER_1).name:find("summonerdot") then Ignite = SUMMONER_1 elseif myHero:GetSpellData(SUMMONER_2).name:lower():find("summonerdot") then Ignite = SUMMONER_2 end
+if myHero:GetSpellData(SUMMONER_1).name:find("summonerdot") then
+	Ignite = SUMMONER_1
+elseif myHero:GetSpellData(SUMMONER_2).name:lower():find("summonerdot") then
+	Ignite = SUMMONER_2
+end
 
 local Smite = nil
-if myHero:GetSpellData(SUMMONER_1).name:find("smite") then Smite = SUMMONER_1 elseif myHero:GetSpellData(SUMMONER_2).name:lower():find("smite") then Smite = SUMMONER_2 end
+if myHero:GetSpellData(SUMMONER_1).name:find("smite") then
+	Smite = SUMMONER_1 
+elseif myHero:GetSpellData(SUMMONER_2).name:lower():find("smite") then
+	Smite = SUMMONER_2
+end
 
 local OutOfCombat = false
 local ultPassiveAvailable = true
 
-local smiteitem = 
+local jungleitem = 
 {
 	SR 	= { id = 3715, slot = nil }, -- Red Smite
 	SB 	= { id = 3706, slot = nil }, -- Blue Smite
@@ -170,10 +187,8 @@ local bushList =
 	["LaneBrushesBotRed"] 					= { x = 13350, y = 51, z = 2550, cd = 0 }
 }
 
-UPL:AddSpell(_W, { speed = W.speed, delay = W.delay, range = W.range, width = W.width, collision = true, aoe = true, type = "linear" })
+UPL:AddSpell(_W, { speed = W.speed, delay = W.delay, range = W.range, width = W.width, collision = true, aoe = false, type = "linear" })
 UPL:AddSpell(_E, { speed = E.speed, delay = E.delay, range = E.range, width = E.width, collision = false, aoe = true, type = "circular" })
-
-
 
 ---------------------------------------------------------------------------------
 --[[Menu]]--
@@ -272,10 +287,10 @@ function Menu()
 
 		--[[Smite]]--
 		if Smite then
-			Menu:addSubMenu("> Smite", "Smite")
-			Menu.Smite:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
-			Menu.Smite:addParam("UseSmite", "Smite neutral monster", SCRIPT_PARAM_ONOFF, true)
-			Menu.Smite:addParam("UseSmiteT", "Use Smite on Target", SCRIPT_PARAM_ONOFF, true)
+			Menu:addSubMenu("> Smite", "SmiteUse")
+			Menu.SmiteUse:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
+			Menu.SmiteUse:addParam("UseSmite", "Smite neutral monster", SCRIPT_PARAM_ONOFF, true)
+			Menu.SmiteUsey:addParam("UseSmiteT", "Use Smite on Target", SCRIPT_PARAM_ONOFF, true)
 		end
 
 		--[[Misc]]--
@@ -332,10 +347,15 @@ end
 
 function GetDamage(spell, unit)
 	local truedamage = 0
-	if spell == _Passiv and Passiv.ready then truedamage = myHero:CalcDamage(unit, (((mylvl * 8) + 2) + (bAD * 0.4)))
-	elseif spell == _Q and Q.ready then truedamage = myHero:CalcDamage(unit, (((qlvl * 25) + 45) + (bAD * 1.4)))
-	elseif spell == _W and W.ready then truedamage = myHero:CalcDamage(unit, (((wlvl * 30) + 50) + (bAD * 1)))
-	elseif spell == _E and E.ready then truedamage = myHero:CalcDamage(unit, (((elvl * 35) + 30) + (bAD * 0.2))) end
+	if spell == _Passiv and Passiv.ready then
+		truedamage = myHero:CalcDamage(unit, (((mylvl * 8) + 2) + (bAD * 0.4)))
+	elseif spell == _Q and Q.ready then
+		truedamage = myHero:CalcDamage(unit, (((qlvl * 25) + 45) + (bAD * 1.4)))
+	elseif spell == _W and W.ready then
+		truedamage = myHero:CalcDamage(unit, (((wlvl * 30) + 50) + (bAD * 1)))
+	elseif spell == _E and E.ready then
+		truedamage = myHero:CalcDamage(unit, (((elvl * 35) + 30) + (bAD * 0.2)))
+	end
 	return truedamage
 end
 
@@ -371,13 +391,13 @@ end
 ---------------------------------------------------------------------------------
 
 function CastQ(unit)
-	if unit ~= nil and ValidTarget(unit) and isReady(_Q) and GetDistanceSqr(unit) < Q.range * Q.range then
+	if ValidTarget(unit) and isReady(_Q) and GetDistanceSqr(unit) < Q.range * Q.range then
 		CastSpell(_Q, unit)
 	end
 end
 
 function CastW(unit)
-	if unit ~= nil and ValidTarget(unit) and isReady(_W) and GetDistanceSqr(unit) < W.range * W.range then
+	if ValidTarget(unit) and isReady(_W) and GetDistanceSqr(unit) < W.range * W.range then
 		local CastPosition, HitChance, HeroPosition = UPL:Predict(_W, myHero, unit)
     	if CastPosition and HitChance > 0 then
       		CastSpell(_W, CastPosition.x, CastPosition.z)
@@ -386,7 +406,7 @@ function CastW(unit)
 end
 
 function CastE(unit)
-	if unit ~= nil and ValidTarget(unit) and isReady(_E) and GetDistanceSqr(unit) < E.range * E.range then
+	if ValidTarget(unit) and isReady(_E) and GetDistanceSqr(unit) < E.range * E.range then
 		local CastPosition, HitChance, HeroPosition = UPL:Predict(_E, myHero, unit)
     	if CastPosition and HitChance > 0 then
       		CastSpell(_E, CastPosition.x, CastPosition.z)
@@ -404,31 +424,44 @@ end
 --[[Mode's]]--
 ---------------------------------------------------------------------------------
 
+function GetCustomTarget()
+	ts:update()	
+	if ValidTarget(ts.target) and ts.target.type == myHero.type then
+		return ts.target
+	else
+		return nil
+	end
+end
+
 function Combo()
-	local target = UOL:GetTarget()
-	if target ~= nil and ValidTarget(target) then
+	local target = ts.target
+	if ValidTarget(target) then
 		local distance = GetDistanceSqr(target)
-		if Menu.Smite.UseSmiteT then
-			for _, item in pairs (smiteitem) do
-				item.slot = GetInventorySlotItem(item.id)
-				if item.slot then
-					if item.id == 3715 or item.id == 3706 or item.id == 1412 or item.id == 1400 then
-						CastSpell(Smite, target)
+		if Smite then
+			if Menu.SmiteUse.UseSmiteT and distance <= 560 * 560 then
+				for _, item in pairs (jungleitem) do
+					item.slot = GetInventorySlotItem(item.id)
+					if item.slot then
+						if item.id == 3715 or item.id == 3706 or item.id == 1412 or item.id == 1400 then
+							CastSpell(Smite, target)
+						end
 					end
 				end
 			end
 		end
-		if Menu.Combo.E then
-			if distance > Q.range * Q.range then
-				CastE(target)
-			end
+
+		if Menu.Combo.E and distance > Q.range * Q.range then
+			CastE(target)
 		end
+
 		if Menu.Combo.Q then
 			CastQ(target) 
 		end
+
 		if Menu.Combo.W then
 			CastW(target)
 		end
+
 		if Menu.Combo.useItems then
 			if distance <= 350 * 350 then
 				CastItem(3077)
@@ -439,6 +472,7 @@ function Combo()
 				CastItem(3142)
 			end
 		end
+
 		if Menu.Combo.R and not Passiv.ready then 
 			CastR() 
 		end
@@ -446,7 +480,7 @@ function Combo()
 end
 
 function Harass()
-	local target = UOL:GetTarget()
+	local target = ts.target
 	if Menu.Harass.W and ManaCheck(Menu.Harass.ManaW, Menu.Harass.ManaCheck) then 
 		CastW(target) 
 	end
@@ -501,26 +535,24 @@ function Jungleclear()
 end
 
 function Killsteal()
-	if Menu.Killsteal.Killsteal then
-		for _, enemy in pairs(GetEnemyHeroes()) do
-			local realHPi = (enemy.health + (enemy.hpRegen * 0.05))
-			if Ignite and isReady(Ignite) then
-				local iDamage = (50 + (20 * mylvl))
-				if enemy ~= nil and enemy.valid and GetDistanceSqr(enemy) < 600 * 600 and realHPi <= iDamge then
-					CastSpell(Ignite, enemy)
-				end
-			elseif Menu.Killsteal.Q and isReady(_Q) then
-				if enemy ~= nil and enemy.valid and GetDistanceSqr(enemy) < Q.range * Q.range and realHPi <= GetDamage(_Q, enemy) then
-					CastQ(enemy)
-				end
-			elseif Menu.Killsteal.W and isReady(_W) then
-				if enemy ~= nil and enemy.valid and GetDistanceSqr(enemy) < W.range * W.range and realHPi <= GetDamage(_W, enemy) then
-					CastW(enemy)
-				end
-			elseif Menu.Killsteal.E and isReady(_E) then
-				if enemy ~= nil and enemy.valid and GetDistanceSqr(enemy) < E.range * E.range and realHPi <= GetDamage(_E, enemy) then
-					CastE(enemy)
-				end
+	for _, enemy in pairs(GetEnemyHeroes()) do
+		local realHPi = (enemy.health + (enemy.hpRegen * 0.05))
+		if Ignite and isReady(Ignite) then
+			local iDamage = (50 + (20 * mylvl))
+			if enemy ~= nil and enemy.valid and GetDistanceSqr(enemy) < 600 * 600 and realHPi <= iDamage then
+				CastSpell(Ignite, enemy)
+			end
+		elseif Menu.Killsteal.Q and isReady(_Q) then
+			if enemy ~= nil and enemy.valid and GetDistanceSqr(enemy) < Q.range * Q.range and realHPi <= GetDamage(_Q, enemy) then
+				CastQ(enemy)
+			end
+		elseif Menu.Killsteal.W and isReady(_W) then
+			if enemy ~= nil and enemy.valid and GetDistanceSqr(enemy) < W.range * W.range and realHPi <= GetDamage(_W, enemy) then
+				CastW(enemy)
+			end
+		elseif Menu.Killsteal.E and isReady(_E) then
+			if enemy ~= nil and enemy.valid and GetDistanceSqr(enemy) < E.range * E.range and realHPi <= GetDamage(_E, enemy) then
+				CastE(enemy)
 			end
 		end
 	end
@@ -529,10 +561,13 @@ end
 function CheckJungle()
 	if Smite then
 		if Menu.Smite.UseSmite then
-			for i, mob in pairs(jungleMinions.objects) do
-				if mob and mob.valid and mob.visible and not mob.dead and SmitePos and myHero:CanUseSpell(SmitePos) == READY and GetDistance(mob) <= 560 and mob.health <= GetSmiteDamage() then
-					if mob.charName == "SRU_Baron" or mob.charName == "SRU_Dragon_Water" or mob.charName == "SRU_Dragon_Fire" or mob.charName == "SRU_Dragon_Earth" or mob.charName == "SRU_Dragon_Air" or mob.charName == "SRU_Dragon_Elder" or mob.charName == "SRU_RiftHerald" then
-						CastSpell(Smite, mob)
+			if isReady(Smite) then
+				jungleMinions:update()
+				for _, monster in pairs(jungleMinions.objects) do
+					if monster.charName == "SRU_Baron" or monster.charName == "SRU_Dragon_Water" or monster.charName == "SRU_Dragon_Fire" or monster.charName == "SRU_Dragon_Earth" or monster.charName == "SRU_Dragon_Air" or monster.charName == "SRU_Dragon_Elder" or monster.charName == "SRU_RiftHerald" then
+						if monster ~= nil and GetDistanceSqr(monster) <= 560 * 560 and monster.health <= GetSmiteDamage() then
+							CastSpell(Smite, monster)
+						end
 					end
 				end
 			end
@@ -614,17 +649,17 @@ function OnUpdateBuff(unit, buff)
   		if buff.name == "KhazixQEvo" then
   			Q.evo = true
   			Q.range = 375
-  			PrintChat("<font color=\"#7b00ff\"><b>[REAPER CLAWS EVOLVED]</b></font>")
+  			DelayAction(function()PrintChat("<font color=\"#7b00ff\"><b>[REAPER CLAWS EVOLVED]</b></font>") end, 0.5)
   		elseif buff.name == "KhazixWEvo" then
   			W.evo = true
-  			PrintChat("<font color=\"#7b00ff\"><b>[SPIKE RACKS EVOLVED]</b></font>")
+  			DelayAction(function()PrintChat("<font color=\"#7b00ff\"><b>[SPIKE RACKS EVOLVED]</b></font>") end, 0.5)
   		elseif buff.name == "KhazixEEvo" then
   			E.evo = true
   			E.range = 900
-  			PrintChat("<font color=\"#7b00ff\"><b>[WINGS EVOLVED]</b></font>")
+  			DelayAction(function()PrintChat("<font color=\"#7b00ff\"><b>[WINGS EVOLVED]</b></font>") end, 0.5)
   		elseif buff.name == "KhazixREvo" then
   			R.evo = true
-  			PrintChat("<font color=\"#7b00ff\"><b>[ADAPTIVE CLOAKING EVOLVED]</b></font>")
+  			DelayAction(function()PrintChat("<font color=\"#7b00ff\"><b>[ADAPTIVE CLOAKING EVOLVED]</b></font>") end, 0.5)
   		elseif buff.name == "KhazixPDamage" then
 			Passiv.ready = true
 		end
@@ -655,8 +690,13 @@ end
 
 function OnLoad()
 	DelayAction(function()PrintMsg("Welcome <font color=\"#3393FF\"><b>"..GetUser().."</b></font>, Have Fun and Good Luck !") end, 0.5)
+
 	Menu()
+
 	StartSkin()
+
+	target = GetCustomTarget()
+
 	for i = 1, myHero.buffCount do
 	    local buff = myHero:getBuff(i)
 		if buff and buff.valid then
@@ -691,6 +731,12 @@ function OnTick()
 	end
 
 	CheckJungle()
+
+	GetCustomTarget()
+
+	if Menu.Killsteal.Killsteal then
+		Killsteal()
+	end
 
 	if UOL:GetOrbWalkMode() == "Combo" then
 		Combo()
