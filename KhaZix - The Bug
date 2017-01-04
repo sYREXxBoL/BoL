@@ -290,7 +290,7 @@ function Menu()
 			Menu:addSubMenu("> Smite", "SmiteUse")
 			Menu.SmiteUse:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
 			Menu.SmiteUse:addParam("UseSmite", "Smite neutral monster", SCRIPT_PARAM_ONOFF, true)
-			Menu.SmiteUsey:addParam("UseSmiteT", "Use Smite on Target", SCRIPT_PARAM_ONOFF, true)
+			Menu.SmiteUse:addParam("UseSmiteT", "Use Smite on Target", SCRIPT_PARAM_ONOFF, true)
 		end
 
 		--[[Misc]]--
@@ -452,7 +452,6 @@ function Combo()
 
 		if Menu.Combo.E and distance > Q.range * Q.range then
 			CastE(target)
-			UPL:GetSpellData(_E)
 		end
 
 		if Menu.Combo.Q then
@@ -461,7 +460,6 @@ function Combo()
 
 		if Menu.Combo.W then
 			CastW(target)
-			UPL:GetSpellData(_W)
 		end
 
 		if Menu.Combo.useItems then
@@ -562,7 +560,7 @@ end
 
 function CheckJungle()
 	if Smite then
-		if Menu.Smite.UseSmite then
+		if Menu.SmiteUse.UseSmite then
 			if isReady(Smite) then
 				jungleMinions:update()
 				for _, monster in pairs(jungleMinions.objects) do
