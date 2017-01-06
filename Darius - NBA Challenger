@@ -516,6 +516,13 @@ function OnUpdateBuff(Unit, Buff, Stacks)
    if Unit and Buff and Unit.team ~= myHero.team and Unit.type == myHero.type and Buff.name == "DariusHemo" then
      	unitStacks[Unit.networkID] = Stacks
    end
+   if unit and unit.isMe and buff and buff.valid then
+   		if Menu.ItemsSettings.ItemsSettings and buffs[buff.type] == true then
+			CastItem(3137)
+			CastItem(3140)
+			CastItem(3139)
+		end
+	end
 end
  
 function OnRemoveBuff(Unit, Buff)
