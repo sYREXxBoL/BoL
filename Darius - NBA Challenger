@@ -1,1 +1,698 @@
+if myHero.charName ~= "Darius" then
+	return 
+end
 
+local version = "1.000"
+
+-- BoL Tracker --
+assert(load(Base64Decode("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"), nil, "bt", _ENV))()
+TrackerLoad("RsnbsYrZfHOvygL2")
+-- BoL Tracker --
+
+function TCPGetRequest(server, path, data, port)
+ 	local start_t = os.clock()
+ 	local port = port or 80
+ 	local data = data or {}
+ 	local lua_socket = require("socket")
+ 	local connection_tcp = lua_socket.connect(server,port)
+ 	local requeststring = "GET "..path
+ 	local first = true
+ 	for i,v in pairs(data)do
+  		requeststring = requeststring..(first and "?" or "&")..i.."="..v
+  		first = false
+ 	end
+ 	requeststring = requeststring.. " HTTP/1.0\r\nHost: "..server.."\r\n\r\n"
+ 	connection_tcp:send(requeststring)
+ 	local response = ""
+ 	local status
+ 	while true do
+  		s,status, partial = connection_tcp:receive('*a')
+  		response = response..(s or partial)
+  		if(status == "closed" or status == "timeout")then
+   			break
+ 		end
+ 	end
+ 	local end_t = os.clock()
+ 	local start_content = response:find("\r\n\r\n")+4
+ 	response = response:sub(start_content)
+ 	return response, status, end_t-start_t
+end
+
+function update()
+	local host = "s1mplescripts.de"
+	local web_path = "/S1mple/Scripts/BolStudio/s1mple_ingame_bol_tools/getGit.php"
+	local version_url_b64 = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3NZUkVYeEJvTC9Cb0wvbWFzdGVyL0Rhcml1cyUyMC0lMjBOQkElMjBDaGFsbGVuZ2VyLnZlcnNpb24="
+	local file_url_b64 = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3NZUkVYeEJvTC9Cb0wvbWFzdGVyL0Rhcml1cyUyMC0lMjBOQkElMjBDaGFsbGVuZ2Vy"
+	
+	local resp, st, t = TCPGetRequest(host, web_path, {url = version_url_b64})
+	local server_version = tonumber(Base64Decode(resp))
+	if (server_version > version) then
+		local file,st,t = TCPGetRequest(host, web_path, {url = file_url_b64})
+		local f = io.open(FILE_NAME, "wb")
+		f:write(Base64Decode(file))
+		f:close()
+	end
+end
+
+if not _G.UPLloaded then
+  if FileExist(LIB_PATH .. "/UPL.lua") then
+    require("UPL")
+    _G.UPL = UPL()
+  else 
+    print("Downloading UPL, please don't press F9")
+    DelayAction(function() DownloadFile("https://raw.github.com/nebelwolfi/BoL/master/Common/UPL.lua".."?rand="..math.random(1,10000), LIB_PATH.."UPL.lua", function () print("Successfully downloaded UPL. Press F9 twice.") end) end, 3) 
+    return
+  end
+end
+
+if not _G.UOLloaded then
+  if FileExist(LIB_PATH .. "/UOL.lua") then
+    require("UOL")
+  else 
+    print("Downloading UOL, please don't press F9")
+    DelayAction(function() DownloadFile("https://raw.github.com/nebelwolfi/BoL/master/Common/UOL.lua".."?rand="..math.random(1,10000), LIB_PATH.."UOL.lua", function () print("Successfully downloaded UOL. Press F9 twice.") end) end, 3) 
+    return
+  end
+end
+
+if FileExist(LIB_PATH .. "/CastItems.lua") then
+	require "CastItems"
+else 
+    print("Downloading CastItems, please don't press F9")
+    DelayAction(function() DownloadFile("https://raw.githubusercontent.com/Icesythe7/GOS/master/CastItems.lua".."?rand="..math.random(1,10000), LIB_PATH.."CastItems.lua", function () print("Successfully downloaded CastItems. Press F9 twice.") end) end, 3) 
+    return
+end
+
+function PrintMsg(msg)
+	PrintChat("<font color=\"#7b00ff\"><b>[Darius]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
+end
+
+
+local unitStacks = {}
+
+local lastCastQ = 0
+
+local Q = {range = 425}
+local E = {range = 550, speed = 1500 , delay = 0.25, width = 300}
+local R = {range = 460}
+
+local ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 900, DAMAGE_PHYSICAL)
+
+local minions 	= minionManager(MINION_ENEMY, 1000, myHero, MINION_SORT_MAXHEALTH_ASC)
+local jungleMinions = minionManager(MINION_JUNGLE, 600, myHero, MINION_SORT_MAXHEALTH_DEC)
+
+local Ignite = nil
+if myHero:GetSpellData(SUMMONER_1).name:find("summonerdot") then
+	Ignite = SUMMONER_1
+elseif myHero:GetSpellData(SUMMONER_2).name:lower():find("summonerdot") then
+	Ignite = SUMMONER_2
+end
+
+local skins = 
+{
+	["Darius"] = {"Default", "Lord", "Bioforge", "Woad King", "Dunkmaster", "Classic Chroma", "Classic Chroma", "Classic Chroma", "Academy", "Dunkmaster Chroma", "Dunkmaster Chroma", "Dunkmaster Chroma", "Dunkmaster Chroma", "Dunkmaster Chroma"}
+}
+
+UPL:AddSpell(_E, { speed = E.speed, delay = E.delay, range = E.range, width = E.width, collision = false, aoe = true, type = "cone" })
+
+function Menu()
+
+	Menu = scriptConfig("Darius", "Darius")
+
+		--[[Combo]]--
+		Menu:addSubMenu("> Combo", "Combo")
+			Menu.Combo:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
+			Menu.Combo:addParam("useItems", "Use Items", SCRIPT_PARAM_ONOFF, true)
+			Menu.Combo:addParam("walker", "Auto Walk (Q)", SCRIPT_PARAM_ONOFF, true)
+			Menu.Combo:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Combo:addParam("Mana", "> Manage your mana:", SCRIPT_PARAM_INFO, "")
+			Menu.Combo:addParam("ManaCheck", "Check mana", SCRIPT_PARAM_ONOFF, false)
+			Menu.Combo:addParam("ManaQ","Minimum % of mana (Q)", SCRIPT_PARAM_SLICE, 7, 0, 100, 0)
+			Menu.Combo:addParam("ManaW","Minimum % of mana (W)", SCRIPT_PARAM_SLICE, 7, 0, 100, 0)
+			Menu.Combo:addParam("ManaE","Minimum % of mana (E)", SCRIPT_PARAM_SLICE, 7, 0, 100, 0)
+			Menu.Combo:addParam("ManaR","Minimum % of mana (R)", SCRIPT_PARAM_SLICE, 7, 0, 100, 0)
+			Menu.Combo:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Combo:addParam("Spell", "> Choose your spells:", SCRIPT_PARAM_INFO, "")
+			Menu.Combo:addParam("Q", "(Q) - Use ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Combo:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Combo:addParam("E", "(E) - Use ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Combo:addParam("R", "(R) - Use ", SCRIPT_PARAM_ONOFF, true)
+
+		--[[Harass]]--
+		Menu:addSubMenu("> Harass", "Harass")
+			Menu.Harass:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
+			Menu.Harass:addParam("useItems", "Use Items", SCRIPT_PARAM_ONOFF, true)
+			Menu.Harass:addParam("walker", "Auto Walk (Q)", SCRIPT_PARAM_ONOFF, true)
+			Menu.Harass:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Harass:addParam("Mana", "> Manage your mana:", SCRIPT_PARAM_INFO, "")
+			Menu.Harass:addParam("ManaCheck", "Check mana", SCRIPT_PARAM_ONOFF, true)
+			Menu.Harass:addParam("ManaQ","Minimum % of mana (Q)", SCRIPT_PARAM_SLICE, 15, 0, 100, 0)
+			Menu.Harass:addParam("ManaW","Minimum % of mana (W)", SCRIPT_PARAM_SLICE, 15, 0, 100, 0)
+			Menu.Harass:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Harass:addParam("Spell", "> Choose your spells:", SCRIPT_PARAM_INFO, "")
+			Menu.Harass:addParam("Q", "(Q) - Use ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Harass:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, true)
+
+		--[[Killsteal]]--
+		Menu:addSubMenu("> Killsteal", "Killsteal")
+			Menu.Killsteal:addParam("generalInfo", "> General settings:", SCRIPT_PARAM_INFO, "")
+		    Menu.Killsteal:addParam("Killsteal", "Use Killsteal", SCRIPT_PARAM_ONOFF, true)
+		    Menu.Killsteal:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Killsteal:addParam("Spell", "> Choose your spells:", SCRIPT_PARAM_INFO, "")
+			Menu.Killsteal:addParam("Q", "(Q) - Use ", SCRIPT_PARAM_ONOFF, false)
+			Menu.Killsteal:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, false)
+			Menu.Killsteal:addParam("R", "(R) - Use ", SCRIPT_PARAM_ONOFF, false)
+
+		--[[Laneclear]]--
+		Menu:addSubMenu("> Laneclear", "Laneclear")
+			Menu.Laneclear:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
+			Menu.Laneclear:addParam("laneclearItems", "Use Items", SCRIPT_PARAM_ONOFF, true)
+			Menu.Laneclear:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Laneclear:addParam("Mana", "> Manage your mana:", SCRIPT_PARAM_INFO, "")
+			Menu.Laneclear:addParam("ManaCheck", "Check mana", SCRIPT_PARAM_ONOFF, true)
+			Menu.Laneclear:addParam("ManaQ","Minimum % of mana (Q)", SCRIPT_PARAM_SLICE, 25, 0, 100, 0)
+			Menu.Laneclear:addParam("ManaW","Minimum % of mana (W)", SCRIPT_PARAM_SLICE, 25, 0, 100, 0)
+			Menu.Laneclear:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Laneclear:addParam("Spell", "> Choose your spells:", SCRIPT_PARAM_INFO, "")
+			Menu.Laneclear:addParam("Q", "(Q) - Use ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Laneclear:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, true)
+			
+		--[[Jungleclear]]--
+		Menu:addSubMenu("> Jungleclear", "Jungleclear")
+			Menu.Jungleclear:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
+			Menu.Jungleclear:addParam("jungleItems", "Use Items", SCRIPT_PARAM_ONOFF, true)
+			Menu.Jungleclear:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Jungleclear:addParam("Mana", "> Manage your mana:", SCRIPT_PARAM_INFO, "")
+			Menu.Jungleclear:addParam("ManaCheck", "Check mana", SCRIPT_PARAM_ONOFF, true)
+			Menu.Jungleclear:addParam("ManaQ","Minimum % of mana (Q)", SCRIPT_PARAM_SLICE, 25, 0, 100, 0)
+			Menu.Jungleclear:addParam("ManaW","Minimum % of mana (W)", SCRIPT_PARAM_SLICE, 25, 0, 100, 0)
+			Menu.Jungleclear:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Jungleclear:addParam("Spell", "> Choose your spells:", SCRIPT_PARAM_INFO, "")
+			Menu.Jungleclear:addParam("Q", "(Q) - Use ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Jungleclear:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, true)
+
+		--[[Def Item Settings]]
+		Menu:addSubMenu("> Item Settings", "ItemsSettings")
+			Menu.ItemsSettings:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
+			Menu.ItemsSettings:addParam("ItemsSettings", "Use Def Item", SCRIPT_PARAM_ONOFF, true)
+			Menu.ItemsSettings:addParam("Humanizer", "Humanizer", SCRIPT_PARAM_SLICE, 250, 0, 500, 0)
+			Menu.ItemsSettings:addSubMenu("QSS","QSS")
+				Menu.ItemsSettings.QSS:addParam("Stun", "Remove stun", SCRIPT_PARAM_ONOFF, true) --5
+				Menu.ItemsSettings.QSS:addParam("Silence", "Remove silence", SCRIPT_PARAM_ONOFF, true)--7
+				Menu.ItemsSettings.QSS:addParam("Taunt", "Remove taunt", SCRIPT_PARAM_ONOFF, true)--8
+				Menu.ItemsSettings.QSS:addParam("Root", "Remove root", SCRIPT_PARAM_ONOFF, true)--11
+				Menu.ItemsSettings.QSS:addParam("Fear", "Remove fear", SCRIPT_PARAM_ONOFF, true)--10
+				Menu.ItemsSettings.QSS:addParam("Charm", "Remove charm", SCRIPT_PARAM_ONOFF, true)--21
+				Menu.ItemsSettings.QSS:addParam("Suppression", "Remove suppression", SCRIPT_PARAM_ONOFF, true)--24
+				Menu.ItemsSettings.QSS:addParam("Blind", "Remove blind", SCRIPT_PARAM_ONOFF, true)--25
+				Menu.ItemsSettings.QSS:addParam("KnockUp", "Remove knock up", SCRIPT_PARAM_ONOFF, true)--29
+
+		--[[Misc]]--
+		Menu:addSubMenu("> Misc", "Misc")
+			Menu.Misc:addParam("SkinChanger", "> SkinChanger:", SCRIPT_PARAM_INFO, "")
+			Menu.Misc:addParam("UseSkin", "Use Skin", SCRIPT_PARAM_ONOFF, true) 
+			Menu.Misc:setCallback("UseSkin", StartSkin)
+			Menu.Misc:addParam("SetSkin", myHero.charName.. " Skins", SCRIPT_PARAM_LIST, 1, skins[myHero.charName])
+			Menu.Misc:setCallback("SetSkin", StartSkin)
+
+		--[[Drawings]]--
+		Menu:addSubMenu("> Drawings", "Draw")
+			Menu.Draw:addParam("lfps", "Low Fps Circles", SCRIPT_PARAM_ONOFF, true)
+			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("Spell", "> Draw range of spell:", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("drawQrange", "(Q) - Draw ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Draw:addParam("Qcolor", "(Q) Color", SCRIPT_PARAM_COLOR, {255, 186, 85, 211})
+			Menu.Draw:addParam("drawErange", "(E) - Draw ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Draw:addParam("Ecolor", "(E) Color", SCRIPT_PARAM_COLOR, {255, 186, 85, 211})
+			Menu.Draw:addParam("drawRrange", "(R) - Draw ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Draw:addParam("Rcolor", "(R) Color", SCRIPT_PARAM_COLOR, {255, 186, 85, 211})
+			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("extra", "> Extra:", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("drawInnate", "(Innate Stacks) - Draw ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Draw:addParam("drawInnateColor", "(Brush) Text Color", SCRIPT_PARAM_COLOR, {255, 186, 85, 211})
+
+			Menu:addSubMenu("> Prediction", "pred")
+			UPL:AddToMenu(Menu.pred)
+
+			Menu:addSubMenu("> Orbwalker", "Orbwalker")
+			UOL:AddToMenu(Menu.Orbwalker)
+
+	Menu:addParam("space", "", 5, "")
+	Menu:addParam("signature0", "            [Darius] v"..version, 5, "")
+	Menu:addParam("space1", "", 5, "")
+	Menu:addParam("signature1", "              by sYREXx    ", 5, "")	
+end
+
+function isReady(slot)
+	return myHero:CanUseSpell(slot) == READY
+end
+
+function isLevel(slot)
+	if myHero:GetSpellData(slot).level > 0 then
+    	return true
+  	else
+    	return false
+  	end
+end
+
+function GetDamage(spell, unit)
+	local truedamage = 0
+	local qlvl = myHero:GetSpellData(_Q).level
+	local wlvl = myHero:GetSpellData(_W).level
+	if spell == _Q and isReady(_Q) then
+		truedamage = myHero:CalcDamage(unit, (((qlvl * 30) + 10) + (myHero.totalDamage * (((qlvl * 10) + 90) / 100))))
+	elseif spell == _W and isReady(_W) then
+		truedamage = myHero:CalcDamage(unit, (myHero.addDamage * 0.4))
+	end
+	return truedamage
+end
+
+function Rdmg(unit)
+	local rlvl = myHero:GetSpellData(_R).level
+	if isReady(_R) then
+		return (((rlvl * 100) + myHero.addDamage * 0.75) + ((GetStacks(unit) * 2 / 10) * ((rlvl * 100) + myHero.addDamage * 0.75)))
+	else return 0
+	end
+end
+
+function ManaCheck(ManaValue, ManaMenu)
+	if not ManaMenu then return true
+	else
+		if ManaValue <= 100 * myHero.mana / myHero.maxMana
+			then return true
+		else
+			return false
+		end
+	end
+end
+
+---------------------------------------------------------------------------------
+--[[Cast Spell's]]--
+---------------------------------------------------------------------------------
+
+function CastQ()
+	if isReady(_Q) then
+		CastSpell(_Q)
+	end
+end
+
+function CalcVector(source,target)
+	if not target then return end
+ 	local V = Vector(source.x, source.y, source.z)
+ 	local V2 = Vector(target.x, target.y, target.z)
+ 	local vec = V-V2
+ 	local vec2 = vec:normalized()
+ 	return vec2
+end
+
+function QWalker()
+	local target = ts.target
+	local Blade = (Q.range + 205) / 2
+	if target ~= nil then
+		if (os.clock() - lastCastQ) < 0.75 then
+			local E = myHero-(Vector(ts.target)-myHero): normalized() * Blade
+			if GetDistanceSqr(target) > Blade * Blade then
+				myHero:MoveTo(target.x, target.z)
+			elseif GetDistance(target) < Blade * Blade then
+				myHero:MoveTo(E.x, E.z)
+			end
+		end
+	end
+end
+
+function CastW()
+	if isReady(_W) then
+      	CastSpell(_W)
+    end
+end
+
+function CastE(unit)
+	if ValidTarget(unit) and isReady(_E) and GetDistanceSqr(unit) < E.range * E.range then
+		local CastPosition, HitChance, HeroPosition = UPL:Predict(_E, myHero, unit)
+    	if CastPosition and HitChance > 0 then
+      		CastSpell(_E, CastPosition.x, CastPosition.z)
+    	end
+    end
+end
+
+function CastR(unit)
+	if ValidTarget(unit) and isReady(_R) and GetDistanceSqr(unit) < R.range * R.range then
+		CastSpell(_R, unit)
+	end
+end
+
+---------------------------------------------------------------------------------
+--[[Mode's]]--
+---------------------------------------------------------------------------------
+
+function GetCustomTarget()
+	ts:update()	
+	if ValidTarget(ts.target) and ts.target.type == myHero.type then
+		return ts.target
+	else
+		return nil
+	end
+end
+
+function Combo()
+	local target = ts.target
+	if ValidTarget(target) then
+		local Distance = GetDistanceSqr(target)
+		if Menu.Combo.E and Distance > Q.range * Q.range then
+			CastE(target)
+		end
+
+		if Menu.Combo.W and Distance < 200 * 200 then
+			CastW()
+		end
+
+		if Menu.Combo.Q and Distance < Q.range * Q.range then
+			CastQ()
+		end
+
+		if Menu.Combo.R and target.health <= Rdmg(target) then
+			CastR(target)
+		end
+	end
+end
+
+function Harass()
+	local Distance = GetDistanceSqr(target)
+	if Menu.Harass.W and Distance < 200 * 200 and ManaCheck(Menu.Harass.ManaW, Menu.Harass.ManaCheck) then 
+		CastW() 
+	end
+	if Menu.Harass.Q and Distance < Q.range * Q.range and ManaCheck(Menu.Harass.ManaQ, Menu.Harass.ManaCheck) then 
+		CastQ() 
+	end
+end
+
+function Laneclear()
+	minions:update()
+	for _, minions in pairs(minions.objects) do
+		if minions and ValidTarget(minions) then
+			local Distance = GetDistanceSqr(minions)
+			if Menu.Laneclear.W and Distance < 200 * 200 and ManaCheck(Menu.Laneclear.ManaW, Menu.Laneclear.ManaCheck) then
+				CastW() 
+			end
+			if Menu.Laneclear.Q and Distance < Q.range * Q.range and ManaCheck(Menu.Laneclear.ManaQ, Menu.Laneclear.ManaCheck) then 
+				CastQ() 
+			end
+			if Menu.Laneclear.laneclearItems then
+				if GetDistanceSqr(minions) <= 189 * 189 then
+					CastItem(3077)
+					CastItem(3074)
+					CastItem(3748) 
+				end
+			end
+		end
+	end
+end
+
+function Jungleclear()
+	jungleMinions:update()
+	for _, minions in pairs(jungleMinions.objects) do
+		local Distance = GetDistanceSqr(minions)
+		if minions.name:find("Plant") then
+			return 
+		end
+		if minions and ValidTarget(minions) then
+			if Menu.Jungleclear.W and Distance < 200 * 200 and ManaCheck(Menu.Jungleclear.ManaW, Menu.Jungleclear.ManaCheck) then 
+				CastW() 
+			end
+			if Menu.Jungleclear.Q and Distance < Q.range * Q.range and ManaCheck(Menu.Jungleclear.ManaQ, Menu.Jungleclear.ManaCheck) then
+				CastQ() 
+			end
+			if Menu.Jungleclear.jungleItems then
+				if GetDistanceSqr(minions) <= 189 * 189 then
+					CastItem(3077)
+					CastItem(3074)
+					CastItem(3748) 
+				end 
+			end
+		end
+	end
+end
+
+function Killsteal()
+	for _, enemy in pairs(GetEnemyHeroes()) do
+		local realHPi = (enemy.health + (enemy.hpRegen * 0.05))
+		if Ignite and isReady(Ignite) then
+			local iDamage = (50 + (20 * mylvl))
+			local Distance = GetDistanceSqr(enemy)
+			if enemy ~= nil and enemy.valid and Distance < 600 * 600 and realHPi <= iDamage then
+				CastSpell(Ignite, enemy)
+			end
+		elseif Menu.Killsteal.Q and isReady(_Q) then
+			if enemy ~= nil and enemy.valid and Distance < Q.range * Q.range and realHPi <= GetDamage(_Q, enemy) then
+				CastQ(enemy)
+			end
+		elseif Menu.Killsteal.W and isReady(_W) then
+			if enemy ~= nil and enemy.valid and Distance < W.range * W.range and realHPi <= GetDamage(_W, enemy) then
+				CastE(enemy)
+				CastW(enemy)
+			end
+		elseif Menu.Killsteal.R and isReady(_R) then
+			if enemy ~= nil and enemy.valid and Distance < R.range * R.range and realHPi <= Rdmg(enemy) then
+				CastR(enemy)
+			end
+		end
+	end
+end
+
+---------------------------------------------------------------------------------
+--[[Check's]]--
+---------------------------------------------------------------------------------
+
+function CC()
+	if Menu.ItemsSettings.QSS.Stun then
+		buffs[5] = true
+	else 
+		buffs[5] = false
+	end
+	if Menu.ItemsSettings.QSS.Silence then
+		buffs[7] = true
+	else 
+		buffs[7] = false
+	end
+	if Menu.ItemsSettings.QSS.Taunt then
+		buffs[8] = true
+	else 
+		buffs[8] = false
+	end
+	if Menu.ItemsSettings.QSS.Fear then
+		buffs[10] = true
+	else 
+		buffs[10] = false
+	end
+	if Menu.ItemsSettings.QSS.Roat then
+		buffs[11] = true
+	else 
+		buffs[11] = false
+	end
+	if Menu.ItemsSettings.QSS.Charm then
+		buffs[21] = true
+	else 
+		buffs[21] = false
+	end
+	if Menu.ItemsSettings.QSS.Suppression then
+		buffs[24] = true
+	else 
+		buffs[24] = false
+	end
+	if Menu.ItemsSettings.QSS.Blind then
+		buffs[25] = true
+	else 
+		buffs[25] = false
+	end
+	if Menu.ItemsSettings.QSS.KnockUp then
+		buffs[29] = true
+	else 
+		buffs[29] = false
+	end
+end
+
+
+function OnUpdateBuff(Unit, Buff, Stacks)
+   if Unit and Buff and Unit.team ~= myHero.team and Unit.type == myHero.type and Buff.name == "DariusHemo" then
+     	unitStacks[Unit.networkID] = Stacks
+   end
+end
+ 
+function OnRemoveBuff(Unit, Buff)
+   if Unit and Buff and Unit.team ~= myHero.team and Unit.type == myHero.type and Buff.name == "DariusHemo" then
+		unitStacks[Unit.networkID] = 0
+   end
+end
+
+function GetStacks(unit)
+	for _, units in pairs(GetEnemyHeroes()) do
+		if unit and ValidTarget(unit) then
+   			return unitStacks[unit.networkID] or 0
+   		elseif not unit and ValidTarget(units) then
+   			return unitStacks[units.networkID] or 0
+   		end
+   	end
+end
+
+function OnProcessSpell(unit, spell)
+	if unit == myHero and spell.name:find("DariusCleave") and ((Menu.Combo.walker and UOL:GetOrbWalkMode() == "Combo") or (Menu.Harass.walker and UOL:GetOrbWalkMode() == "Harass")) then
+		UOL:SetMovement(false)
+		DelayAction(function() UOL:SetMovement(true) end, 0.75)
+		lastCastQ = os.clock()
+	end
+end
+
+---------------------------------------------------------------------------------
+--[[OnLoad]]--
+---------------------------------------------------------------------------------
+
+function OnLoad()
+	DelayAction(function()PrintMsg("Welcome <font color=\"#3393FF\"><b>"..GetUser().."</b></font>, Have Fun and Good Luck !") end, 0.5)
+
+	Menu()
+
+	target = GetCustomTarget()
+
+	StartSkin()
+end
+
+---------------------------------------------------------------------------------
+--[[OnTick]]--
+---------------------------------------------------------------------------------
+
+function OnTick()
+	if myHero.dead then 
+		return
+	end
+
+	GetCustomTarget()
+
+	GetStacks()
+
+	QWalker()
+
+	if UOL:GetOrbWalkMode() == "Combo" then
+		Combo()
+	end
+	if UOL:GetOrbWalkMode() == "Harass" then
+		Harass()
+	end
+	if UOL:GetOrbWalkMode() == "LaneClear" then
+		Laneclear()
+		Jungleclear()
+	end
+
+	buffs = {[5]=Menu.ItemsSettings.QSS.Stun, [7]=Menu.ItemsSettings.QSS.Silence, [8]=Menu.ItemsSettings.QSS.Taunt, [10]=Menu.ItemsSettings.QSS.Fear, [11]=Menu.ItemsSettings.QSS.Roat, [21]=Menu.ItemsSettings.QSS.Charm, [24]=Menu.ItemsSettings.QSS.Suppression, [25]=Menu.ItemsSettings.QSS.Blind, [29]=Menu.ItemsSettings.QSS.KnockUp}
+end
+
+---------------------------------------------------------------------------------
+--[[Draw Stuff]]--
+---------------------------------------------------------------------------------
+
+function GetHPBarPos(enemy)
+ 	enemy.barData = {PercentageOffset = {x = -0.05, y = 0}}
+  	local barPos = GetUnitHPBarPos(enemy)
+  	local barPosOffset = GetUnitHPBarOffset(enemy)
+  	local barOffset = { x = enemy.barData.PercentageOffset.x, y = enemy.barData.PercentageOffset.y }
+  	local barPosPercentageOffset = { x = enemy.barData.PercentageOffset.x, y = enemy.barData.PercentageOffset.y }
+  	local BarPosOffsetX = 171
+  	local BarPosOffsetY = 46
+  	local CorrectionY = 39
+  	local StartHpPos = 31
+
+  	barPos.x = math.floor(barPos.x + (barPosOffset.x - 0.5 + barPosPercentageOffset.x) * BarPosOffsetX + StartHpPos)
+  	barPos.y = math.floor(barPos.y + (barPosOffset.y - 0.5 + barPosPercentageOffset.y) * BarPosOffsetY + CorrectionY)
+
+ 	local StartPos = Vector(barPos.x , barPos.y, 0)
+  	local EndPos = Vector(barPos.x + 108 , barPos.y , 0)
+  	return Vector(StartPos.x, StartPos.y, 0), Vector(EndPos.x, EndPos.y, 0)
+end
+
+function DrawCircleNextLvl(x, y, z, radius, width, color, chordlength)
+	radius = radius or 300
+	quality = math.max(8,math.floor(180/math.deg((math.asin((chordlength/(2*radius)))))))
+	quality = 2 * math.pi / quality
+	local points = {}
+	for theta = 0, 2 * math.pi + quality, quality do
+		local c = WorldToScreen(D3DXVECTOR3(x + radius * math.cos(theta), y, z - radius * math.sin(theta)))
+		points[#points + 1] = D3DXVECTOR2(c.x, c.y)
+	end
+	DrawLines2(points, width or 1, color or 4294967295)
+end
+
+function DrawCircle2(x, y, z, radius, color)
+	local vPos1 = Vector(x, y, z)
+	local vPos2 = Vector(cameraPos.x, cameraPos.y, cameraPos.z)
+	local tPos = vPos1 - (vPos1 - vPos2):normalized() * radius
+	local sPos = WorldToScreen(D3DXVECTOR3(tPos.x, tPos.y, tPos.z))
+	if OnScreen({ x = sPos.x, y = sPos.y }, { x = sPos.x, y = sPos.y })  then
+		DrawCircleNextLvl(x, y, z, radius, 1, color, 75)	
+	end
+end
+
+function OnDraw()
+	if myHero.dead then
+		return
+	end
+
+	if Menu.Draw.lfps then
+		if Menu.Draw.drawQrange and isReady(_Q) then 
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, Q.range, ARGB(Menu.Draw.Qcolor[1], Menu.Draw.Qcolor[2], Menu.Draw.Qcolor[3], Menu.Draw.Qcolor[4]))
+  		elseif Menu.Draw.drawQrange and not isReady(_Q) and isLevel(_Q) then
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, Q.range, ARGB(255, 255, 0, 0))
+  		end
+  		if Menu.Draw.drawErange and isReady(_E) then 
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, E.range, ARGB(Menu.Draw.Ecolor[1], Menu.Draw.Ecolor[2], Menu.Draw.Ecolor[3], Menu.Draw.Ecolor[4]))
+  		elseif Menu.Draw.drawErange and not isReady(_E) and isLevel(_E) then
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, E.range, ARGB(255, 255, 0, 0))
+  		end
+  		if Menu.Draw.drawRrange and isReady(_R) then 
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, R.range, ARGB(Menu.Draw.Rcolor[1], Menu.Draw.Rcolor[2], Menu.Draw.Rcolor[3], Menu.Draw.Rcolor[4]))
+  		elseif Menu.Draw.drawRrange and not isReady(_R) and isLevel(_R) then
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, R.range, ARGB(255, 255, 0, 0))
+  		end
+	else
+		if Menu.Draw.drawQrange and isReady(_Q) then
+    		DrawCircle(myHero.x, myHero.y, myHero.z, Q.range, ARGB(Menu.Draw.Qcolor[1], Menu.Draw.Qcolor[2], Menu.Draw.Qcolor[3], Menu.Draw.Qcolor[4]))
+  		elseif Menu.Draw.drawQrange and not isReady(_Q) and isLevel(_Q) then
+    		DrawCircle(myHero.x, myHero.y, myHero.z, Q.range, ARGB(255, 255, 0, 0))
+  		end
+  		if Menu.Draw.drawErange and isReady(_E) then 
+    		DrawCircle(myHero.x, myHero.y, myHero.z, E.range, ARGB(Menu.Draw.Ecolor[1], Menu.Draw.Ecolor[2], Menu.Draw.Ecolor[3], Menu.Draw.Ecolor[4]))
+  		elseif Menu.Draw.drawErange and not isReady(_E) and isLevel(_E) then
+    		DrawCircle(myHero.x, myHero.y, myHero.z, E.range, ARGB(255, 255, 0, 0))
+  		end
+  		if Menu.Draw.drawRrange and isReady(_R) then 
+    		DrawCircle(myHero.x, myHero.y, myHero.z, R.range, ARGB(Menu.Draw.Rcolor[1], Menu.Draw.Rcolor[2], Menu.Draw.Rcolor[3], Menu.Draw.Rcolor[4]))
+  		elseif Menu.Draw.drawRrange and not isReady(_R) and isLevel(_R) then
+    		DrawCircle(myHero.x, myHero.y, myHero.z, R.range, ARGB(255, 255, 0, 0))
+  		end
+	end
+
+	for _, unit in pairs(GetEnemyHeroes()) do
+		if ValidTarget(unit, 1500) then
+	      	local barPos = GetHPBarPos(unit)
+	      	if Menu.Draw.drawInnate then
+				if unitStacks[unit.networkID] == nil or unitStacks[unit.networkID] == 0 then return end
+				if GetStacks(unit) < 5 then
+				    DrawTextA(""..GetStacks(unit).."", 25, barPos.x+135, barPos.y-23, ARGB(Menu.Draw.drawInnateColor[1], Menu.Draw.drawInnateColor[2], Menu.Draw.drawInnateColor[3], Menu.Draw.drawInnateColor[4]))
+				elseif GetStacks(unit) >= 5 then
+	     			DrawTextA("FULL STACKS", 25, barPos.x+135, barPos.y-23, ARGB(Menu.Draw.drawInnateColor[1], Menu.Draw.drawInnateColor[2], Menu.Draw.drawInnateColor[3], Menu.Draw.drawInnateColor[4]))
+				end
+			end
+		end
+	end
+end
+
+---------------------------------------------------------------------------------
+--[[Skin]]--
+---------------------------------------------------------------------------------
+
+function StartSkin()
+	if Menu.Misc.UseSkin then
+		local id = Menu.Misc.SetSkin-1
+		SetSkin(myHero, id)
+	else
+		SetSkin(myHero, -1)
+	end
+end
