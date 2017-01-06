@@ -2,7 +2,7 @@ if myHero.charName ~= "Darius" then
 	return 
 end
 
-local version = "1.000"
+local version = "1.001"
 
 -- BoL Tracker --
 assert(load(Base64Decode("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"), nil, "bt", _ENV))()
@@ -84,7 +84,7 @@ else
 end
 
 function PrintMsg(msg)
-	PrintChat("<font color=\"#7b00ff\"><b>[Darius]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
+	PrintChat("<font color=\"#aa1f00\"><b>[Darius]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
 end
 
 
@@ -257,22 +257,14 @@ end
 
 function GetDamage(spell, unit)
 	local truedamage = 0
-	local qlvl = myHero:GetSpellData(_Q).level
-	local wlvl = myHero:GetSpellData(_W).level
 	if spell == _Q and isReady(_Q) then
-		truedamage = myHero:CalcDamage(unit, (((qlvl * 30) + 10) + (myHero.totalDamage * (((qlvl * 10) + 90) / 100))))
+		truedamage = myHero:CalcDamage(unit, (((myHero:GetSpellData(_Q).level * 30) + 10) + (myHero.totalDamage * (((myHero:GetSpellData(_Q).level * 10) + 90) / 100))))
 	elseif spell == _W and isReady(_W) then
 		truedamage = myHero:CalcDamage(unit, (myHero.addDamage * 0.4))
+	elseif spell == _R and isReady(_R) then
+		truedamage = (((myHero:GetSpellData(_R).level * 100) + myHero.addDamage * 0.75) + ((GetStacks(unit) * 2 / 10) * ((myHero:GetSpellData(_R).level * 100) + myHero.addDamage * 0.75)))
 	end
 	return truedamage
-end
-
-function Rdmg(unit)
-	local rlvl = myHero:GetSpellData(_R).level
-	if isReady(_R) then
-		return (((rlvl * 100) + myHero.addDamage * 0.75) + ((GetStacks(unit) * 2 / 10) * ((rlvl * 100) + myHero.addDamage * 0.75)))
-	else return 0
-	end
 end
 
 function ManaCheck(ManaValue, ManaMenu)
@@ -366,23 +358,37 @@ function Combo()
 			CastW()
 		end
 
+		if Menu.Combo.useItems then
+			if Distance <= 200 * 200 then
+				CastItem(3077)
+				CastItem(3074)
+				CastItem(3748)
+			end
+			if Distance <= 1000 * 1000 then
+				CastItem(3142)
+			end
+		end
+
 		if Menu.Combo.Q and Distance < Q.range * Q.range then
 			CastQ()
 		end
 
-		if Menu.Combo.R and target.health <= Rdmg(target) then
+		if Menu.Combo.R and target.health <= GetDamage(_R, target) then
 			CastR(target)
 		end
 	end
 end
 
 function Harass()
-	local Distance = GetDistanceSqr(target)
-	if Menu.Harass.W and Distance < 200 * 200 and ManaCheck(Menu.Harass.ManaW, Menu.Harass.ManaCheck) then 
-		CastW() 
-	end
-	if Menu.Harass.Q and Distance < Q.range * Q.range and ManaCheck(Menu.Harass.ManaQ, Menu.Harass.ManaCheck) then 
-		CastQ() 
+	local target = ts.target
+	if ValidTarget(target) then
+		local Distance = GetDistanceSqr(target)
+		if Menu.Harass.W and Distance < 200 * 200 and ManaCheck(Menu.Harass.ManaW, Menu.Harass.ManaCheck) then 
+			CastW() 
+		end
+		if Menu.Harass.Q and Distance < Q.range * Q.range and ManaCheck(Menu.Harass.ManaQ, Menu.Harass.ManaCheck) then 
+			CastQ() 
+		end
 	end
 end
 
@@ -436,24 +442,26 @@ end
 function Killsteal()
 	for _, enemy in pairs(GetEnemyHeroes()) do
 		local realHPi = (enemy.health + (enemy.hpRegen * 0.05))
-		if Ignite and isReady(Ignite) then
-			local iDamage = (50 + (20 * mylvl))
-			local Distance = GetDistanceSqr(enemy)
-			if enemy ~= nil and enemy.valid and Distance < 600 * 600 and realHPi <= iDamage then
-				CastSpell(Ignite, enemy)
-			end
-		elseif Menu.Killsteal.Q and isReady(_Q) then
-			if enemy ~= nil and enemy.valid and Distance < Q.range * Q.range and realHPi <= GetDamage(_Q, enemy) then
-				CastQ(enemy)
-			end
-		elseif Menu.Killsteal.W and isReady(_W) then
-			if enemy ~= nil and enemy.valid and Distance < W.range * W.range and realHPi <= GetDamage(_W, enemy) then
-				CastE(enemy)
-				CastW(enemy)
-			end
-		elseif Menu.Killsteal.R and isReady(_R) then
-			if enemy ~= nil and enemy.valid and Distance < R.range * R.range and realHPi <= Rdmg(enemy) then
-				CastR(enemy)
+		local Distance = GetDistanceSqr(enemy)
+		if enemy ~= nil and ValidTarget(enemy) then
+			if Ignite and isReady(Ignite) then
+				local iDamage = (50 + (20 * myHero.level))
+				if Distance < 600 * 600 and realHPi <= iDamage then
+					CastSpell(Ignite, enemy)
+				end
+			elseif Menu.Killsteal.Q and isReady(_Q) then
+				if Distance < Q.range * Q.range and realHPi <= GetDamage(_Q, enemy) then
+					CastQ()
+				end
+			elseif Menu.Killsteal.W and isReady(_W) then
+				if Distance < 200 * 200 and realHPi <= GetDamage(_W, enemy) then
+					CastE(enemy)
+					CastW()
+				end
+			elseif Menu.Killsteal.R and isReady(_R) then
+				if Distance < R.range * R.range and realHPi <= GetDamage(_R, enemy) then
+					CastR(enemy)
+				end
 			end
 		end
 	end
@@ -532,11 +540,11 @@ function OnRemoveBuff(Unit, Buff)
 end
 
 function GetStacks(unit)
-	for _, units in pairs(GetEnemyHeroes()) do
-		if unit and ValidTarget(unit) then
-   			return unitStacks[unit.networkID] or 0
+	for _, s in pairs(GetEnemyHeroes()) do
+		if s and ValidTarget(s) then
+   			return unitStacks[s.networkID] or 0
    		elseif not unit and ValidTarget(units) then
-   			return unitStacks[units.networkID] or 0
+   			return unitStacks[s.networkID] or 0
    		end
    	end
 end
@@ -577,6 +585,10 @@ function OnTick()
 	GetStacks()
 
 	QWalker()
+
+	if Menu.Killsteal.Killsteal then
+		Killsteal()
+	end
 
 	if UOL:GetOrbWalkMode() == "Combo" then
 		Combo()
