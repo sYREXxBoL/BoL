@@ -1,58 +1,9 @@
-if myHero.charName ~= "Darius" then
-	return 
-end
+if myHero.charName ~= "Darius" then return end
 
-local version = "1.002"
+local version = "1.003"
 
 -- BoL Tracker --
-assert(load(Base64Decode("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"), nil, "bt", _ENV))()
-TrackerLoad("RsnbsYrZfHOvygL2")
 -- BoL Tracker --
-
-function TCPGetRequest(server, path, data, port)
- 	local start_t = os.clock()
- 	local port = port or 80
- 	local data = data or {}
- 	local lua_socket = require("socket")
- 	local connection_tcp = lua_socket.connect(server,port)
- 	local requeststring = "GET "..path
- 	local first = true
- 	for i,v in pairs(data)do
-  		requeststring = requeststring..(first and "?" or "&")..i.."="..v
-  		first = false
- 	end
- 	requeststring = requeststring.. " HTTP/1.0\r\nHost: "..server.."\r\n\r\n"
- 	connection_tcp:send(requeststring)
- 	local response = ""
- 	local status
- 	while true do
-  		s,status, partial = connection_tcp:receive('*a')
-  		response = response..(s or partial)
-  		if(status == "closed" or status == "timeout")then
-   			break
- 		end
- 	end
- 	local end_t = os.clock()
- 	local start_content = response:find("\r\n\r\n")+4
- 	response = response:sub(start_content)
- 	return response, status, end_t-start_t
-end
-
-function update()
-	local host = "s1mplescripts.de"
-	local web_path = "/S1mple/Scripts/BolStudio/s1mple_ingame_bol_tools/getGit.php"
-	local version_url_b64 = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3NZUkVYeEJvTC9Cb0wvbWFzdGVyL0Rhcml1cyUyMC0lMjBOQkElMjBDaGFsbGVuZ2VyLnZlcnNpb24="
-	local file_url_b64 = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3NZUkVYeEJvTC9Cb0wvbWFzdGVyL0Rhcml1cyUyMC0lMjBOQkElMjBDaGFsbGVuZ2Vy"
-	
-	local resp, st, t = TCPGetRequest(host, web_path, {url = version_url_b64})
-	local server_version = tonumber(Base64Decode(resp))
-	if (server_version > version) then
-		local file,st,t = TCPGetRequest(host, web_path, {url = file_url_b64})
-		local f = io.open(FILE_NAME, "wb")
-		f:write(Base64Decode(file))
-		f:close()
-	end
-end
 
 if not _G.UPLloaded then
   if FileExist(LIB_PATH .. "/UPL.lua") then
@@ -83,18 +34,33 @@ else
     return
 end
 
+if FileExist(LIB_PATH..'TRPrediction.lua') then
+  	require('TRPrediction')
+else
+  	print("Downloading TRPrediction, please don't press F9")
+    DelayAction(function() DownloadFile("https://raw.githubusercontent.com/Project4706/BoL/master/TRPrediction.lua".."?rand="..math.random(1,10000), LIB_PATH.."TRPrediction.lua", function () print("Successfully downloaded TRPrediction. Press F9 twice.") end) end, 3) 
+    return
+end
+
+local TQ, TP
+
 function PrintMsg(msg)
 	PrintChat("<font color=\"#aa1f00\"><b>[Darius]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
 end
-
 
 local unitStacks = {}
 
 local lastCastQ = 0
 
 local Q = {range = 425}
-local E = {range = 550, speed = 1500 , delay = 0.25, width = 300}
+local E = {range = 535, speed = 1500 , delay = 0.25, width = 535, angle = 50}
 local R = {range = 460}
+
+local mylvl = myHero.level
+local qlvl = myHero:GetSpellData(_Q).level
+local wlvl = myHero:GetSpellData(_W).level
+local elvl = myHero:GetSpellData(_E).level
+local rlvl = myHero:GetSpellData(_R).level
 
 local ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 900, DAMAGE_PHYSICAL)
 
@@ -192,7 +158,7 @@ function Menu()
 			Menu.Jungleclear:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, true)
 
 		--[[Def Item Settings]]
-		Menu:addSubMenu("> Item Settings", "ItemsSettings")
+		Menu:addSubMenu("> QSS Settings", "ItemsSettings")
 			Menu.ItemsSettings:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
 			Menu.ItemsSettings:addParam("ItemsSettings", "Use Def Item", SCRIPT_PARAM_ONOFF, true)
 			Menu.ItemsSettings:addParam("Humanizer", "Humanizer", SCRIPT_PARAM_SLICE, 250, 0, 500, 0)
@@ -208,7 +174,7 @@ function Menu()
 				Menu.ItemsSettings.QSS:addParam("KnockUp", "Remove knock up", SCRIPT_PARAM_ONOFF, true)--29
 
 		--[[Misc]]--
-		Menu:addSubMenu("> Misc", "Misc")
+		Menu:addSubMenu("> Skin SkinChanger", "Misc")
 			Menu.Misc:addParam("SkinChanger", "> SkinChanger:", SCRIPT_PARAM_INFO, "")
 			Menu.Misc:addParam("UseSkin", "Use Skin", SCRIPT_PARAM_ONOFF, true) 
 			Menu.Misc:setCallback("UseSkin", StartSkin)
@@ -257,12 +223,14 @@ end
 
 function GetDamage(spell, unit)
 	local truedamage = 0
+	local AD = myHero.totalDamage
+	local bAD = myHero.addDamage
 	if spell == _Q and isReady(_Q) then
-		truedamage = myHero:CalcDamage(unit, (((myHero:GetSpellData(_Q).level * 30) + 10) + (myHero.totalDamage * (((myHero:GetSpellData(_Q).level * 10) + 90) / 100))))
+		truedamage = myHero:CalcDamage(unit, (((qlvl * 30) + 10) + (AD * (((qlvl * 10) + 90) / 100))))
 	elseif spell == _W and isReady(_W) then
-		truedamage = myHero:CalcDamage(unit, (myHero.addDamage * 0.4))
+		truedamage = myHero:CalcDamage(unit, (bAD * 0.4))
 	elseif spell == _R and isReady(_R) then
-		damage = ((myHero:GetSpellData(_R).level * 100) + (myHero.addDamage * 0.75))
+		damage = ((rlvl * 100) + (bAD * 0.75))
 		truedamage = damage + (damage * 0.2 * GetStacks())
 	end
 	return truedamage
@@ -303,7 +271,8 @@ function QWalker()
 	local Blade = (Q.range + 205) / 2
 	if target ~= nil then
 		if (os.clock() - lastCastQ) < 0.75 then
-			local E = myHero-(Vector(ts.target)-myHero): normalized() * Blade
+			local PredictedPosition = TRPrediction:GetUnitPosition(ts.target, 0.75, true)
+			local E = myHero - (Vector(PredictedPosition) - myHero): normalized() * Blade
 			if GetDistanceSqr(target) > Blade * Blade then
 				myHero:MoveTo(target.x, target.z)
 			elseif GetDistance(target) < Blade * Blade then
@@ -521,7 +490,6 @@ function CC()
 	end
 end
 
-
 function OnUpdateBuff(Unit, Buff, Stacks)
    if Unit and Buff and Unit.team ~= myHero.team and Unit.type == myHero.type and Buff.name == "DariusHemo" then
      	unitStacks[Unit.networkID] = Stacks
@@ -571,6 +539,13 @@ function OnLoad()
 	target = GetCustomTarget()
 
 	StartSkin()
+
+	if TRPrediction then
+	    if TRPrediction:GetVersion() >= 0.3 then
+	      TP = TRPrediction()
+	      TQ = TR_BindSS({type = 'IsConic', delay = E.delay, range = E.range, angle = E.angle, speed = E.speed, allowedCollisionCount = 0})
+	    end
+	end
 end
 
 ---------------------------------------------------------------------------------
@@ -652,9 +627,7 @@ function DrawCircle2(x, y, z, radius, color)
 end
 
 function OnDraw()
-	if myHero.dead then
-		return
-	end
+	if myHero.dead then return end
 
 	if Menu.Draw.lfps then
 		if Menu.Draw.drawQrange and isReady(_Q) then 
