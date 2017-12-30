@@ -1,6 +1,6 @@
 if myHero.charName ~= "Darius" then return end
 
-local version = "1.003"
+local version = "1.004"
 
 -- BoL Tracker --
 -- BoL Tracker --
@@ -55,12 +55,6 @@ local lastCastQ = 0
 local Q = {range = 425}
 local E = {range = 535, speed = 1500 , delay = 0.25, width = 535, angle = 50}
 local R = {range = 460}
-
-local mylvl = myHero.level
-local qlvl = myHero:GetSpellData(_Q).level
-local wlvl = myHero:GetSpellData(_W).level
-local elvl = myHero:GetSpellData(_E).level
-local rlvl = myHero:GetSpellData(_R).level
 
 local ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 900, DAMAGE_PHYSICAL)
 
@@ -196,6 +190,9 @@ function Menu()
 			Menu.Draw:addParam("extra", "> Extra:", SCRIPT_PARAM_INFO, "")
 			Menu.Draw:addParam("drawInnate", "(Innate Stacks) - Draw ", SCRIPT_PARAM_ONOFF, true)
 			Menu.Draw:addParam("drawInnateColor", "(Innate) Text Color", SCRIPT_PARAM_COLOR, {255, 186, 85, 211})
+			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("UltDamage", "Ultimate Damage in Chat", SCRIPT_PARAM_ONOFF, true)
+
 
 			Menu:addSubMenu("> Prediction", "pred")
 			UPL:AddToMenu(Menu.pred)
@@ -221,16 +218,22 @@ function isLevel(slot)
   	end
 end
 
+function Level(slot)
+	if isLevel(slot) then
+		return myHero:GetSpellData(slot).level
+	end
+end
+
 function GetDamage(spell, unit)
 	local truedamage = 0
 	local AD = myHero.totalDamage
 	local bAD = myHero.addDamage
 	if spell == _Q and isReady(_Q) then
-		truedamage = myHero:CalcDamage(unit, (((qlvl * 30) + 10) + (AD * (((qlvl * 10) + 90) / 100))))
+		truedamage = myHero:CalcDamage(unit, (((Level(_Q) * 30) + 10) + (AD * (((Level(_Q) * 10) + 90) / 100))))
 	elseif spell == _W and isReady(_W) then
 		truedamage = myHero:CalcDamage(unit, (bAD * 0.4))
 	elseif spell == _R and isReady(_R) then
-		damage = ((rlvl * 100) + (bAD * 0.75))
+		damage = ((Level(_R) * 100) + (bAD * 0.75))
 		truedamage = damage + (damage * 0.2 * GetStacks())
 	end
 	return truedamage
@@ -524,6 +527,11 @@ function OnProcessSpell(unit, spell)
 		UOL:SetMovement(false)
 		DelayAction(function() UOL:SetMovement(true) end, 0.75)
 		lastCastQ = os.clock()
+	end
+	if Menu.Draw.UltDamage then
+		if unit == myHero and spell.name:find("DariusExecute") then
+			PrintMsg("Ultimate Damage =" ..GetDamage(_R, target).."")
+		end
 	end
 end
 
