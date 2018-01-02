@@ -549,10 +549,8 @@ function OnLoad()
 	StartSkin()
 
 	if TRPrediction then
-	    if TRPrediction:GetVersion() >= 0.3 then
-	      TP = TRPrediction()
-	      TQ = TR_BindSS({type = 'IsConic', delay = E.delay, range = E.range, angle = E.angle, speed = E.speed, allowedCollisionCount = 0})
-	    end
+	    TP = TRPrediction()
+	    TQ = TR_BindSS({type = 'IsConic', delay = E.delay, range = E.range, angle = E.angle, speed = E.speed, allowedCollisionCount = 0})
 	end
 end
 
