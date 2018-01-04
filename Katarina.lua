@@ -1,37 +1,9 @@
 if myHero.charName ~= "Katarina" then return end
 
-local version = "1.000"
+local version = 1.000
 
 function PrintMsg(msg)
 	PrintChat("<font color=\"#ff0000\"><b>[Katarina]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
-end
-
-local AUTOUPDATE = true
-local UPDATE_NAME = "Katarina"
-local UPDATE_HOST = "raw.github.com"
-local UPDATE_PATH = "/sYREXxBoL/BoL/blob/master/Katarina.lua".."?rand="..math.random(1,10000)
-local UPDATE_FILE_PATH = SCRIPT_PATH..GetCurrentEnv().FILE_NAME
-local UPDATE_URL = "https://"..UPDATE_HOST..UPDATE_PATH
-
-function AutoupdaterMsg(msg) print("<font color=\"#6699ff\"><b>Free Awareness:</b></font> <font color=\"#FFFFFF\">"..msg..".</font>") end
-if AUTOUPDATE then
-    local ServerData = GetWebResult(UPDATE_HOST, UPDATE_PATH)
-    if ServerData then
-        local ServerVersion = string.match(ServerData, "local version = \"%d+.%d+\"")
-        ServerVersion = string.match(ServerVersion and ServerVersion or "", "%d+.%d+")
-        if ServerVersion then
-            ServerVersion = tonumber(ServerVersion)
-            if tonumber(version) < ServerVersion then
-                AutoupdaterMsg("New version available"..ServerVersion)
-                AutoupdaterMsg("Updating, please don't press F9")
-                DelayAction(function() DownloadFile(UPDATE_URL, UPDATE_FILE_PATH, function () AutoupdaterMsg("Successfully updated. ("..version.." => "..ServerVersion.."), press F9 twice to load the updated version.") end) end, 3)
-            else
-                AutoupdaterMsg("You have got the latest version ("..ServerVersion..")")
-            end
-        end
-    else
-        AutoupdaterMsg("Error downloading version info")
-    end
 end
 
 if FileExist(LIB_PATH..'TRPrediction.lua') then
@@ -208,7 +180,6 @@ function OnLoad()
 	Int()
 	StartSkin()
 	DelayAction(function()PrintMsg("Welcome <font color=\"#ddff00\"><b>"..GetUser().."</b></font>. Have Fun and Good Luck !") end, 0.5)
-	DelayAction(function()PrintMsg("v"..version.." loaded.") end, 0.5)
 end
 
 function OnTick()
@@ -710,3 +681,23 @@ function StartSkin()
 		SetSkin(myHero, -1)
 	end
 end
+
+---------------------------------------------------------------------------------
+--[[AutoUpdater]]--
+---------------------------------------------------------------------------------
+
+local ServerResult = GetWebResult("raw.github.com","https://raw.githubusercontent.com/sYREXxBoL/BoL/master/Katarina.version")
+if ServerResult then
+	ServerVersion = tonumber(ServerResult)
+	if version < ServerVersion then
+		PrintMsg("A new version is available: v"..ServerVersion..". Attempting to download now.")
+		DelayAction(function()PrintMsg("A new version is available: v"..ServerVersion..". Attempting to download now.") end, 0.55)
+		DelayAction(function() DownloadFile("https://raw.githubusercontent.com/sYREXxBoL/BoL/master/Katarina.lua".."?rand"..math.random(1,9999), SCRIPT_PATH.."Katarina.lua", function() PrintMsg("Successfully downloaded the latest version: v"..ServerVersion..".") end) end, 2)
+	else
+		DelayAction(function()PrintMsg("You are running the latest version: v"..version..".") end, 0.55)
+	end
+else
+	DelayAction(function()PrintMsg("Error finding server version.") end, 0.55)
+end
+
+DelayAction(function()PrintMsg("Successfully downloaded the latest version: v"..ServerVersion..".") end, 0.55)
