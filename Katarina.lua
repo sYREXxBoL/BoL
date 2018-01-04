@@ -1,6 +1,6 @@
 if myHero.charName ~= "Katarina" then return end
 
-local version = 1.000
+local version = 1.01
 
 function PrintMsg(msg)
 	PrintChat("<font color=\"#ff0000\"><b>[Katarina]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
