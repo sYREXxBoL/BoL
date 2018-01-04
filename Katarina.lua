@@ -699,5 +699,3 @@ if ServerResult then
 else
 	DelayAction(function()PrintMsg("Error finding server version.") end, 0.55)
 end
-
-DelayAction(function()PrintMsg("Successfully downloaded the latest version: v"..ServerVersion..".") end, 0.55)
