@@ -172,6 +172,11 @@ function Menu()
 
 			Menu:addSubMenu("> Orbwalker", "Orbwalker")
 			UOL:AddToMenu(Menu.Orbwalker)
+
+	Menu:addParam("space", "", 5, "")
+	Menu:addParam("signature0", "            [Katarina] v"..version, 5, "")
+	Menu:addParam("space1", "", 5, "")
+	Menu:addParam("signature1", "              by sYREXx    ", 5, "")
 end
 
 function OnLoad()
@@ -313,6 +318,14 @@ function CastR(unit)
 end
 
 function ChancelR()
+	if R.active then
+		UOL:SetMovement(false)
+		UOL:SetAttacks(false)
+	else
+		UOL:SetMovement(true)
+		UOL:SetAttacks(true)
+	end
+
 	if R.active and CountEnemyHeroInRange(R.range, myHero) < 1 then
 		myHero:MoveTo(mousePos.x, mousePos.z)
 	end
