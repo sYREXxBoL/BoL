@@ -29,11 +29,14 @@ local W = {range = 340}
 local E = {range = 725, speed = math.huge , delay = math.huge, radius = 145}
 local R = {range = 550, active = false}
 
+local I = {range = 600}
+
 local items = 
 {
 	[3137] = {Name = "Dervish Blade", nickName = "Dervish Qss", requiresTarget = false, requiresXZ = false, spellRange = nil},
 	[3140] = {Name = "Quicksilver Sash", nickName = "Qss", requiresTarget = false, requiresXZ = false, spellRange = nil},
 	[3139] = {Name = "Mercurial Scimitar", nickName = "Merc Qss", requiresTarget = false, requiresXZ = false, spellRange = nil},
+	[3157] = {Name = "Zhonya's Hourglass", nickName = "Zhonya's", requiresTarget = false, requiresXZ = false, spellRange = nil},
 	[3146] = {Name = "Hextech Gunblade", nickName = "Gunblade", requiresTarget = true, requiresXZ = false, spellRange = 700}
 }
 
@@ -44,9 +47,9 @@ local jungleMinions = minionManager(MINION_JUNGLE, 600, myHero, MINION_SORT_MAXH
 
 local Ignite = nil
 if myHero:GetSpellData(SUMMONER_1).name:find("summonerdot") then
-	Ignite = SUMMONER_1
+	_Ignite = SUMMONER_1
 elseif myHero:GetSpellData(SUMMONER_2).name:lower():find("summonerdot") then
-	Ignite = SUMMONER_2
+	_Ignite = SUMMONER_2
 end
 
 local TRe, TP
@@ -72,6 +75,7 @@ function Menu()
 		Menu:addSubMenu("> Combo", "Combo")
 			Menu.Combo:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
 			Menu.Combo:addParam("useItems", "Use Items", SCRIPT_PARAM_ONOFF, true)
+			Menu.Combo:addParam("useIgnite", "Use Ignite", SCRIPT_PARAM_ONOFF, true)
 			Menu.Combo:addParam("divider", "", SCRIPT_PARAM_INFO, "")
 			Menu.Combo:addParam("Spell", "> Choose your spells:", SCRIPT_PARAM_INFO, "")
 			Menu.Combo:addParam("Q", "(Q) - Use ", SCRIPT_PARAM_ONOFF, true)
@@ -102,6 +106,8 @@ function Menu()
 			Menu.Killsteal:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, false)
 			Menu.Killsteal:addParam("E", "(E) - Use ", SCRIPT_PARAM_ONOFF, false)
 			Menu.Killsteal:addParam("R", "(R) - Use ", SCRIPT_PARAM_ONOFF, false)
+			Menu.Killsteal:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Killsteal:addParam("I", "(Ignite) - Use ", SCRIPT_PARAM_ONOFF, false)
 
 		--[[Laneclear]]--
 		Menu:addSubMenu("> Laneclear", "Laneclear")
@@ -141,16 +147,18 @@ function Menu()
 			Menu.Draw:addParam("drawRrange", "(R) - Draw ", SCRIPT_PARAM_ONOFF, true)
 			Menu.Draw:addParam("Rcolor", "(R) Color", SCRIPT_PARAM_COLOR, {255, 186, 85, 211})
 			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
-			Menu.Draw:addParam("drawD", "(Dagger) - Draw ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Draw:addParam("drawD", "(Dagger) - Draw ", SCRIPT_PARAM_ONOFF, false)
+			Menu.Draw:addParam("drawDCircle", "(Dagger) - Circle ", SCRIPT_PARAM_ONOFF, false)
+			Menu.Draw:addParam("drawDLine", "(Dagger) - Line ", SCRIPT_PARAM_ONOFF, false)
 			Menu.Draw:addParam("Dcolor", "(Dagger) Color", SCRIPT_PARAM_COLOR, {255, 186, 85, 211})
-			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
-			Menu.Draw:addParam("drawPath", "(Path) - Draw ", SCRIPT_PARAM_ONOFF, true)
+
+
 
 	--[[Def Item Settings]]
-		Menu:addSubMenu("> QSS Settings", "ItemsSettings")
+		Menu:addSubMenu("> Items Settings", "ItemsSettings")
 			Menu.ItemsSettings:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
 			Menu.ItemsSettings:addParam("ItemsSettings", "Use Def Item", SCRIPT_PARAM_ONOFF, true)
-			Menu.ItemsSettings:addParam("Humanizer", "Humanizer", SCRIPT_PARAM_SLICE, 250, 0, 500, 0)
+			Menu.ItemsSettings:addParam("Humanizer", "Delay for QSS", SCRIPT_PARAM_SLICE, 250, 0, 500, 0)
 			Menu.ItemsSettings:addSubMenu("QSS","QSS")
 				Menu.ItemsSettings.QSS:addParam("Stun", "Remove Stun", SCRIPT_PARAM_ONOFF, true) --5
 				Menu.ItemsSettings.QSS:addParam("Silence", "Remove Silence", SCRIPT_PARAM_ONOFF, true)--7
@@ -161,6 +169,10 @@ function Menu()
 				Menu.ItemsSettings.QSS:addParam("Suppression", "Remove Suppression", SCRIPT_PARAM_ONOFF, true)--24
 				Menu.ItemsSettings.QSS:addParam("Blind", "Remove Blind", SCRIPT_PARAM_ONOFF, true)--25
 				Menu.ItemsSettings.QSS:addParam("KnockUp", "Remove Knock up", SCRIPT_PARAM_ONOFF, true)--29
+			Menu.ItemsSettings:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.ItemsSettings:addParam("zhonya", "Use Zhonya", SCRIPT_PARAM_ONOFF, true)
+			Menu.ItemsSettings:addParam("zhonyaHealth", "Use Zhonya at HP %", SCRIPT_PARAM_SLICE, 35, 1, 100, 0)
+			Menu.ItemsSettings:addParam("zhonyaAmount", "Use Zhonya at min Enemy", SCRIPT_PARAM_SLICE, 3, 1, 5, 0)
 
 	--[[Misc]]--
 		Menu:addSubMenu("> Skin SkinChanger", "Misc")
@@ -181,9 +193,13 @@ end
 
 function OnLoad()
 	Menu()
+
 	if FileExist(LIB_PATH..'TRPrediction.lua') then require('TRPrediction') end
+
 	Int()
+
 	StartSkin()
+
 	DelayAction(function()PrintMsg("Welcome <font color=\"#ddff00\"><b>"..GetUser().."</b></font>. Have Fun and Good Luck !") end, 0.5)
 end
 
@@ -211,6 +227,10 @@ function OnTick()
 
 	if Menu.Escape.flee then
 		Flee()
+	end
+
+	if Menu.ItemsSettings.zhonya then
+		Zhonya()
 	end
 
 	ChancelR()
@@ -252,8 +272,8 @@ function GetDamage(spell, unit)
 		truedamage = myHero:CalcMagicDamage(unit, ((Level(_E) * 15) + (AD * 0.6) + (AP * 0.25))) 
 	elseif spell == _R and isReady(_R) then
 		truedamage = myHero:CalcMagicDamage(unit, (((Level(_R) * 25) - ((Level(_R) - 1) * 12.5)) + (bAD * 0.22) + (AP * 0.19))) -- every 0.166 sec#
-	elseif spell == Ignite and isReady(Ignite) then
-		truedamage = (50 + (mylvl * 20))
+	elseif spell == _Ignite and isReady(_Ignite) then
+		truedamage = (50 + (myHero.level * 20))
 	end
 	return truedamage
 end
@@ -331,6 +351,12 @@ function ChancelR()
 	end
 end
 
+function CastI(unit)
+	if ValidTarget(unit) and isReady(_Ignite) and GetDistanceSqr(unit) < I.range * I.range then
+		CastSpell(_Ignite, unit)
+	end
+end
+
 ---------------------------------------------------------------------------------
 --[[Mode's]]--
 ---------------------------------------------------------------------------------
@@ -375,8 +401,16 @@ function Combo()
 			CastQ(target)
 		end
 		if GetDistanceSqr(myHero, target) < R.range * R.range then
-			if (Menu.Combo.R and CountEnemyHeroInRange(W.range, myHero) >= Menu.Combo.RAmount) or Menu.Combo.Rkill and (target.health <= (GetDamage(_R, target) * (RTime(target) / 0.13))) then
+			if (Menu.Combo.R and CountEnemyHeroInRange(W.range, myHero) >= Menu.Combo.RAmount) or Menu.Combo.Rkill and (target.health <= (GetDamage(_R, target) * (RTime(target) / 0.125))) then
 				CastR(target)
+			end
+		end
+
+		if Menu.Combo.useIgnite then
+			if GetDistanceSqr(myHero, target) < 450 * 450 then
+				if 25 >= (100 * target.health / target.maxHealth) then
+					CastI(target)
+				end
 			end
 		end
 	end
@@ -446,26 +480,20 @@ end
 
 function Killsteal()
 	for _, enemy in pairs(GetEnemyHeroes()) do
-		local realHPi = (enemy.health + (enemy.hpRegen * 0.05))
-		if Ignite and isReady(Ignite) then
-			local iDamage = (50 + (20 * myHero.level))
-			if enemy ~= nil and enemy.valid and GetDistanceSqr(enemy) < 600 * 600 and realHPi <= iDamage then
-				CastSpell(Ignite, enemy)
+		if Menu.Killsteal.I and isReady(_Ignite) then
+			if enemy ~= nil and enemy.valid and enemy.health <= GetDamage(_Ignite, enemy) then
+				CastI(enemy)
 			end
-		elseif Menu.Killsteal.Q and isReady(_Q) then
-			if enemy ~= nil and enemy.valid and GetDistanceSqr(enemy) < Q.range * Q.range and realHPi <= GetDamage(_Q, enemy) then
+		end
+		if Menu.Killsteal.Q and isReady(_Q) then
+			if enemy ~= nil and enemy.valid and enemy.health <= GetDamage(_Q, enemy) then
 				CastQ(enemy)
 			end
-		elseif Menu.Killsteal.E and isReady(_E) then
-			if enemy ~= nil and enemy.valid and GetDistanceSqr(enemy) < E.range * E.range and realHPi <= GetDamage(_E, enemy) then
+		end
+		if Menu.Killsteal.E and isReady(_E) then
+			if enemy ~= nil and enemy.valid and enemy.health <= GetDamage(_E, enemy) then
 				GetECast(enemy)
 			end
-
-
-		elseif Menu.Killsteal.Q and isReady(_Q) then
-
-
-		elseif Menu.Killsteal.Q and isReady(_Q) then
 		end
 	end
 end
@@ -474,6 +502,12 @@ function Flee()
 	myHero:MoveTo(mousePos.x, mousePos.z)
 	if Menu.Escape.W then
 		CastSpell(_W)
+	end
+end
+
+function Zhonya()
+	if (Menu.ItemsSettings.zhonyaHealth >= (100 * myHero.health / myHero.maxHealth)) and Menu.ItemsSettings.zhonyaAmount <= CountEnemyHeroInRange(W.range, myHero) then
+		CastItem(3157)
 	end
 end
 
@@ -587,19 +621,15 @@ function OnDraw()
 	end
 	if Menu.Draw.drawD then
 		for _, D in pairs(Dagger) do
-			DrawCircle2(D.obj.x, D.obj.y, D.obj.z, 145, ARGB(Menu.Draw.Dcolor[1], Menu.Draw.Dcolor[2], Menu.Draw.Dcolor[3], Menu.Draw.Dcolor[4]))
-			DrawLine3D(myHero.x, myHero.y, myHero.z, D.obj.x, D.obj.y, D.obj.z, 5, ARGB(Menu.Draw.Dcolor[1], Menu.Draw.Dcolor[2], Menu.Draw.Dcolor[3], Menu.Draw.Dcolor[4]))
-		end
-	end
-	local target = ts.target
-	if ValidTarget(target) then
-		if GetDistanceSqr(myHero, target) < R.range * R.range then
-			local end_pos = myHero + (Vector(target) - myHero): normalized() * R.range
-			DrawLine3D(end_pos.x, end_pos.y, end_pos.z, target.x, target.y, target.z, 5, ARGB(Menu.Draw.Dcolor[1], Menu.Draw.Dcolor[2], Menu.Draw.Dcolor[3], Menu.Draw.Dcolor[4]))
+			if Menu.Draw.drawDCircle then
+				DrawCircle2(D.obj.x, D.obj.y, D.obj.z, 145, ARGB(Menu.Draw.Dcolor[1], Menu.Draw.Dcolor[2], Menu.Draw.Dcolor[3], Menu.Draw.Dcolor[4]))
+			end
+			if Menu.Draw.drawDLine then
+				DrawLine3D(myHero.x, myHero.y, myHero.z, D.obj.x, D.obj.y, D.obj.z, 2.5, ARGB(Menu.Draw.Dcolor[1], Menu.Draw.Dcolor[2], Menu.Draw.Dcolor[3], Menu.Draw.Dcolor[4]))
+			end
 		end
 	end
 end
-
 
 ---------------------------------------------------------------------------------
 --[[Item's]]--
