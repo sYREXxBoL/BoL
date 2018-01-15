@@ -1,6 +1,6 @@
 if myHero.charName ~= "Katarina" then return end
 
-local version = 1.02
+local version = 1.03
 
 function PrintMsg(msg)
 	PrintChat("<font color=\"#ff0000\"><b>[Katarina]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
@@ -12,16 +12,6 @@ else
   	print("Downloading TRPrediction, please don't press F9")
     DelayAction(function() DownloadFile("https://raw.githubusercontent.com/Project4706/BoL/master/TRPrediction.lua".."?rand="..math.random(1,10000), LIB_PATH.."TRPrediction.lua", function () print("Successfully downloaded TRPrediction. Press F9 twice.") end) end, 3) 
     return
-end
-
-if not _G.UOLloaded then
-  if FileExist(LIB_PATH .. "/UOL.lua") then
-    require("UOL")
-  else 
-    print("Downloading UOL, please don't press F9")
-    DelayAction(function() DownloadFile("https://raw.github.com/nebelwolfi/BoL/master/Common/UOL.lua".."?rand="..math.random(1,10000), LIB_PATH.."UOL.lua", function () print("Successfully downloaded UOL. Press F9 twice.") end) end, 3) 
-    return
-  end
 end
 
 local Q = {range = 625}
@@ -45,7 +35,8 @@ local ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 1500, DAMAGE_PHYSICAL)
 local minions = minionManager(MINION_ENEMY, 1000, myHero, MINION_SORT_MAXHEALTH_ASC)
 local jungleMinions = minionManager(MINION_JUNGLE, 600, myHero, MINION_SORT_MAXHEALTH_DEC)
 
-local Ignite = nil
+local _Ignite = nil
+
 if myHero:GetSpellData(SUMMONER_1).name:find("summonerdot") then
 	_Ignite = SUMMONER_1
 elseif myHero:GetSpellData(SUMMONER_2).name:lower():find("summonerdot") then
@@ -182,9 +173,6 @@ function Menu()
 			Menu.Misc:addParam("SetSkin", myHero.charName.. " Skins", SCRIPT_PARAM_LIST, 1, skins[myHero.charName])
 			Menu.Misc:setCallback("SetSkin", StartSkin)
 
-			Menu:addSubMenu("> Orbwalker", "Orbwalker")
-			UOL:AddToMenu(Menu.Orbwalker)
-
 	Menu:addParam("space", "", 5, "")
 	Menu:addParam("signature0", "            [Katarina] v"..version, 5, "")
 	Menu:addParam("space1", "", 5, "")
@@ -200,6 +188,9 @@ function OnLoad()
 
 	StartSkin()
 
+	LoadTableOrbs()
+	LoadOrb()
+
 	DelayAction(function()PrintMsg("Welcome <font color=\"#ddff00\"><b>"..GetUser().."</b></font>. Have Fun and Good Luck !") end, 0.5)
 end
 
@@ -208,15 +199,15 @@ function OnTick()
 
 	GetCustomTarget()
 
-	if UOL:GetOrbWalkMode() == "Combo" then
+	if Keys() == "Combo" then
 		Combo()
 	end
 
-	if UOL:GetOrbWalkMode() == "Harass" then
+	if Keys() == "Harass" then
 		Harass()
 	end
 
-	if UOL:GetOrbWalkMode() == "LaneClear" then
+	if Keys() == "Laneclear" then
 		Laneclear()
 		Jungleclear()
 	end
@@ -337,13 +328,30 @@ function CastR(unit)
 	end
 end
 
+function SetMove(value)
+	_G["BigFatOrb_DisableMove"] = not value
+end
+function SetAttacks(value)
+	_G["BigFatOrb_DisableAttacks"] = not value
+end
+
 function ChancelR()
 	if R.active then
-		UOL:SetMovement(false)
-		UOL:SetAttacks(false)
+		if LoadedOrb == "Sac" then
+			SAC:HardDisableMovement()
+		end
+		if LoadedOrb == "Big" then
+			SetMove(false)
+			SetAttacks(false)
+		end
 	else
-		UOL:SetMovement(true)
-		UOL:SetAttacks(true)
+		if LoadedOrb == "Sac" then
+			SAC:EnableMovement()
+		end
+		if LoadedOrb == "Big" then
+			SetMove(true)
+			SetAttacks(true)
+		end
 	end
 
 	if R.active and CountEnemyHeroInRange(R.range, myHero) < 1 then
@@ -352,7 +360,7 @@ function ChancelR()
 end
 
 function CastI(unit)
-	if ValidTarget(unit) and isReady(_Ignite) and GetDistanceSqr(unit) < I.range * I.range then
+	if ValidTarget(unit) and _Ignite and isReady(_Ignite) and GetDistanceSqr(unit) < I.range * I.range then
 		CastSpell(_Ignite, unit)
 	end
 end
@@ -741,4 +749,60 @@ if ServerResult then
 	end
 else
 	DelayAction(function()PrintMsg("Error finding server version.") end, 0.55)
+end
+
+---------------------------------------------------------------------------------
+--[[Orbwalker]]--
+---------------------------------------------------------------------------------
+
+function LoadTableOrbs()
+	OrbWalkers = {}
+	LoadedOrb = nil
+	if _G.Reborn_Loaded or _G.Reborn_Initialised or _G.AutoCarry ~= nil then
+		table.insert(OrbWalkers, "SAC")
+		LoadedOrb = "Sac"
+	end
+	if FileExist(LIB_PATH .. "/Big Fat Orbwalker.lua") then
+	    table.insert(OrbWalkers, "Big Fat Walk")
+	end
+	if #OrbWalkers > 0 then
+	    Menu:addSubMenu("> Orbwalkers", "Orbwalkers")
+	    Menu:addSubMenu("> Keys", "Keys")
+	    Menu.Orbwalkers:addParam("Orbwalker", "OrbWalker", SCRIPT_PARAM_LIST, 1, OrbWalkers)
+	    Menu.Keys:addParam("info", "Detecting keys from :", SCRIPT_PARAM_INFO, OrbWalkers[Menu.Orbwalkers.Orbwalker])
+	    local OrbAlr = false
+	    Menu.Orbwalkers:setCallback("Orbwalker", function(value) 
+	    	if OrbAlr then return end
+	    	OrbAlr = true
+	      	Menu.Orbwalkers:addParam("info", "Press F9 2x to load your selected Orbwalker.", SCRIPT_PARAM_INFO, "")
+	        SendMsg("Press F9 2x to load your selected Orbwalker")
+	    end)
+	end
+end
+
+function LoadOrb()
+  	if OrbWalkers[Menu.Orbwalkers.Orbwalker] == "SAC" then
+    	LoadedOrb = "Sac"
+    	TIMETOSACLOAD = false
+   		DelayAction(function()
+      		TIMETOSACLOAD = true
+    	end,15)
+  	elseif OrbWalkers[Menu.Orbwalkers.Orbwalker] == "Big Fat Walk" then
+    	LoadedOrb = "Big"
+    	require "Big Fat Orbwalker"
+  	end
+end
+
+function Keys()
+	if LoadedOrb == "Sac" and TIMETOSACLOAD then
+		if _G.AutoCarry.Keys.AutoCarry then return "Combo" end
+		if _G.AutoCarry.Keys.MixedMode then return "Harass" end
+		if _G.AutoCarry.Keys.LaneClear then return "Laneclear" end
+		if _G.AutoCarry.Keys.LastHit then return "Lasthit" end
+	elseif LoadedOrb == "Big" then
+	  	if _G["BigFatOrb_Mode"] == "Combo" then return "Combo" end
+	  	if _G["BigFatOrb_Mode"] == "Harass" then return "Harass" end
+	  	if _G["BigFatOrb_Mode"] == "LaneClear" then return "Laneclear" end
+	  	if _G["BigFatOrb_Mode"] == "LastHit" then return "Lasthit" end
+	end
 end
