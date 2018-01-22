@@ -1,6 +1,6 @@
 if myHero.charName ~= "Katarina" then return end
 
-local version = 1.03
+local version = 1.04
 
 function PrintMsg(msg)
 	PrintChat("<font color=\"#ff0000\"><b>[Katarina]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
@@ -16,7 +16,7 @@ end
 
 local Q = {range = 625}
 local W = {range = 340}
-local E = {range = 725, speed = math.huge , delay = math.huge, radius = 145}
+local E = {range = 725, speed = 5000, delay = 0, radius = 145}
 local R = {range = 550, active = false}
 
 local I = {range = 600}
@@ -188,8 +188,8 @@ function OnLoad()
 
 	StartSkin()
 
-	LoadTableOrbs()
-	LoadOrb()
+	Orb__init()
+	FindOrbwalker()
 
 	DelayAction(function()PrintMsg("Welcome <font color=\"#ddff00\"><b>"..GetUser().."</b></font>. Have Fun and Good Luck !") end, 0.5)
 end
@@ -199,15 +199,15 @@ function OnTick()
 
 	GetCustomTarget()
 
-	if Keys() == "Combo" then
+	if ComboMode() then
 		Combo()
 	end
 
-	if Keys() == "Harass" then
+	if HarassMode() then
 		Harass()
 	end
 
-	if Keys() == "Laneclear" then
+	if LaneclearMode() then
 		Laneclear()
 		Jungleclear()
 	end
@@ -292,14 +292,6 @@ function CastW(unit)
 	end
 end
 
-function GetECast(unit)
-	if dgr > 0 then
-		CastEDagger(unit)
-	elseif dgr < 1 then
-		CastETarget(unit)
-	end
-end
-
 function CastETarget(unit)
 	if ValidTarget(unit) and isReady(_E) and GetDistanceSqr(unit) < E.range * E.range then
 		if TRPrediction then
@@ -322,36 +314,27 @@ function CastEDagger(unit)
 	end
 end
 
+function GetECast(unit)
+	if dgr > 0 then
+		CastEDagger(unit)
+	elseif dgr < 1 then
+		CastETarget(unit)
+	end
+end
+
 function CastR(unit)
 	if isReady(_R) and GetDistanceSqr(unit) < R.range * R.range then
 		CastSpell(_R)
 	end
 end
 
-function SetMove(value)
-	_G["BigFatOrb_DisableMove"] = not value
-end
-function SetAttacks(value)
-	_G["BigFatOrb_DisableAttacks"] = not value
-end
-
 function ChancelR()
 	if R.active then
-		if LoadedOrb == "Sac" then
-			SAC:HardDisableMovement()
-		end
-		if LoadedOrb == "Big" then
-			SetMove(false)
-			SetAttacks(false)
-		end
+		AllowAttacks(false)
+		AllowMovement(false)
 	else
-		if LoadedOrb == "Sac" then
-			SAC:EnableMovement()
-		end
-		if LoadedOrb == "Big" then
-			SetMove(true)
-			SetAttacks(true)
-		end
+		AllowAttacks(true)
+		AllowMovement(true)	
 	end
 
 	if R.active and CountEnemyHeroInRange(R.range, myHero) < 1 then
@@ -442,8 +425,9 @@ function Laneclear()
 	for _, minions in pairs(minions.objects) do
 		if minions and ValidTarget(minions) then
 			if Menu.Laneclear.E then
-				if dgr > 0 then
-					for _, D in pairs(Dagger) do
+				for _, D in pairs(Dagger) do
+					if dgr > 0 then
+						print("DaggerFound")
 						if not UnderTurret(D.obj, enemyTurret) then
 							GetECast(minions)
 						end
@@ -525,7 +509,7 @@ end
 
 function OnCreateObj(obj)
 	if obj and obj.valid and obj.networkID and obj.networkID ~= 0 then
-        if obj.name:find("Katarina_Base_W_Indicator_Ally") then
+        if (obj.name:find("Katarina_Base_W_Indicator_Ally") or obj.name:find("Katarina_Skin01_W_Indicator_Ally") or obj.name:find("Katarina_Skin02_W_Indicator_Ally") or obj.name:find("Katarina_Skin03_W_Indicator_Ally") or obj.name:find("Katarina_Skin04_W_Indicator_Ally") or obj.name:find("Katarina_Skin05_W_Indicator_Ally") or obj.name:find("Katarina_Skin06_W_Indicator_Ally") or obj.name:find("Katarina_Skin07_W_Indicator_Ally") or obj.name:find("Katarina_Skin08_W_Indicator_Ally") or obj.name:find("Katarina_Skin09_W_Indicator_Ally") or obj.name:find("Katarina_Skin10_W_Indicator_Ally")) then
             Dagger[obj.networkID] = {obj = Vector(obj)}
             dgr = dgr + 1
         end
@@ -534,7 +518,7 @@ end
 
 function OnDeleteObj(obj)
 	if obj and obj.valid and obj.networkID and obj.networkID ~= 0 then
-        if obj.name:find("Katarina_Base_W_Indicator_Ally") then
+        if (obj.name:find("Katarina_Base_W_Indicator_Ally") or obj.name:find("Katarina_Skin01_W_Indicator_Ally") or obj.name:find("Katarina_Skin02_W_Indicator_Ally") or obj.name:find("Katarina_Skin03_W_Indicator_Ally") or obj.name:find("Katarina_Skin04_W_Indicator_Ally") or obj.name:find("Katarina_Skin05_W_Indicator_Ally") or obj.name:find("Katarina_Skin06_W_Indicator_Ally") or obj.name:find("Katarina_Skin07_W_Indicator_Ally") or obj.name:find("Katarina_Skin08_W_Indicator_Ally") or obj.name:find("Katarina_Skin09_W_Indicator_Ally") or obj.name:find("Katarina_Skin10_W_Indicator_Ally")) then
             Dagger[obj.networkID] = nil
             dgr = dgr - 1 
         end
@@ -743,7 +727,7 @@ if ServerResult then
 	if version < ServerVersion then
 		PrintMsg("A new version is available: v"..ServerVersion..". Attempting to download now.")
 		DelayAction(function()PrintMsg("A new version is available: v"..ServerVersion..". Attempting to download now.") end, 0.55)
-		DelayAction(function() DownloadFile("https://raw.githubusercontent.com/sYREXxBoL/BoL/master/Katarina.lua".."?rand"..math.random(1,9999), SCRIPT_PATH.."Katarina.lua", function() PrintMsg("Successfully downloaded the latest version: v"..ServerVersion..".") end) end, 2)
+		DelayAction(function() DownloadFile("https://raw.githubusercontent.com/sYREXxBoL/BoL/master/Katarina.lua".."?rand"..math.random(1,9999), SCRIPT_PATH.."Katarina.lua", function() PrintMsg("Successfully downloaded the latest version: v"..ServerVersion..". Please 2xF9.") end) end, 2)
 	else
 		DelayAction(function()PrintMsg("You are running the latest version: v"..version..".") end, 0.55)
 	end
@@ -755,54 +739,113 @@ end
 --[[Orbwalker]]--
 ---------------------------------------------------------------------------------
 
-function LoadTableOrbs()
-	OrbWalkers = {}
-	LoadedOrb = nil
-	if _G.Reborn_Loaded or _G.Reborn_Initialised or _G.AutoCarry ~= nil then
-		table.insert(OrbWalkers, "SAC")
-		LoadedOrb = "Sac"
-	end
-	if FileExist(LIB_PATH .. "/Big Fat Orbwalker.lua") then
-	    table.insert(OrbWalkers, "Big Fat Walk")
-	end
-	if #OrbWalkers > 0 then
-	    Menu:addSubMenu("> Orbwalkers", "Orbwalkers")
-	    Menu:addSubMenu("> Keys", "Keys")
-	    Menu.Orbwalkers:addParam("Orbwalker", "OrbWalker", SCRIPT_PARAM_LIST, 1, OrbWalkers)
-	    Menu.Keys:addParam("info", "Detecting keys from :", SCRIPT_PARAM_INFO, OrbWalkers[Menu.Orbwalkers.Orbwalker])
-	    local OrbAlr = false
-	    Menu.Orbwalkers:setCallback("Orbwalker", function(value) 
-	    	if OrbAlr then return end
-	    	OrbAlr = true
-	      	Menu.Orbwalkers:addParam("info", "Press F9 2x to load your selected Orbwalker.", SCRIPT_PARAM_INFO, "")
-	        SendMsg("Press F9 2x to load your selected Orbwalker")
-	    end)
-	end
+function Orb__init()
+    local orbwalker = nil
+
+    Menu:addSubMenu("> Orbwalker", "Orbwalker")
+        Menu.Orbwalker:addParam("CustomKey", "Use Custom Combat Keys", SCRIPT_PARAM_ONOFF, false)
+        Menu.Orbwalker:setCallback("CustomKey", function(v)
+        	if v == true then
+        		Menu.Orbwalker:removeParam("Orbwalker")
+        		Menu.Orbwalker:addParam("Combo", "Combo Mode", SCRIPT_PARAM_ONKEYDOWN, false, string.byte(" "))
+        		Menu.Orbwalker:addParam("Harass", "Harass Mode", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("C"))
+        		Menu.Orbwalker:addParam("Laneclear", "Lane Clear Mode", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
+        		Menu.Orbwalker:addParam("Lasthit", "Last Hit", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("X"))
+        	elseif v == false then
+        		Menu.Orbwalker:addParam("Orbwalker", orbwalker .. " Detected, Hotkeys integrated", SCRIPT_PARAM_INFO, "")
+        		Menu.Orbwalker:removeParam("Combo")
+        		Menu.Orbwalker:removeParam("Harass")
+        		Menu.Orbwalker:removeParam("Laneclear")
+        		Menu.Orbwalker:removeParam("Lasthit")
+        	end
+    	end)
+
+    AddTickCallback(function() FindOrbwalker() end)
 end
 
-function LoadOrb()
-  	if OrbWalkers[Menu.Orbwalkers.Orbwalker] == "SAC" then
-    	LoadedOrb = "Sac"
-    	TIMETOSACLOAD = false
-   		DelayAction(function()
-      		TIMETOSACLOAD = true
-    	end,15)
-  	elseif OrbWalkers[Menu.Orbwalkers.Orbwalker] == "Big Fat Walk" then
-    	LoadedOrb = "Big"
-    	require "Big Fat Orbwalker"
-  	end
+function FindOrbwalker()
+    if orbwalker ~= nil then return end
+    if _G.Reborn_Initialised and _G.Reborn_Loaded and SAC and SAC.Loaded then
+        orbwalker = "SAC:P"
+        PrintMsg("Sida's Auto Carry Detected!")
+    elseif _G.Reborn_Initialised and _G.Reborn_Loaded and not SAC then
+        orbwalker = "SAC:R"
+        PrintMsg("Sida's Auto Carry Detected!")
+    elseif _G["BigFatOrb_Loaded"] == true then
+    	orbwalker = "BigFat"
+    	PrintMsg("BigFat Walk Detected!")
+    end
+
+    if orbwalker ~= nil and not Menu.Orbwalker.CustomKey then
+        Menu.Orbwalker:addParam("Orbwalker", orbwalker .. " Detected, Hotkeys integrated", SCRIPT_PARAM_INFO, "")
+    elseif orbwalker ~= nil then
+        Menu.Orbwalker:addParam("Combo", "Combo Mode", SCRIPT_PARAM_ONKEYDOWN, false, string.byte(" "))
+        Menu.Orbwalker:addParam("Harass", "Harass Mode", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("C"))
+        Menu.Orbwalker:addParam("Laneclear", "Lane Clear Mode", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
+        Menu.Orbwalker:addParam("Lasthit", "Last Hit", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("X"))
+    end
 end
 
-function Keys()
-	if LoadedOrb == "Sac" and TIMETOSACLOAD then
-		if _G.AutoCarry.Keys.AutoCarry then return "Combo" end
-		if _G.AutoCarry.Keys.MixedMode then return "Harass" end
-		if _G.AutoCarry.Keys.LaneClear then return "Laneclear" end
-		if _G.AutoCarry.Keys.LastHit then return "Lasthit" end
-	elseif LoadedOrb == "Big" then
-	  	if _G["BigFatOrb_Mode"] == "Combo" then return "Combo" end
-	  	if _G["BigFatOrb_Mode"] == "Harass" then return "Harass" end
-	  	if _G["BigFatOrb_Mode"] == "LaneClear" then return "Laneclear" end
-	  	if _G["BigFatOrb_Mode"] == "LastHit" then return "Lasthit" end
-	end
+function ComboMode()
+    if not Menu.Orbwalker.CustomKey then
+        if orbwalker == "SAC:R" or orbwalker == "SAC:P" then
+            return _G.AutoCarry.Keys.AutoCarry
+        elseif orbwalker == "BigFat" then
+        	return _G["BigFatOrb_Mode"] == "Combo"
+        end
+    else
+        return Menu.Orbwalker.Combo
+    end
+end
+
+function HarassMode()
+    if not Menu.Orbwalker.CustomKey then
+        if orbwalker == "SAC:R" or orbwalker == "SAC:P" then
+            return _G.AutoCarry.Keys.MixedMode
+        elseif orbwalker == "BigFat" then
+        	return _G["BigFatOrb_Mode"] == "Harass"
+        end
+    else
+        return Menu.Orbwalker.Harass
+    end
+end
+
+function LaneclearMode()
+    if not Menu.Orbwalker.CustomKey then
+        if orbwalker == "SAC:R" or orbwalker == "SAC:P" then
+            return _G.AutoCarry.Keys.LaneClear
+        elseif orbwalker == "BigFat" then
+        	return _G["BigFatOrb_Mode"] == "LaneClear"
+        end
+    else
+        return Menu.Orbwalker.LaneClear
+    end
+end
+
+function LasthitMode()
+    if not Menu.Orbwalker.CustomKey then
+        if orbwalker == "SAC:R" or orbwalker == "SAC:P" then
+            return _G.AutoCarry.Keys.LaneClear
+        elseif orbwalker == "BigFat" then
+        	return _G["BigFatOrb_Mode"] == "LastHit"
+        end
+    else
+        return Menu.Orbwalker.LaneClear
+    end
+end
+
+function AllowAttacks(bool)
+    if orbwalker == "SAC:R" or orbwalker == "SAC:P" then
+        _G.AutoCarry.MyHero:AttacksEnabled(bool)
+    elseif orbwalker == "BigFat" then
+        _G["BigFatOrb_DisableAttacks"] = not bool
+    end
+end
+
+function AllowMovement(bool)
+    if orbwalker == "SAC:R" or orbwalker == "SAC:P" then
+        _G.AutoCarry.MyHero:MovementEnabled(bool)
+    elseif orbwalker == "BigFat" then
+        _G["BigFatOrb_DisableMove"] = not bool
+    end
 end
