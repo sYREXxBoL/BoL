@@ -87,6 +87,7 @@ end
 
 function OnLoad()
 	DelayAction(function()PrintMsg("Welcome <font color=\"#3393FF\"><b>"..GetUser().."</b></font>, Have Fun and Good Luck !") end, 0.5)
+	DelayAction(function()PrintMsg("Successfully Loaded!") end, 0.5)
 
 	Menu()
 end
