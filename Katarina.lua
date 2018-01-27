@@ -1,6 +1,6 @@
 if myHero.charName ~= "Katarina" then return end
 
-local version = 1.04
+local version = 1.05
 
 function PrintMsg(msg)
 	PrintChat("<font color=\"#ff0000\"><b>[Katarina]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
@@ -33,15 +33,18 @@ local items =
 local ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 1500, DAMAGE_PHYSICAL)
 
 local minions = minionManager(MINION_ENEMY, 1000, myHero, MINION_SORT_MAXHEALTH_ASC)
+local allyMinions = minionManager(MINION_ALLY, 1000, myHero, MINION_SORT_HEALTH_DES)
 local jungleMinions = minionManager(MINION_JUNGLE, 600, myHero, MINION_SORT_MAXHEALTH_DEC)
 
 local _Ignite = nil
 
-if myHero:GetSpellData(SUMMONER_1).name:find("summonerdot") then
+if myHero:GetSpellData(SUMMONER_1).name:lower():find("summonerdot") then
 	_Ignite = SUMMONER_1
 elseif myHero:GetSpellData(SUMMONER_2).name:lower():find("summonerdot") then
 	_Ignite = SUMMONER_2
 end
+
+local enemyHeros = GetEnemyHeroes()
 
 local TRe, TP
 
@@ -73,6 +76,8 @@ function Menu()
 			Menu.Combo:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, true)
 			Menu.Combo:addParam("E", "(E) - Use ", SCRIPT_PARAM_ONOFF, true)
 			Menu.Combo:addParam("R", "(R) - Use ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Combo:addParam("divider", "", SCRIPT_PARAM_INFO, "")		
+			Menu.Combo:addParam("EonlyD", "(E) - Only on Dagger ", SCRIPT_PARAM_ONOFF, true)
 			Menu.Combo:addParam("divider", "", SCRIPT_PARAM_INFO, "")
 			Menu.Combo:addParam("RSettings", "> R Settings:", SCRIPT_PARAM_INFO, "")
 			Menu.Combo:addParam("RAmount", "min. Enemy Hit", SCRIPT_PARAM_SLICE, 3, 1, 5, 0)
@@ -125,6 +130,7 @@ function Menu()
 			Menu.Escape:addParam("divider", "", SCRIPT_PARAM_INFO, "")
 			Menu.Escape:addParam("Spell", "> Choose your spells:", SCRIPT_PARAM_INFO, "")
 			Menu.Escape:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Escape:addParam("E", "(E) - Use ", SCRIPT_PARAM_ONOFF, true)
 
 		--[[Drawings]]--
 		Menu:addSubMenu("> Drawings", "Draw")
@@ -155,7 +161,7 @@ function Menu()
 				Menu.ItemsSettings.QSS:addParam("Silence", "Remove Silence", SCRIPT_PARAM_ONOFF, true)--7
 				Menu.ItemsSettings.QSS:addParam("Taunt", "Remove Taunt", SCRIPT_PARAM_ONOFF, true)--8
 				Menu.ItemsSettings.QSS:addParam("Root", "Remove Root", SCRIPT_PARAM_ONOFF, true)--11
-				Menu.ItemsSettings.QSS:addParam("Fear", "Remove Dear", SCRIPT_PARAM_ONOFF, true)--10
+				Menu.ItemsSettings.QSS:addParam("Fear", "Remove Fear", SCRIPT_PARAM_ONOFF, true)--10
 				Menu.ItemsSettings.QSS:addParam("Charm", "Remove Charm", SCRIPT_PARAM_ONOFF, true)--21
 				Menu.ItemsSettings.QSS:addParam("Suppression", "Remove Suppression", SCRIPT_PARAM_ONOFF, true)--24
 				Menu.ItemsSettings.QSS:addParam("Blind", "Remove Blind", SCRIPT_PARAM_ONOFF, true)--25
@@ -270,6 +276,50 @@ function GetDamage(spell, unit)
 end
 
 ---------------------------------------------------------------------------------
+--[[Callback's]]--
+---------------------------------------------------------------------------------
+
+function OnCreateObj(obj)
+	if obj and obj.valid and obj.networkID and obj.networkID ~= 0 then
+        if (obj.name:lower():find("katarina_base_w_indicator_ally") or obj.name:lower():find("katarina_skin01_w_indicator_ally") or obj.name:lower():find("katarina_skin02_w_indicator_ally") or obj.name:lower():find("katarina_akin03_w_indicator_ally") or obj.name:lower():find("katarina_skin04_w_indicator_ally") or obj.name:lower():find("katarina_skin05_w_indicator_ally") or obj.name:lower():find("katarina_skin06_w_indicator_ally") or obj.name:lower():find("katarina_skin07_w_indicator_ally") or obj.name:lower():find("katarina_skin08_w_indicator_ally") or obj.name:lower():find("katarina_skin09_w_indicator_ally") or obj.name:lower():find("katarina_skin10_w_indicator_ally")) then
+            Dagger[obj.networkID] = {obj = Vector(obj)}
+            dgr = dgr + 1
+        end
+    end
+end
+
+function OnDeleteObj(obj)
+	if obj and obj.valid and obj.networkID and obj.networkID ~= 0 then
+        if (obj.name:lower():find("katarina_base_w_indicator_ally") or obj.name:lower():find("katarina_skin01_w_indicator_ally") or obj.name:lower():find("katarina_skin02_w_indicator_ally") or obj.name:lower():find("katarina_akin03_w_indicator_ally") or obj.name:lower():find("katarina_skin04_w_indicator_ally") or obj.name:lower():find("katarina_skin05_w_indicator_ally") or obj.name:lower():find("katarina_skin06_w_indicator_ally") or obj.name:lower():find("katarina_skin07_w_indicator_ally") or obj.name:lower():find("katarina_skin08_w_indicator_ally") or obj.name:lower():find("katarina_skin09_w_indicator_ally") or obj.name:lower():find("katarina_skin10_w_indicator_ally")) then
+            Dagger[obj.networkID] = nil
+            dgr = dgr - 1 
+        end
+    end
+end
+
+function OnUpdateBuff(unit, buff)
+   	if unit and unit.isMe and buff and buff.valid then
+   		if Menu.ItemsSettings.ItemsSettings and buffs[buff.type] == true then
+	   		DelayAction(function()
+	   			CastItem(3137)
+				CastItem(3140)
+				CastItem(3139)
+	   		end, Menu.ItemsSettings.Humanizer/1000)
+		end
+	end
+
+	if unit and unit.isMe and buff.name:lower():find("katarinarsound") then
+		R.active = true
+	end
+end
+
+function OnRemoveBuff(unit, buff)
+	if unit and unit.isMe and buff.name:lower():find("katarinarsound") then
+		R.active = false
+	end
+end
+
+---------------------------------------------------------------------------------
 --[[Spell's Settings]]--
 ---------------------------------------------------------------------------------
 
@@ -315,10 +365,14 @@ function CastEDagger(unit)
 end
 
 function GetECast(unit)
-	if dgr > 0 then
+	if Menu.Combo.EonlyD then
 		CastEDagger(unit)
-	elseif dgr < 1 then
-		CastETarget(unit)
+	else
+		if dgr > 0 then
+			CastEDagger(unit)
+		else
+			CastETarget(unit)
+		end
 	end
 end
 
@@ -391,9 +445,12 @@ function Combo()
 			CastW(target)
 			CastQ(target)
 		end
-		if GetDistanceSqr(myHero, target) < R.range * R.range then
-			if (Menu.Combo.R and CountEnemyHeroInRange(W.range, myHero) >= Menu.Combo.RAmount) or Menu.Combo.Rkill and (target.health <= (GetDamage(_R, target) * (RTime(target) / 0.125))) then
-				CastR(target)
+
+		if isLevel(_R) then
+			if GetDistanceSqr(myHero, target) < R.range * R.range then
+				if (Menu.Combo.R and CountEnemyHeroInRange(W.range, myHero) >= Menu.Combo.RAmount) or Menu.Combo.Rkill and (target.health <= (GetDamage(_R, target) * (RTime(target) / 0.125))) then
+					CastR(target)
+				end
 			end
 		end
 
@@ -427,7 +484,6 @@ function Laneclear()
 			if Menu.Laneclear.E then
 				for _, D in pairs(Dagger) do
 					if dgr > 0 then
-						print("DaggerFound")
 						if not UnderTurret(D.obj, enemyTurret) then
 							GetECast(minions)
 						end
@@ -450,7 +506,7 @@ function Jungleclear()
 	jungleMinions:update()
 	for _, minions in pairs(jungleMinions.objects) do
 		if minions and ValidTarget(minions) then
-			if minions.name:find("Plant") then return end
+			if minions.name:lower():find("plant") then return end
 			if minions and ValidTarget(minions) then
 				if Menu.Jungleclear.Q then 
 					CastQ(minions) 
@@ -471,7 +527,7 @@ function Jungleclear()
 end
 
 function Killsteal()
-	for _, enemy in pairs(GetEnemyHeroes()) do
+	for _, enemy in pairs(enemyHeros) do
 		if Menu.Killsteal.I and isReady(_Ignite) then
 			if enemy ~= nil and enemy.valid and enemy.health <= GetDamage(_Ignite, enemy) then
 				CastI(enemy)
@@ -493,57 +549,67 @@ end
 function Flee()
 	myHero:MoveTo(mousePos.x, mousePos.z)
 	if Menu.Escape.W then
-		CastSpell(_W)
+		CastW()
+	end
+	if Menu.Escape.E then
+		allyMinions:update()
+		minions:update()
+		jungleMinions:update()
+		
+		if GetDistance(mousePos) > E.range then
+            unit = myHero + (Vector(mousePos) - myHero):normalized() * E.range
+        else
+            unit = myHero + (Vector(mousePos) - myHero)
+        end
+
+        if isReady(_E) then
+        	UnitValid = false
+           	UnitDistance = 9999
+			for _, m in pairs(allyMinions.objects) do
+				if GetDistance(m, unit) < 350 and not m.dead and UnitDistance > GetDistance(mousePos, m) then
+                    UnitDistance = GetDistance(mousePos, m)
+                    UnitValid = m
+                end
+			end
+			for _, m in pairs(minions.objects) do
+				if GetDistance(m, unit) < 350 and not m.dead and UnitDistance > GetDistance(mousePos, m) then
+                    UnitDistance = GetDistance(mousePos, m)
+                    UnitValid = m
+                end
+			end
+			for _, m in pairs(jungleMinions.objects) do
+				if GetDistance(m, unit) < 350 and not m.dead and UnitDistance > GetDistance(mousePos, m) then
+                    UnitDistance = GetDistance(mousePos, m)
+                    UnitValid = m
+                end
+			end
+			for _, D in pairs(Dagger) do
+				if GetDistance(D.obj, unit) < 350 and not D.dead and UnitDistance > GetDistance(mousePos, D.obj) then
+                    UnitDistance = GetDistance(mousePos, D.obj)
+                    UnitValid = D.obj
+                end
+			end
+		end
+
+		if UnitValid then
+            unit = UnitValid
+        end
+
+        if GetDistance(mousePos) > E.range then
+            if UnitValid then
+                CastSpell(_E, UnitValid.x, UnitValid.z)
+            end
+        elseif GetDistance(mousePos) < E.range then
+            if UnitValid then
+                CastSpell(_E, UnitValid.x, UnitValid.z)
+            end
+        end
 	end
 end
 
 function Zhonya()
 	if (Menu.ItemsSettings.zhonyaHealth >= (100 * myHero.health / myHero.maxHealth)) and Menu.ItemsSettings.zhonyaAmount <= CountEnemyHeroInRange(W.range, myHero) then
 		CastItem(3157)
-	end
-end
-
----------------------------------------------------------------------------------
---[[Callback's]]--
----------------------------------------------------------------------------------
-
-function OnCreateObj(obj)
-	if obj and obj.valid and obj.networkID and obj.networkID ~= 0 then
-        if (obj.name:find("Katarina_Base_W_Indicator_Ally") or obj.name:find("Katarina_Skin01_W_Indicator_Ally") or obj.name:find("Katarina_Skin02_W_Indicator_Ally") or obj.name:find("Katarina_Skin03_W_Indicator_Ally") or obj.name:find("Katarina_Skin04_W_Indicator_Ally") or obj.name:find("Katarina_Skin05_W_Indicator_Ally") or obj.name:find("Katarina_Skin06_W_Indicator_Ally") or obj.name:find("Katarina_Skin07_W_Indicator_Ally") or obj.name:find("Katarina_Skin08_W_Indicator_Ally") or obj.name:find("Katarina_Skin09_W_Indicator_Ally") or obj.name:find("Katarina_Skin10_W_Indicator_Ally")) then
-            Dagger[obj.networkID] = {obj = Vector(obj)}
-            dgr = dgr + 1
-        end
-    end
-end
-
-function OnDeleteObj(obj)
-	if obj and obj.valid and obj.networkID and obj.networkID ~= 0 then
-        if (obj.name:find("Katarina_Base_W_Indicator_Ally") or obj.name:find("Katarina_Skin01_W_Indicator_Ally") or obj.name:find("Katarina_Skin02_W_Indicator_Ally") or obj.name:find("Katarina_Skin03_W_Indicator_Ally") or obj.name:find("Katarina_Skin04_W_Indicator_Ally") or obj.name:find("Katarina_Skin05_W_Indicator_Ally") or obj.name:find("Katarina_Skin06_W_Indicator_Ally") or obj.name:find("Katarina_Skin07_W_Indicator_Ally") or obj.name:find("Katarina_Skin08_W_Indicator_Ally") or obj.name:find("Katarina_Skin09_W_Indicator_Ally") or obj.name:find("Katarina_Skin10_W_Indicator_Ally")) then
-            Dagger[obj.networkID] = nil
-            dgr = dgr - 1 
-        end
-    end
-end
-
-function OnUpdateBuff(unit, buff)
-   	if unit and unit.isMe and buff and buff.valid then
-   		if Menu.ItemsSettings.ItemsSettings and buffs[buff.type] == true then
-	   		DelayAction(function()
-	   			CastItem(3137)
-				CastItem(3140)
-				CastItem(3139)
-	   		end, Menu.ItemsSettings.Humanizer/1000)
-		end
-	end
-
-	if unit and unit.isMe and buff.name:find("katarinarsound") then
-		R.active = true
-	end
-end
-
-function OnRemoveBuff(unit, buff)
-	if unit and unit.isMe and buff.name:find("katarinarsound") then
-		R.active = false
 	end
 end
 
@@ -679,7 +745,7 @@ end
 
 function RTime(unit)
 	if GetDistanceSqr(myHero, unit) < R.range * R.range and ValidTarget(unit) then
-		for _, champion in ipairs(GetEnemyHeroes()) do
+		for _, champion in ipairs(enemyHeros) do
 			local fastes_way = {}
 			local end_pos = myHero + (Vector(unit) - myHero): normalized() * R.range
 			table.insert(fastes_way, Vector(champion.x, champion.z))
@@ -765,6 +831,7 @@ end
 
 function FindOrbwalker()
     if orbwalker ~= nil then return end
+
     if _G.Reborn_Initialised and _G.Reborn_Loaded and SAC and SAC.Loaded then
         orbwalker = "SAC:P"
         PrintMsg("Sida's Auto Carry Detected!")
@@ -774,6 +841,9 @@ function FindOrbwalker()
     elseif _G["BigFatOrb_Loaded"] == true then
     	orbwalker = "BigFat"
     	PrintMsg("BigFat Walk Detected!")
+    --elseif _G.ZWalker:IsLoaded() then
+    	--orbwalker = "0Walk"
+    	--PrintMsg("0Walker Detected!")
     end
 
     if orbwalker ~= nil and not Menu.Orbwalker.CustomKey then
@@ -792,6 +862,8 @@ function ComboMode()
             return _G.AutoCarry.Keys.AutoCarry
         elseif orbwalker == "BigFat" then
         	return _G["BigFatOrb_Mode"] == "Combo"
+        elseif orbwalker == "0Walk" then
+        	return _G.ZWalker:ActiveMode() == "Combo"
         end
     else
         return Menu.Orbwalker.Combo
@@ -804,6 +876,8 @@ function HarassMode()
             return _G.AutoCarry.Keys.MixedMode
         elseif orbwalker == "BigFat" then
         	return _G["BigFatOrb_Mode"] == "Harass"
+        elseif orbwalker == "0Walk" then
+        	return _G.ZWalker:ActiveMode() == "Harass"
         end
     else
         return Menu.Orbwalker.Harass
@@ -816,6 +890,8 @@ function LaneclearMode()
             return _G.AutoCarry.Keys.LaneClear
         elseif orbwalker == "BigFat" then
         	return _G["BigFatOrb_Mode"] == "LaneClear"
+        elseif orbwalker == "0Walk" then
+        	return _G.ZWalker:ActiveMode() == "LaneClear"
         end
     else
         return Menu.Orbwalker.LaneClear
@@ -828,9 +904,33 @@ function LasthitMode()
             return _G.AutoCarry.Keys.LaneClear
         elseif orbwalker == "BigFat" then
         	return _G["BigFatOrb_Mode"] == "LastHit"
+        elseif orbwalker == "0Walk" then
+        	return _G.ZWalker:ActiveMode() == "LastHit"
         end
     else
         return Menu.Orbwalker.LaneClear
+    end
+end
+
+function GetOrbwalkerTarget()
+    if orbwalker == "SAC:R" then
+        return _G.AutoCarry.SkillsCrosshair.target
+    elseif orbwalker == "SAC:P" then
+        return _G.SAC:GetTarget("enemy")
+    elseif orbwalker == "BigFat" then
+    	--return _G["BigFatOrb_ForcedTarget"] = target
+   	elseif orbwalker == "0Walk" then
+   		return _G.ZWalker:GetOrbTarget()
+   	end
+end
+
+function ForceTarget(target)
+    if orbwalker == "SAC:R" or orbwalker == "SAC:P" then
+        _G.AutoCarry.Crosshair:ForceTarget(target)
+    elseif orbwalker == "BigFat" then
+    	--_G["BigFatOrb_ForcedTarget"] = target
+    elseif orbwalker == "0Walk" then
+    	_G.ZWalker:ForceTarget(target)
     end
 end
 
@@ -839,6 +939,12 @@ function AllowAttacks(bool)
         _G.AutoCarry.MyHero:AttacksEnabled(bool)
     elseif orbwalker == "BigFat" then
         _G["BigFatOrb_DisableAttacks"] = not bool
+    elseif orbwalker == "0Walk" then
+    	if bool then
+    		_G.ZWalker:EnableAA()
+    	else
+    		_G.ZWalker:DisableAA()
+    	end
     end
 end
 
@@ -847,5 +953,11 @@ function AllowMovement(bool)
         _G.AutoCarry.MyHero:MovementEnabled(bool)
     elseif orbwalker == "BigFat" then
         _G["BigFatOrb_DisableMove"] = not bool
+    elseif orbwalker == "0Walk" then
+    	if bool then
+    		_G.ZWalker:EnableMovement()
+    	else
+    		_G.ZWalker:DisableMovement()
+    	end
     end
 end
