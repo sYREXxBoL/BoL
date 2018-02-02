@@ -1,6 +1,6 @@
 if myHero.charName ~= "Katarina" then return end
 
-local version = 1.05
+local version = 1.06
 
 function PrintMsg(msg)
 	PrintChat("<font color=\"#ff0000\"><b>[Katarina]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
@@ -27,6 +27,7 @@ local items =
 	[3140] = {Name = "Quicksilver Sash", nickName = "Qss", requiresTarget = false, requiresXZ = false, spellRange = nil},
 	[3139] = {Name = "Mercurial Scimitar", nickName = "Merc Qss", requiresTarget = false, requiresXZ = false, spellRange = nil},
 	[3157] = {Name = "Zhonya's Hourglass", nickName = "Zhonya's", requiresTarget = false, requiresXZ = false, spellRange = nil},
+	[3144] = {Name = "Bilgewater Cutlass", nickName = "Cutlass", requiresTarget = true, requiresXZ = false, spellRange = 550},
 	[3146] = {Name = "Hextech Gunblade", nickName = "Gunblade", requiresTarget = true, requiresXZ = false, spellRange = 700}
 }
 
@@ -104,6 +105,8 @@ function Menu()
 			Menu.Killsteal:addParam("R", "(R) - Use ", SCRIPT_PARAM_ONOFF, false)
 			Menu.Killsteal:addParam("divider", "", SCRIPT_PARAM_INFO, "")
 			Menu.Killsteal:addParam("I", "(Ignite) - Use ", SCRIPT_PARAM_ONOFF, false)
+			Menu.Killsteal:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Killsteal:addParam("Item", "(Items) - Use ", SCRIPT_PARAM_ONOFF, false)
 
 		--[[Laneclear]]--
 		Menu:addSubMenu("> Laneclear", "Laneclear")
@@ -122,6 +125,14 @@ function Menu()
 			Menu.Jungleclear:addParam("Q", "(Q) - Use ", SCRIPT_PARAM_ONOFF, true)
 			Menu.Jungleclear:addParam("W", "(W) - Use ", SCRIPT_PARAM_ONOFF, true)
 			Menu.Jungleclear:addParam("E", "(E) - Use ", SCRIPT_PARAM_ONOFF, true)
+
+		--[[Lasthit]]--
+		Menu:addSubMenu("> LastHit", "Lasthit")
+			Menu.Lasthit:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
+			Menu.Lasthit:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Lasthit:addParam("Spell", "> Choose your spells:", SCRIPT_PARAM_INFO, "")
+			Menu.Lasthit:addParam("Q", "(Q) - Use ", SCRIPT_PARAM_ONOFF, true)
+			Menu.Lasthit:addParam("E", "(E) - Use ", SCRIPT_PARAM_ONOFF, true)
 
 
 		--[[Escape]]--
@@ -148,7 +159,9 @@ function Menu()
 			Menu.Draw:addParam("drawDCircle", "(Dagger) - Circle ", SCRIPT_PARAM_ONOFF, false)
 			Menu.Draw:addParam("drawDLine", "(Dagger) - Line ", SCRIPT_PARAM_ONOFF, false)
 			Menu.Draw:addParam("Dcolor", "(Dagger) Color", SCRIPT_PARAM_COLOR, {255, 186, 85, 211})
-
+			Menu.Draw:addParam("divider", "", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("General", "> Damage Draw:", SCRIPT_PARAM_INFO, "")
+			Menu.Draw:addParam("Damage", "(Damage) - Draw ", SCRIPT_PARAM_ONOFF, true)
 
 
 	--[[Def Item Settings]]
@@ -185,56 +198,6 @@ function Menu()
 	Menu:addParam("signature1", "              by sYREXx    ", 5, "")
 end
 
-function OnLoad()
-	Menu()
-
-	if FileExist(LIB_PATH..'TRPrediction.lua') then require('TRPrediction') end
-
-	Int()
-
-	StartSkin()
-
-	Orb__init()
-	FindOrbwalker()
-
-	DelayAction(function()PrintMsg("Welcome <font color=\"#ddff00\"><b>"..GetUser().."</b></font>. Have Fun and Good Luck !") end, 0.5)
-end
-
-function OnTick()
-	if myHero.dead then return end
-
-	GetCustomTarget()
-
-	if ComboMode() then
-		Combo()
-	end
-
-	if HarassMode() then
-		Harass()
-	end
-
-	if LaneclearMode() then
-		Laneclear()
-		Jungleclear()
-	end
-
-	if Menu.Killsteal.Killsteal then
-		Killsteal()
-	end
-
-	if Menu.Escape.flee then
-		Flee()
-	end
-
-	if Menu.ItemsSettings.zhonya then
-		Zhonya()
-	end
-
-	ChancelR()
-
-	buffs = {[5]=Menu.ItemsSettings.QSS.Stun, [7]=Menu.ItemsSettings.QSS.Silence, [8]=Menu.ItemsSettings.QSS.Taunt, [10]=Menu.ItemsSettings.QSS.Fear, [11]=Menu.ItemsSettings.QSS.Roat, [21]=Menu.ItemsSettings.QSS.Charm, [24]=Menu.ItemsSettings.QSS.Suppression, [25]=Menu.ItemsSettings.QSS.Blind, [29]=Menu.ItemsSettings.QSS.KnockUp}
-end
-
 ---------------------------------------------------------------------------------
 --[[Spell Check's]]--
 ---------------------------------------------------------------------------------
@@ -259,18 +222,133 @@ end
 
 function GetDamage(spell, unit)
 	local truedamage = 0
+	local basedamage = 0
 	local AD = myHero.totalDamage
 	local AP = myHero.ap
 	local bAD = myHero.addDamage
 
-	if spell == _Q and isReady(_Q) then
-		truedamage = myHero:CalcMagicDamage(unit, ((Level(_Q) * 30 + 45) + (AP * 0.6)))
-	elseif spell == _E and isReady(_E) then
-		truedamage = myHero:CalcMagicDamage(unit, ((Level(_E) * 15) + (AD * 0.6) + (AP * 0.25))) 
-	elseif spell == _R and isReady(_R) then
-		truedamage = myHero:CalcMagicDamage(unit, (((Level(_R) * 25) - ((Level(_R) - 1) * 12.5)) + (bAD * 0.22) + (AP * 0.19))) -- every 0.166 sec#
+	if spell == _Q then
+		if isReady(_Q) then
+			truedamage = myHero:CalcMagicDamage(unit, ((Level(_Q) * 30 + 45) + (AP * 0.6)))
+		end
+	elseif spell == _Dagger and dgr > 0 then
+		if myHero.level == 1 then
+			basedamage = 75
+		elseif myHero.level == 2 then
+			basedamage = 80
+		elseif myHero.level == 3 then
+			basedamage = 87
+		elseif myHero.level == 4 then
+			basedamage = 94
+		elseif myHero.level == 5 then
+			basedamage = 102
+		elseif myHero.level == 6 then
+			basedamage = 111	
+		elseif myHero.level == 7 then
+			basedamage = 120	
+		elseif myHero.level == 8 then
+			basedamage = 131	
+		elseif myHero.level == 9 then
+			basedamage = 143	
+		elseif myHero.level == 10 then
+			basedamage = 155	
+		elseif myHero.level == 11 then
+			basedamage = 168	
+		elseif myHero.level == 12 then
+			basedamage = 183	
+		elseif myHero.level == 13 then
+			basedamage = 198	
+		elseif myHero.level == 14 then
+			basedamage = 214	
+		elseif myHero.level == 15 then
+			basedamage = 231	
+		elseif myHero.level == 16 then
+			basedamage = 248
+		elseif myHero.level == 17 then
+			basedamage = 267	
+		elseif myHero.level == 18 then
+			basedamage = 287
+		end
+
+		if dgr > 1 then
+			if myHero.level < 6 then
+				truedamage = myHero:CalcMagicDamage(unit, 2 * (basedamage + bAD + (0.55 * AP)))
+			elseif myHero.level < 11 and myHero.level > 5 then
+				truedamage = myHero:CalcMagicDamage(unit, 2 * (basedamage + bAD + (0.7 * AP)))
+			elseif myHero.level < 16 and myHero.level > 10 then
+				truedamage = myHero:CalcMagicDamage(unit, 2 * (basedamage + bAD + (0.85 * AP))) 
+			elseif myHero.level > 15 then
+				truedamage = myHero:CalcMagicDamage(unit, 2 * (basedamage + bAD + AP))
+			end
+		else
+			if myHero.level < 6 then
+				truedamage = myHero:CalcMagicDamage(unit, (basedamage + bAD + (0.55 * AP)))
+			elseif myHero.level < 11 and myHero.level > 5 then
+				truedamage = myHero:CalcMagicDamage(unit, (basedamage + bAD + (0.7 * AP)))
+			elseif myHero.level < 16 and myHero.level > 10 then
+				truedamage = myHero:CalcMagicDamage(unit, (basedamage + bAD + (0.85 * AP))) 
+			elseif myHero.level > 15 then
+				truedamage = myHero:CalcMagicDamage(unit, (basedamage + bAD + AP))
+			end
+		end
+
+	elseif spell == _E then
+		if isReady(_E) then
+			truedamage = myHero:CalcMagicDamage(unit, ((Level(_E) * 15) + (AD * 0.6) + (AP * 0.25)))
+		end
+	elseif spell == _R then
+		if isReady(_R) then
+			truedamage = myHero:CalcMagicDamage(unit, (((Level(_R) * 25) - ((Level(_R) - 1) * 12.5)) + (bAD * 0.22) + (AP * 0.19))) -- every 0.166 sec#
+		end
 	elseif spell == _Ignite and isReady(_Ignite) then
-		truedamage = (50 + (myHero.level * 20))
+		if isReady(_Ignite) then
+			truedamage = (50 + (myHero.level * 20))
+		end
+	elseif HasItem(3146) then --GunBlade
+		if spell == _GunBlade and ItemReady(3146) then
+			if myHero.level == 1 then
+				basedamage = 175
+			elseif myHero.level == 2 then
+				basedamage = 180
+			elseif myHero.level == 3 then
+				basedamage = 184
+			elseif myHero.level == 4 then
+				basedamage = 189
+			elseif myHero.level == 5 then
+				basedamage = 193
+			elseif myHero.level == 6 then
+				basedamage = 198	
+			elseif myHero.level == 7 then
+				basedamage = 203	
+			elseif myHero.level == 8 then
+				basedamage = 207	
+			elseif myHero.level == 9 then
+				basedamage = 212	
+			elseif myHero.level == 10 then
+				basedamage = 216	
+			elseif myHero.level == 11 then
+				basedamage = 221	
+			elseif myHero.level == 12 then
+				basedamage = 225	
+			elseif myHero.level == 13 then
+				basedamage = 230	
+			elseif myHero.level == 14 then
+				basedamage = 235	
+			elseif myHero.level == 15 then
+				basedamage = 239	
+			elseif myHero.level == 16 then
+				basedamage = 244
+			elseif myHero.level == 17 then
+				basedamage = 248	
+			elseif myHero.level == 18 then
+				basedamage = 253
+			end
+		end
+		truedamage = myHero:CalcMagicDamage(unit, basedamage + (0.3 * AP))
+	elseif HasItem(3144) then --Cutlass
+		if spell == _Cutlass and ItemReady(3144) then
+			truedamage = myHero:CalcMagicDamage(unit, 100)
+		end
 	end
 	return truedamage
 end
@@ -307,7 +385,9 @@ function OnUpdateBuff(unit, buff)
 	   		end, Menu.ItemsSettings.Humanizer/1000)
 		end
 	end
+end
 
+function OnApplyBuff(unit, buff)
 	if unit and unit.isMe and buff.name:lower():find("katarinarsound") then
 		R.active = true
 	end
@@ -337,7 +417,7 @@ function CastQ(unit)
 end
 
 function CastW(unit)
-	if isReady(_W) and GetDistanceSqr(unit) < W.range * W.range then
+	if isReady(_W) and GetDistanceSqr(unit) < W.range/2 * W.range/2 then
 		CastSpell(_W)
 	end
 end
@@ -422,6 +502,7 @@ function Combo()
 		if (Menu.Combo.Q and Menu.Combo.W and Menu.Combo.E) and Distance <= W.range * W.range and not R.active then
 			if Menu.Combo.useItems then
 				CastItem(3146, target)
+				CastItem(3144, target)
 			end
 			CastW(target)
 			CastQ(target)
@@ -433,6 +514,7 @@ function Combo()
 			GetECast(target)
 			if Menu.Combo.useItems then
 				CastItem(3146, target)
+				CastItem(3144, target)
 			end
 			CastW(target)
 		end
@@ -441,6 +523,7 @@ function Combo()
 			GetECast(target)
 			if Menu.Combo.useItems then
 				CastItem(3146, target)
+				CastItem(3144, target)
 			end
 			CastW(target)
 			CastQ(target)
@@ -502,6 +585,25 @@ function Laneclear()
 	end
 end
 
+function LastHit()
+	minions:update()
+	for _, minions in pairs(minions.objects) do
+		if minions and ValidTarget(minions) then
+			if Menu.Lasthit.Q then
+				if minions.health <= GetDamage(_Q, minions) then
+					CastQ(minions)
+				end
+			end
+
+			if Menu.Lasthit.E then
+				if minions.health <= GetDamage(_E, minions) then
+					CastETarget(minions)
+				end
+			end
+		end
+	end
+end
+
 function Jungleclear()
 	jungleMinions:update()
 	for _, minions in pairs(jungleMinions.objects) do
@@ -528,19 +630,55 @@ end
 
 function Killsteal()
 	for _, enemy in pairs(enemyHeros) do
-		if Menu.Killsteal.I and isReady(_Ignite) then
-			if enemy ~= nil and enemy.valid and enemy.health <= GetDamage(_Ignite, enemy) then
-				CastI(enemy)
+		if GetDistanceSqr(myHero, enemy) < 1000 * 1000 and not enemy.dead then
+			if Menu.Killsteal.I and isReady(_Ignite) then
+				if enemy ~= nil and enemy.valid and enemy.health <= GetDamage(_Ignite, enemy) then
+					CastI(enemy)
+				end
 			end
-		end
-		if Menu.Killsteal.Q and isReady(_Q) then
-			if enemy ~= nil and enemy.valid and enemy.health <= GetDamage(_Q, enemy) then
-				CastQ(enemy)
+			--Q
+			if Menu.Killsteal.Q and isReady(_Q) then
+				if enemy ~= nil and enemy.valid and enemy.health <= GetDamage(_Q, enemy) then
+					CastQ(enemy)
+				end
 			end
-		end
-		if Menu.Killsteal.E and isReady(_E) then
-			if enemy ~= nil and enemy.valid and enemy.health <= GetDamage(_E, enemy) then
-				GetECast(enemy)
+			-- W
+			if Menu.Killsteal.W and isReady(_W) then
+				if enemy ~= nil and enemy.valid and enemy.health <= GetDamage(_Dagger, enemy) then
+					CastW(enemy)
+				end
+			end
+			--E
+			if Menu.Killsteal.E and isReady(_E) then
+				if enemy ~= nil and enemy.valid and enemy.health <= GetDamage(_E, enemy) then
+					CastETarget(enemy)
+				end
+			end
+
+			-- E on Dagger
+			if Menu.Killsteal.E and isReady(_E) then
+				if dgr > 0 then
+					for _, D in pairs(Dagger) do
+						if enemy ~= nil and enemy.valid and enemy.health <= GetDamage(_E, enemy) + GetDamage(_Dagger, enemy) then
+							if GetDistanceSqr(enemy, D.obj) < 250 * 250 then
+								CastEDagger(enemy)
+							end
+						end
+					end
+				end
+			end
+
+			--Items
+			if Menu.Killsteal.Item and HasItem(3146) and ItemReady(3146) then 
+				if enemy ~= nil and enemy.valid and enemy.health <= GetDamage(_GunBlade, enemy) then
+					CastItem(3146, enemy)
+				end
+			end
+
+			if Menu.Killsteal.Item and HasItem(3144) and ItemReady(3144) then 
+				if enemy ~= nil and enemy.valid and enemy.health <= GetDamage(_Cutlass, enemy) then
+					CastItem(3144, enemy)
+				end
 			end
 		end
 	end
@@ -549,7 +687,7 @@ end
 function Flee()
 	myHero:MoveTo(mousePos.x, mousePos.z)
 	if Menu.Escape.W then
-		CastW()
+		CastSpell(_W)
 	end
 	if Menu.Escape.E then
 		allyMinions:update()
@@ -584,7 +722,7 @@ function Flee()
                 end
 			end
 			for _, D in pairs(Dagger) do
-				if GetDistance(D.obj, unit) < 350 and not D.dead and UnitDistance > GetDistance(mousePos, D.obj) then
+				if GetDistance(D.obj, unit) < 350 and UnitDistance > GetDistance(mousePos, D.obj) then
                     UnitDistance = GetDistance(mousePos, D.obj)
                     UnitValid = D.obj
                 end
@@ -610,82 +748,6 @@ end
 function Zhonya()
 	if (Menu.ItemsSettings.zhonyaHealth >= (100 * myHero.health / myHero.maxHealth)) and Menu.ItemsSettings.zhonyaAmount <= CountEnemyHeroInRange(W.range, myHero) then
 		CastItem(3157)
-	end
-end
-
----------------------------------------------------------------------------------
---[[Draw]]--
----------------------------------------------------------------------------------
-
-function round(num, idp)
-	return string.format("%." .. (idp or 0) .. "f", num)
-end
-
-function DrawCircleNextLvl(x, y, z, radius, width, color, chordlength)
-	radius = radius or 300
-	quality = math.max(8,math.floor(180/math.deg((math.asin((chordlength/(2*radius)))))))
-	quality = 2 * math.pi / quality
-	local points = {}
-	for theta = 0, 2 * math.pi + quality, quality do
-		local c = WorldToScreen(D3DXVECTOR3(x + radius * math.cos(theta), y, z - radius * math.sin(theta)))
-		points[#points + 1] = D3DXVECTOR2(c.x, c.y)
-	end
-	DrawLines2(points, width or 1, color or 4294967295)
-end
-
-function DrawCircle2(x, y, z, radius, color)
-	local vPos1 = Vector(x, y, z)
-	local vPos2 = Vector(cameraPos.x, cameraPos.y, cameraPos.z)
-	local tPos = vPos1 - (vPos1 - vPos2):normalized() * radius
-	local sPos = WorldToScreen(D3DXVECTOR3(tPos.x, tPos.y, tPos.z))
-	if OnScreen({ x = sPos.x, y = sPos.y }, { x = sPos.x, y = sPos.y })  then
-		DrawCircleNextLvl(x, y, z, radius, 2, color, 50)	
-	end
-end
-
-function OnDraw()
-	if Menu.Draw.lfps then
-		if Menu.Draw.drawQrange and isReady(_Q) then 
-    		DrawCircle2(myHero.x, myHero.y, myHero.z, Q.range, ARGB(Menu.Draw.Qcolor[1], Menu.Draw.Qcolor[2], Menu.Draw.Qcolor[3], Menu.Draw.Qcolor[4]))
-  		elseif Menu.Draw.drawQrange and not isReady(_Q) and isLevel(_Q) then
-    		DrawCircle2(myHero.x, myHero.y, myHero.z, Q.range, ARGB(255, 255, 0, 0))
-  		end
-  		if Menu.Draw.drawErange and isReady(_E) then 
-    		DrawCircle2(myHero.x, myHero.y, myHero.z, E.range, ARGB(Menu.Draw.Ecolor[1], Menu.Draw.Ecolor[2], Menu.Draw.Ecolor[3], Menu.Draw.Ecolor[4]))
-  		elseif Menu.Draw.drawErange and not isReady(_E) and isLevel(_E) then
-    		DrawCircle2(myHero.x, myHero.y, myHero.z, E.range, ARGB(255, 255, 0, 0))
-  		end
-  		if Menu.Draw.drawRrange and isReady(_R) then 
-    		DrawCircle2(myHero.x, myHero.y, myHero.z, R.range, ARGB(Menu.Draw.Rcolor[1], Menu.Draw.Rcolor[2], Menu.Draw.Rcolor[3], Menu.Draw.Rcolor[4]))
-  		elseif Menu.Draw.drawRrange and not isReady(_R) and isLevel(_R) then
-    		DrawCircle2(myHero.x, myHero.y, myHero.z, R.range, ARGB(255, 255, 0, 0))
-  		end
-	else
-		if Menu.Draw.drawQrange and isReady(_Q) then 
-    		DrawCircle(myHero.x, myHero.y, myHero.z, Q.range, ARGB(Menu.Draw.Qcolor[1], Menu.Draw.Qcolor[2], Menu.Draw.Qcolor[3], Menu.Draw.Qcolor[4]))
-  		elseif Menu.Draw.drawQrange and not isReady(_Q) and isLevel(_Q) then
-    		DrawCircle(myHero.x, myHero.y, myHero.z, Q.range, ARGB(255, 255, 0, 0))
-  		end
-  		if Menu.Draw.drawErange and isReady(_E) then 
-    		DrawCircle(myHero.x, myHero.y, myHero.z, E.range, ARGB(Menu.Draw.Ecolor[1], Menu.Draw.Ecolor[2], Menu.Draw.Ecolor[3], Menu.Draw.Ecolor[4]))
-  		elseif Menu.Draw.drawErange and not isReady(_E) and isLevel(_E) then
-    		DrawCircle(myHero.x, myHero.y, myHero.z, E.range, ARGB(255, 255, 0, 0))
-  		end
-  		if Menu.Draw.drawRrange and isReady(_R) then 
-    		DrawCircle(myHero.x, myHero.y, myHero.z, R.range, ARGB(Menu.Draw.Rcolor[1], Menu.Draw.Rcolor[2], Menu.Draw.Rcolor[3], Menu.Draw.Rcolor[4]))
-  		elseif Menu.Draw.drawRrange and not isReady(_R) and isLevel(_R) then
-    		DrawCircle(myHero.x, myHero.y, myHero.z, R.range, ARGB(255, 255, 0, 0))
-  		end
-	end
-	if Menu.Draw.drawD then
-		for _, D in pairs(Dagger) do
-			if Menu.Draw.drawDCircle then
-				DrawCircle2(D.obj.x, D.obj.y, D.obj.z, 145, ARGB(Menu.Draw.Dcolor[1], Menu.Draw.Dcolor[2], Menu.Draw.Dcolor[3], Menu.Draw.Dcolor[4]))
-			end
-			if Menu.Draw.drawDLine then
-				DrawLine3D(myHero.x, myHero.y, myHero.z, D.obj.x, D.obj.y, D.obj.z, 2.5, ARGB(Menu.Draw.Dcolor[1], Menu.Draw.Dcolor[2], Menu.Draw.Dcolor[3], Menu.Draw.Dcolor[4]))
-			end
-		end
 	end
 end
 
@@ -744,29 +806,31 @@ function CountEnemyHeroInRange(range, object)
 end
 
 function RTime(unit)
-	if GetDistanceSqr(myHero, unit) < R.range * R.range and ValidTarget(unit) then
-		for _, champion in ipairs(enemyHeros) do
-			local fastes_way = {}
-			local end_pos = myHero + (Vector(unit) - myHero): normalized() * R.range
-			table.insert(fastes_way, Vector(champion.x, champion.z))
-			if end_pos ~= nil and end_pos.x then
-				table.insert(fastes_way, end_pos)
-			end
-			local travel_time = 0
-			if #fastes_way > 1 then
-				for current_index = 1, #fastes_way-1 do
-					DrawLine3D(fastes_way[current_index].x, myHero.y, fastes_way[current_index].y, fastes_way[current_index+1].x, myHero.y, fastes_way[current_index+1].y, 5, ARGB(255, 255, 0, 0) )
-					if current_index == #fastes_way-1 then
-						local endpoint = fastes_way[current_index+1]
-						local current_time = GetDistance(fastes_way[current_index], fastes_way[current_index+1])/champion.ms
-						travel_time = travel_time + current_time
-						return (round(travel_time,3))
+	if ValidTarget(unit) then
+		if GetDistanceSqr(myHero, unit) < R.range * R.range and ValidTarget(unit) then
+			for _, champion in ipairs(enemyHeros) do
+				local fastes_way = {}
+				local end_pos = myHero + (Vector(unit) - myHero): normalized() * R.range
+				table.insert(fastes_way, Vector(champion.x, champion.z))
+				if end_pos ~= nil and end_pos.x then
+					table.insert(fastes_way, end_pos)
+				end
+				local travel_time = 0
+				if #fastes_way > 1 then
+					for current_index = 1, #fastes_way-1 do
+						DrawLine3D(fastes_way[current_index].x, myHero.y, fastes_way[current_index].y, fastes_way[current_index+1].x, myHero.y, fastes_way[current_index+1].y, 5, ARGB(255, 255, 0, 0) )
+						if current_index == #fastes_way-1 then
+							local endpoint = fastes_way[current_index+1]
+							local current_time = GetDistance(fastes_way[current_index], fastes_way[current_index+1])/champion.ms
+							travel_time = travel_time + current_time
+							return (round(travel_time,3))
+						end
 					end
 				end
-			end
+			end 
 		end
 	else 
-		travel_time = 0 
+		travel_time = 0
 	end
 end
 
@@ -901,14 +965,14 @@ end
 function LasthitMode()
     if not Menu.Orbwalker.CustomKey then
         if orbwalker == "SAC:R" or orbwalker == "SAC:P" then
-            return _G.AutoCarry.Keys.LaneClear
+            return _G.AutoCarry.Keys.LastHit
         elseif orbwalker == "BigFat" then
         	return _G["BigFatOrb_Mode"] == "LastHit"
         elseif orbwalker == "0Walk" then
         	return _G.ZWalker:ActiveMode() == "LastHit"
         end
     else
-        return Menu.Orbwalker.LaneClear
+        return Menu.Orbwalker.Lasthit
     end
 end
 
@@ -960,4 +1024,201 @@ function AllowMovement(bool)
     		_G.ZWalker:DisableMovement()
     	end
     end
+end
+
+---------------------------------------------------------------------------------
+--[[Draw]]--
+---------------------------------------------------------------------------------
+
+function round(num, idp)
+	return string.format("%." .. (idp or 0) .. "f", num)
+end
+
+function DrawCircleNextLvl(x, y, z, radius, width, color, chordlength)
+	radius = radius or 300
+	quality = math.max(8,math.floor(180/math.deg((math.asin((chordlength/(2*radius)))))))
+	quality = 2 * math.pi / quality
+	local points = {}
+	for theta = 0, 2 * math.pi + quality, quality do
+		local c = WorldToScreen(D3DXVECTOR3(x + radius * math.cos(theta), y, z - radius * math.sin(theta)))
+		points[#points + 1] = D3DXVECTOR2(c.x, c.y)
+	end
+	DrawLines2(points, width or 1, color or 4294967295)
+end
+
+function DrawCircle2(x, y, z, radius, color)
+	local vPos1 = Vector(x, y, z)
+	local vPos2 = Vector(cameraPos.x, cameraPos.y, cameraPos.z)
+	local tPos = vPos1 - (vPos1 - vPos2):normalized() * radius
+	local sPos = WorldToScreen(D3DXVECTOR3(tPos.x, tPos.y, tPos.z))
+	if OnScreen({ x = sPos.x, y = sPos.y }, { x = sPos.x, y = sPos.y })  then
+		DrawCircleNextLvl(x, y, z, radius, 2, color, 50)	
+	end
+end
+
+function GetHPBarPos(enemy)
+	enemy.barData = {PercentageOffset = {x = -0.05, y = 0}}
+	local barPos = GetUnitHPBarPos(enemy)
+	local barPosOffset = GetUnitHPBarOffset(enemy)
+	local barOffset = { x = enemy.barData.PercentageOffset.x, y = enemy.barData.PercentageOffset.y }
+	local barPosPercentageOffset = { x = enemy.barData.PercentageOffset.x, y = enemy.barData.PercentageOffset.y }
+	local BarPosOffsetX = -50
+	local BarPosOffsetY = 46
+	local CorrectionY = 39
+	local StartHpPos = 31
+	barPos.x = math.floor(barPos.x + (barPosOffset.x - 0.5 + barPosPercentageOffset.x) * BarPosOffsetX + StartHpPos)
+	barPos.y = math.floor(barPos.y + (barPosOffset.y - 0.5 + barPosPercentageOffset.y) * BarPosOffsetY + CorrectionY)
+	local StartPos = Vector(barPos.x , barPos.y, 0)
+	local EndPos = Vector(barPos.x + 108 , barPos.y , 0)
+	return Vector(StartPos.x, StartPos.y, 0), Vector(EndPos.x, EndPos.y, 0)
+end
+
+function OnDraw()
+	if Menu.Draw.lfps then
+		if Menu.Draw.drawQrange and isReady(_Q) then 
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, Q.range, ARGB(Menu.Draw.Qcolor[1], Menu.Draw.Qcolor[2], Menu.Draw.Qcolor[3], Menu.Draw.Qcolor[4]))
+  		elseif Menu.Draw.drawQrange and not isReady(_Q) and isLevel(_Q) then
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, Q.range, ARGB(255, 255, 0, 0))
+  		end
+  		if Menu.Draw.drawErange and isReady(_E) then 
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, E.range, ARGB(Menu.Draw.Ecolor[1], Menu.Draw.Ecolor[2], Menu.Draw.Ecolor[3], Menu.Draw.Ecolor[4]))
+  		elseif Menu.Draw.drawErange and not isReady(_E) and isLevel(_E) then
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, E.range, ARGB(255, 255, 0, 0))
+  		end
+  		if Menu.Draw.drawRrange and isReady(_R) then 
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, R.range, ARGB(Menu.Draw.Rcolor[1], Menu.Draw.Rcolor[2], Menu.Draw.Rcolor[3], Menu.Draw.Rcolor[4]))
+  		elseif Menu.Draw.drawRrange and not isReady(_R) and isLevel(_R) then
+    		DrawCircle2(myHero.x, myHero.y, myHero.z, R.range, ARGB(255, 255, 0, 0))
+  		end
+	else
+		if Menu.Draw.drawQrange and isReady(_Q) then 
+    		DrawCircle(myHero.x, myHero.y, myHero.z, Q.range, ARGB(Menu.Draw.Qcolor[1], Menu.Draw.Qcolor[2], Menu.Draw.Qcolor[3], Menu.Draw.Qcolor[4]))
+  		elseif Menu.Draw.drawQrange and not isReady(_Q) and isLevel(_Q) then
+    		DrawCircle(myHero.x, myHero.y, myHero.z, Q.range, ARGB(255, 255, 0, 0))
+  		end
+  		if Menu.Draw.drawErange and isReady(_E) then 
+    		DrawCircle(myHero.x, myHero.y, myHero.z, E.range, ARGB(Menu.Draw.Ecolor[1], Menu.Draw.Ecolor[2], Menu.Draw.Ecolor[3], Menu.Draw.Ecolor[4]))
+  		elseif Menu.Draw.drawErange and not isReady(_E) and isLevel(_E) then
+    		DrawCircle(myHero.x, myHero.y, myHero.z, E.range, ARGB(255, 255, 0, 0))
+  		end
+  		if Menu.Draw.drawRrange and isReady(_R) then 
+    		DrawCircle(myHero.x, myHero.y, myHero.z, R.range, ARGB(Menu.Draw.Rcolor[1], Menu.Draw.Rcolor[2], Menu.Draw.Rcolor[3], Menu.Draw.Rcolor[4]))
+  		elseif Menu.Draw.drawRrange and not isReady(_R) and isLevel(_R) then
+    		DrawCircle(myHero.x, myHero.y, myHero.z, R.range, ARGB(255, 255, 0, 0))
+  		end
+	end
+	if Menu.Draw.drawD then
+		for _, D in pairs(Dagger) do
+			if Menu.Draw.drawDCircle then
+				DrawCircle2(D.obj.x, D.obj.y, D.obj.z, 145, ARGB(Menu.Draw.Dcolor[1], Menu.Draw.Dcolor[2], Menu.Draw.Dcolor[3], Menu.Draw.Dcolor[4]))
+			end
+			if Menu.Draw.drawDLine then
+				DrawLine3D(myHero.x, myHero.y, myHero.z, D.obj.x, D.obj.y, D.obj.z, 2.5, ARGB(Menu.Draw.Dcolor[1], Menu.Draw.Dcolor[2], Menu.Draw.Dcolor[3], Menu.Draw.Dcolor[4]))
+			end
+		end
+	end
+
+	if Menu.Draw.Damage then
+		for _, enemy in pairs(enemyHeros) do
+			if enemy and enemy.visible and not enemy.dead then
+				local myDmg = GetDamage(_Q, enemy) + GetDamage(_Dagger, enemy) + GetDamage(_E, enemy) + (GetDamage(_R, enemy) * 8) + GetDamage(_Ignite, enemy) + GetDamage(_Cutlass, enemy) + GetDamage(_GunBlade, enemy)
+				local textLabel = nil
+				local line = 2
+				local linePosA  = {x = 0, y = 0 }
+				local linePosB  = {x = 0, y = 0 }
+				local TextPos   = {x = 0, y = 0 }
+				local p = WorldToScreen(D3DXVECTOR3(enemy.x, enemy.y, enemy.z))
+				if OnScreen(p.x, p.y) then
+					if myDmg >= enemy.health then
+						myDmg = enemy.health - 1
+						textLabel = "Killable"
+					else
+						textLabel = "Damage"
+					end
+					myDmg = math.round(myDmg)
+					local StartPos, EndPos = GetHPBarPos(enemy)
+					local Real_X = StartPos.x + 44
+					local Offs_X = (Real_X + ((enemy.health - myDmg) / enemy.maxHealth) * (EndPos.x - StartPos.x - 2))
+					if Offs_X < Real_X then
+						Offs_X = Real_X 
+					end 
+					local mytrans = 350 - math.round(255*((enemy.health-myDmg)/enemy.maxHealth))
+					if mytrans >= 255 then 
+						mytrans = 254 
+					end
+					local my_bluepart = math.round(400*((enemy.health-myDmg)/enemy.maxHealth))
+					if my_bluepart >= 255 then 
+						my_bluepart = 254 
+					end
+					linePosA.x = Offs_X-150
+					linePosA.y = (StartPos.y-(30+(line*15)))    
+					linePosB.x = Offs_X-150
+					linePosB.y = (StartPos.y-10)
+					TextPos.x = Offs_X-148
+					TextPos.y = (StartPos.y-(30+(line*15)))
+					if myDmg > 0 then
+						DrawLine(linePosA.x, linePosA.y, linePosB.x, linePosB.y, 1, ARGB(mytrans, 255, my_bluepart, 0))
+						DrawText(tostring(myDmg).." "..tostring(textLabel), 15, TextPos.x, TextPos.y , ARGB(mytrans, 255, my_bluepart, 0))
+					end
+				end
+			end
+		end
+	end
+end
+---------------------------------------------------------------------------
+--[[OnLoad/OnTick]]--
+---------------------------------------------------------------------------------
+
+function OnLoad()
+	Menu()
+
+	if FileExist(LIB_PATH..'TRPrediction.lua') then require('TRPrediction') end
+
+	Int()
+
+	StartSkin()
+
+	Orb__init()
+	FindOrbwalker()
+
+	DelayAction(function()PrintMsg("Welcome <font color=\"#ddff00\"><b>"..GetUser().."</b></font>. Have Fun and Good Luck !") end, 0.5)
+end
+
+function OnTick()
+	if myHero.dead then return end
+
+	GetCustomTarget()
+
+	if ComboMode() then
+		Combo()
+	end
+
+	if HarassMode() then
+		Harass()
+	end
+
+	if LaneclearMode() then
+		Laneclear()
+		Jungleclear()
+	end
+
+	if LasthitMode() then
+		LastHit()
+	end
+
+	if Menu.Killsteal.Killsteal then
+		Killsteal()
+	end
+
+	if Menu.Escape.flee then
+		Flee()
+	end
+
+	if Menu.ItemsSettings.zhonya then
+		Zhonya()
+	end
+
+	ChancelR()
+
+	buffs = {[5]=Menu.ItemsSettings.QSS.Stun, [7]=Menu.ItemsSettings.QSS.Silence, [8]=Menu.ItemsSettings.QSS.Taunt, [10]=Menu.ItemsSettings.QSS.Fear, [11]=Menu.ItemsSettings.QSS.Roat, [21]=Menu.ItemsSettings.QSS.Charm, [24]=Menu.ItemsSettings.QSS.Suppression, [25]=Menu.ItemsSettings.QSS.Blind, [29]=Menu.ItemsSettings.QSS.KnockUp}
 end
