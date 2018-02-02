@@ -300,7 +300,7 @@ function GetDamage(spell, unit)
 		if isReady(_R) then
 			truedamage = myHero:CalcMagicDamage(unit, (((Level(_R) * 25) - ((Level(_R) - 1) * 12.5)) + (bAD * 0.22) + (AP * 0.19))) -- every 0.166 sec#
 		end
-	elseif spell == _Ignite and isReady(_Ignite) then
+	elseif spell == _Ignite then
 		if isReady(_Ignite) then
 			truedamage = (50 + (myHero.level * 20))
 		end
