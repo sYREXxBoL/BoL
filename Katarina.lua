@@ -300,7 +300,7 @@ function GetDamage(spell, unit)
 		if isReady(_R) then
 			truedamage = myHero:CalcMagicDamage(unit, (((Level(_R) * 25) - ((Level(_R) - 1) * 12.5)) + (bAD * 0.22) + (AP * 0.19))) -- every 0.166 sec#
 		end
-	elseif spell == _Ignite then
+	elseif spell == _Ignite and not _Ignite == nil then
 		if isReady(_Ignite) then
 			truedamage = (50 + (myHero.level * 20))
 		end
@@ -631,7 +631,7 @@ end
 function Killsteal()
 	for _, enemy in pairs(enemyHeros) do
 		if GetDistanceSqr(myHero, enemy) < 1000 * 1000 and not enemy.dead then
-			if Menu.Killsteal.I and isReady(_Ignite) then
+			if Menu.Killsteal.I then
 				if enemy ~= nil and enemy.valid and enemy.health <= GetDamage(_Ignite, enemy) then
 					CastI(enemy)
 				end
