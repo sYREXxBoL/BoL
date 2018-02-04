@@ -387,8 +387,8 @@ function OnUpdateBuff(unit, buff)
 	end
 end
 
-function OnApplyBuff(unit, buff)
-	if unit and unit.isMe and buff.name:lower():find("katarinarsound") then
+function OnProcessSpell(unit, spell)
+	if unit and unit.isMe and spell.name:lower():find("katarinar") then
 		R.active = true
 	end
 end
