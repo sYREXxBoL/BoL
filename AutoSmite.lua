@@ -5,7 +5,7 @@ function PrintMsg(msg)
 end
 
 local Smite = nil
-if myHero:GetSpellData(SUMMONER_1).name:find("smite") then
+if myHero:GetSpellData(SUMMONER_1).name:lower():find("smite") then
 	Smite = SUMMONER_1 
 elseif myHero:GetSpellData(SUMMONER_2).name:lower():find("smite") then
 	Smite = SUMMONER_2
