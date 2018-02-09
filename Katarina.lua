@@ -1,6 +1,6 @@
 if myHero.charName ~= "Katarina" then return end
 
-local version = 1.06
+local version = 1.07
 
 function PrintMsg(msg)
 	PrintChat("<font color=\"#ff0000\"><b>[Katarina]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
@@ -233,41 +233,41 @@ function GetDamage(spell, unit)
 		end
 	elseif spell == _Dagger and dgr > 0 then
 		if myHero.level == 1 then
-			basedamage = 75
+			basedamage = 68
 		elseif myHero.level == 2 then
-			basedamage = 80
+			basedamage = 72
 		elseif myHero.level == 3 then
-			basedamage = 87
+			basedamage = 77
 		elseif myHero.level == 4 then
-			basedamage = 94
+			basedamage = 82
 		elseif myHero.level == 5 then
-			basedamage = 102
+			basedamage = 89
 		elseif myHero.level == 6 then
-			basedamage = 111	
+			basedamage = 96	
 		elseif myHero.level == 7 then
-			basedamage = 120	
+			basedamage = 103	
 		elseif myHero.level == 8 then
-			basedamage = 131	
+			basedamage = 112	
 		elseif myHero.level == 9 then
-			basedamage = 143	
+			basedamage = 121	
 		elseif myHero.level == 10 then
-			basedamage = 155	
+			basedamage = 131	
 		elseif myHero.level == 11 then
-			basedamage = 168	
+			basedamage = 142	
 		elseif myHero.level == 12 then
-			basedamage = 183	
+			basedamage = 154	
 		elseif myHero.level == 13 then
-			basedamage = 198	
+			basedamage = 166	
 		elseif myHero.level == 14 then
-			basedamage = 214	
+			basedamage = 180	
 		elseif myHero.level == 15 then
-			basedamage = 231	
+			basedamage = 194	
 		elseif myHero.level == 16 then
-			basedamage = 248
+			basedamage = 208
 		elseif myHero.level == 17 then
-			basedamage = 267	
+			basedamage = 224	
 		elseif myHero.level == 18 then
-			basedamage = 287
+			basedamage = 240
 		end
 
 		if dgr > 1 then
