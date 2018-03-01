@@ -1,6 +1,6 @@
 if myHero.charName ~= "Katarina" then return end
 
-local version = 1.07
+local version = 1.08
 
 function PrintMsg(msg)
 	PrintChat("<font color=\"#ff0000\"><b>[Katarina]</b></font> <font color=\"#ffffff\">"..msg.."</font>")
@@ -88,6 +88,7 @@ function Menu()
 		Menu:addSubMenu("> Harass", "Harass")
 			Menu.Harass:addParam("General", "> General settings:", SCRIPT_PARAM_INFO, "")
 			Menu.Harass:addParam("useItems", "Use Items", SCRIPT_PARAM_ONOFF, true)
+			Menu.Harass:addParam("HarassToggle", "Toggle Harass", SCRIPT_PARAM_ONKEYDOWN, false, string.byte ("K"))
 			Menu.Harass:addParam("divider", "", SCRIPT_PARAM_INFO, "")
 			Menu.Harass:addParam("Spell", "> Choose your spells:", SCRIPT_PARAM_INFO, "")
 			Menu.Harass:addParam("Q", "(Q) - Use ", SCRIPT_PARAM_ONOFF, true)
@@ -1193,7 +1194,7 @@ function OnTick()
 		Combo()
 	end
 
-	if HarassMode() then
+	if HarassMode() or Menu.Harass.HarassToggle then
 		Harass()
 	end
 
